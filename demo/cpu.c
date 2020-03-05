@@ -63,6 +63,7 @@ int main(int argc, char **argv)
      cpu();
      sleep(3);
  
+#ifdef CONF_DSENSOR_ROTATION
      // with two rotation sensors enabled (23%)
      cputc_native_user(CHAR_2, CHAR_r, CHAR_o, CHAR_t); // 2rot
      msleep(100);
@@ -72,6 +73,19 @@ int main(int argc, char **argv)
      ds_rotation_off(&SENSOR_1);
      ds_rotation_off(&SENSOR_2);
      sleep(3);
+#endif
+ 
+#ifdef CONF_DSENSOR_EDGECOUNT
+     // with two edge count sensors enabled
+     cputc_native_user(CHAR_2, CHAR_e, CHAR_d, CHAR_g); // 2edg
+     msleep(100);
+     ds_edgecount_on(&SENSOR_1);
+     ds_edgecount_on(&SENSOR_2);
+     cpu();
+     ds_edgecount_off(&SENSOR_1);
+     ds_edgecount_off(&SENSOR_2);
+     sleep(3);
+#endif
  
      // with A/D interrupts disabled (95%)
      cputc_native_user(CHAR_n, CHAR_o, CHAR_A, CHAR_d);  // noAd

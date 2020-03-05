@@ -1,6 +1,7 @@
 
 DSOURCES1=helloworld.c helloworld_lnp.c rover.c linetrack.c robots.c \
-          c++.cpp sound.c trailerbot.c cpu.c dccthrottle.c memtest.c
+          c++.cpp sound.c trailerbot.c cpu.c dccthrottle.c memtest.c \
+          edgecounting.c
 DSOURCES=$(DSOURCES1:%=demo/%)
 PROGRAMS=$(patsubst %.c,%.lx,$(patsubst %.cpp,%.lx,$(DSOURCES)))
 
@@ -16,6 +17,7 @@ sound_SRC =
 trailerbot_SRC =
 dccthrottle_SRC =
 memtest_SRC =
+edgecounting_SRC =
 
 DSOURCES_ALL = $(DSOURCES) \
         $(foreach prog,$(PROGRAMS:%.lx=%),$($(notdir $(prog))_SRC))

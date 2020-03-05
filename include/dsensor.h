@@ -114,6 +114,15 @@ extern "C" {
 #define SENSOR_3C (ds_muxs[0][2])
 #endif //CONF_DSENSOR_MUX
 
+#ifdef CONF_DSENSOR_EDGECOUNT
+//
+// edge count for each sensor
+//
+#define EDGECOUNT_1  (ds_edgecounts[2])
+#define EDGECOUNT_2  (ds_edgecounts[1])
+#define EDGECOUNT_3  (ds_edgecounts[0])
+#endif
+
 //! Convert raw data to touch sensor (0: off, else pressed)
 #define TOUCH(a)    ((unsigned int)(a) < 0x8000)
 
@@ -154,6 +163,13 @@ extern unsigned char ds_mux;	//!< mux   bitmask
 
 extern volatile int ds_muxs[3][3];	//!< mux ch values
 #endif //CONF_DSENSOR_MUX
+
+#ifdef CONF_DSENSOR_EDGECOUNT
+extern unsigned char ds_edgecount;		//!< edge counting bitmask
+extern volatile unsigned int ds_edgecounts[3];	//!< edge counts
+extern unsigned char ds_edgecount_level_low[3];	//!< maximum (raw>>8) value for 'off'
+extern unsigned char ds_edgecount_level_high[3]; //!< minimum (raw>>8) value for 'on'
+#endif // CONF_DSENSOR_EDGECOUNT
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -278,8 +294,79 @@ extern inline void ds_mux_off(volatile unsigned *sensor)
 #endif // CONF_DSENSOR_MUX
 
 
+#ifdef CONF_DSENSOR_EDGECOUNT
 
+//! start tracking edgecount
+/*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
+*/
+extern inline void ds_edgecount_on(volatile unsigned *sensor)
+{
+    if (sensor == &SENSOR_3) {
+	bit_set(&ds_edgecount, 0);
+	bit_set(&ds_sensorbits,4);
+    } else if (sensor == &SENSOR_2) {
+	bit_set(&ds_edgecount, 1);
+	bit_set(&ds_sensorbits,5);
+    } else if (sensor == &SENSOR_1) {
+	bit_set(&ds_edgecount, 2);
+	bit_set(&ds_sensorbits, 6);
+    }
+}
 
+//! stop tracking edgecount
+/*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
+*/
+extern inline void ds_edgecount_off(volatile unsigned *sensor)
+{
+    if (sensor == &SENSOR_3) {
+	bit_clear(&ds_edgecount, 0);
+	bit_clear(&ds_sensorbits, 4);
+    }
+    else if (sensor == &SENSOR_2) {
+	bit_clear(&ds_edgecount, 1);
+	bit_clear(&ds_sensorbits, 5);
+    }
+    else if (sensor == &SENSOR_1) {
+	bit_clear(&ds_edgecount, 2);
+	bit_clear(&ds_sensorbits, 6);
+    }
+}
+
+//! set edgecount low threshold
+/*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
+*/
+extern inline void ds_edgecount_set_low(volatile unsigned *sensor,
+  unsigned char level)
+{
+    if (sensor == &SENSOR_3) {
+	ds_edgecount_level_low[0] = level;
+    }
+    else if (sensor == &SENSOR_2) {
+	ds_edgecount_level_low[1] = level;
+    }
+    else if (sensor == &SENSOR_1) {
+	ds_edgecount_level_low[2] = level;
+    }
+}
+
+//! set edgecount high threshold
+/*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
+*/
+extern inline void ds_edgecount_set_high(volatile unsigned *sensor,
+  unsigned char level)
+{
+    if (sensor == &SENSOR_3) {
+	ds_edgecount_level_high[0] = level;
+    }
+    else if (sensor == &SENSOR_2) {
+	ds_edgecount_level_high[1] = level;
+    }
+    else if (sensor == &SENSOR_1) {
+	ds_edgecount_level_high[2] = level;
+    }
+}
+
+#endif // CONF_DSENSOR_EDGECOUNT
 
 #endif // CONF_DSENSOR
 

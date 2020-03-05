@@ -1267,7 +1267,7 @@ LOOP:
 		case Lrotation_on: {
 			volatile unsigned *port;
 			if (!(port = get_port(e = base[0]))) goto LERROR;
-#ifdef RCX
+#if defined(RCX) && defined(CONF_DSENSOR_ROTATION)
 			ds_active(port);
 			ds_rotation_on(port);
 			ds_rotation_set(port, 0);
@@ -1278,7 +1278,7 @@ LOOP:
 		case Lrotation_off: {
 			volatile unsigned *port;
 			if (!(port = get_port(e = base[0]))) goto LERROR;
-#ifdef RCX
+#if defined(RCX) && defined(CONF_DSENSOR_ROTATION)
 			ds_passive(port);
 			ds_rotation_off(port);
 #endif
@@ -1286,7 +1286,7 @@ LOOP:
 		}
 		case Lrotation:
 			if (!get_port(base[0])) goto LERROR;
-#ifdef RCX
+#if defined(RCX) && defined(CONF_DSENSOR_ROTATION)
 			e = valINT(base[0] == valINT(1) ? ROTATION_1
 			            : (base[0] == valINT(2) ? ROTATION_2 : ROTATION_3));
 #else

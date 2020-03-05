@@ -27,7 +27,7 @@
 
 #include <dcc.h>
 
-#ifdef CONF_DCC
+#if defined(CONF_DCC) && defined(CONF_DSENSOR_ROTATION)
 
 #include <unistd.h>
 #include <dmotor.h>
@@ -121,11 +121,11 @@ int main()
   }
   
 #else
-#warning dccthrottle.c requires CONF_DSOUND which is not set
+#warning dccthrottle.c requires CONF_DCC and CONF_DSENSOR_ROTATION, at least one of which is not set
 #warning dcc throttle demo will do nothing
 int main(int argc, char *argv[]) {
   return 0;
 }
-#endif  // CONF_DCC
+#endif  //  defined(CONF_DCC) && defined(CONF_DSENSOR_ROTATION)
 
 // EOF //

@@ -51,6 +51,7 @@ clean::
 	rm -f util/host/*.srec util/host/*.coff
 	rm -f $(MKIMG) util/host/fastdl.h
 	rm -f util/host/lnp-logical.c util/host/lnp.c
+	rm -f util/host/fastdl_*.h
 
 realclean:: clean
 	rm -f util/host/*~ util/host/*.bak 

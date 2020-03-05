@@ -222,6 +222,49 @@ void ds_rotation_handler(unsigned channel) {
 }
 #endif // CONF_DSENSOR_ROTATION
 
+#ifdef CONF_DSENSOR_EDGECOUNT
+unsigned char ds_edgecount;			//!< bitmask
+volatile unsigned int ds_edgecounts[3];		//!< edge counts
+unsigned char ds_edgecount_state[3];		//!< overall state, prev sample state
+unsigned char ds_edgecount_level_low[3];	//!< maximum (raw>>8) value for 'off'
+unsigned char ds_edgecount_level_high[3];	//!< minimum (raw>>8) value for 'on'
+
+
+void ds_edgecount_handler(unsigned channel)
+{
+  unsigned char raw = (*((&AD_A)+channel)) >> 8;
+  unsigned char state = ds_edgecount_state[channel];
+  if(raw < ds_edgecount_level_low[channel])
+  {
+    if(state & 1)
+      state &= ~1;
+    else if(state & 2)
+    {
+      state &= ~2;
+      ++ds_edgecounts[channel];
+    }
+    else
+      return;
+  }
+  else if(raw > ds_edgecount_level_high[channel])
+  {
+    if(!(state & 1))
+      state |= 1;
+    else if(!(state & 2))
+    {
+      state |= 2;
+      ++ds_edgecounts[channel];
+    }
+    else
+      return;
+  }
+  else
+    return;
+  ds_edgecount_state[channel] = state;
+}
+
+#endif // CONF_DSENSOR_EDGECOUNT
+
 #ifdef CONF_DSENSOR_MUX
 unsigned char ds_mux;	//!< mux   bitmask
 
@@ -420,6 +463,10 @@ void ds_callback(void) {
 	if (ds_mux & (1 << channel))
 	    ds_mux_handler(channel);
 #endif
+#ifdef CONF_DSENSOR_EDGECOUNT
+	if (ds_edgecount & (1 << channel))
+	    ds_edgecount_handler(channel);
+#endif
     }
 }
 
@@ -498,6 +545,10 @@ void ds_init(void) {
     
 #ifdef CONF_DSENSOR_MUX
     ds_mux=0;                             // muxing disabled
+#endif
+
+#ifdef CONF_DSENSOR_EDGECOUNT
+  ds_edgecount = 0;			// edge counting disabled
 #endif
     
     ad_vector=&ds_interrupt;		// setup IRQ handler
