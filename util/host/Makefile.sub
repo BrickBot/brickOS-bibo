@@ -1,0 +1,123 @@
+### ==========================================================================
+###  $Id: Makefile.sub 606 2007-11-14 22:02:48Z hoenicke $
+###  FILE: util/host/Makefile.sub - make program download & link support utilities
+###  brickOS - the independent LEGO Mindstorms OS
+### --------------------------------------------------------------------------
+
+FONTTARGET=fontdesign$(EXT)
+FIRMDLTARGET=firmdl$(EXT)
+FIRMDLMAN1=firmdl.1
+LNPMSGTARGET=lnpmsg$(EXT)
+IRSRVRTARGET=ir-server$(EXT)
+DLLALLTARGETS=dll$(EXT) makelx$(EXT) genlds$(EXT)
+DLLALLMAN1=dll.1
+MKIMG := util/host/mkimg$(EXT)
+
+RCX_COMM_SRCS = rcx_comm.c lnp-logical.c lnp.c
+
+FONTSRC   = fontdesign.c
+FIRMDLSRC = firmdl.c srec.c srecload.c $(RCX_COMM_SRCS)
+MKIMGSRC  = mkimg.c srec.c srecload.c
+LNPMSGSRC = lnpmsg.c lnpmsg_comm.c $(RCX_COMM_SRCS)
+DLLSRC = loader.c lx.c $(RCX_COMM_SRCS)
+MAKELXSRC = convert.c srec.c srecload.c lx.c
+IRSRVRSRC = ir-server.c $(RCX_COMM_SRCS)
+GENLDSSRC = genlds.c
+
+FONTOBJS   := $(FONTSRC:%.c=util/host/%.o)
+FIRMDLOBJS := $(FIRMDLSRC:%.c=util/host/%.o)
+MKIMGOBJS  := $(MKIMGSRC:%.c=util/host/%.o)
+LNPMSGOBJS := $(LNPMSGSRC:%.c=util/host/%.o)
+DLLOBJS    := $(DLLSRC:%.c=util/host/%.o)
+MAKELXOBJS := $(MAKELXSRC:%.c=util/host/%.o)
+IRSRVROBJS := $(IRSRVRSRC:%.c=util/host/%.o)
+GENLDSOBJS := $(GENLDSSRC:%.c=util/host/%.o)
+
+
+DISTFILES += $(patsubst %,util/host/%, Makefile.sub $(sort $(FONTSRC) $(FIRMDLSRC) \
+        $(MKIMGSRC) $(LNPMSGSRC) $(DLLSRC) $(MAKELXSRC) $(IRSRVRSRC) $(GENLDSSRC) \
+        config.h fastdl.S srec.h srecload.h lx.h rcx_comm.h lnpmsg_comm.h \
+        $(DLLALLMAN1) $(FIRMDLMAN1) ))
+LIBS=
+
+BIN = $(FONTTARGET:%=util/%) $(FIRMDLTARGET:%=util/%) $(DLLALLTARGETS:%=util/%) \
+    $(LNPMSGTARGET:%=util/%) $(IRSRVRTARGET:%=util/%)
+MAN1 = $(FIRMDLMAN1:%=util/host/%) $(DLLALLMAN1:%=util/host/%)
+
+all::  $(BIN)
+
+clean::
+	rm -f util/host/*.d util/host/*.o
+	rm -f util/host/*.srec util/host/*.coff
+	rm -f $(MKIMG) util/host/fastdl.h
+	rm -f util/host/lnp-logical.c util/host/lnp.c
+
+realclean:: clean
+	rm -f util/host/*~ util/host/*.bak 
+	rm -f $(BIN)
+
+install:: $(BIN) $(MAN1) $(mandir)/man1
+	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
+	test -d $(DESTDIR)$(mandir)/man1 || mkdir -p $(DESTDIR)$(mandir)/man1
+	install -s -m 755  $(BIN) $(DESTDIR)$(bindir)/
+	install -m 644 $(MAN1) $(DESTDIR)$(mandir)/man1/
+
+uninstall::
+	rm -f $(mandir)/man1/$(MAN1) $(bindir)/$(EXE1)
+
+
+$(mandir)/man1:
+	mkdir -p $@
+
+util/host/lnp.o: kernel/lnp.c
+	$(CC) -MMD $(CFLAGS) -c -o $@ $^
+    
+util/host/lnp-logical.o: kernel/lnp-logical.c
+	$(CC) -MMD $(CFLAGS) -c -o $@ $^
+
+NATIVEOBJS+=$(patsubst util/host/lnp.o,, $(patsubst util/host/lnp-logical.o,, $(sort $(FONTOBJS) \
+    $(FIRMDLOBJS) $(MKIMGOBJS) $(LNPMSGOBJS) $(DLLOBJS) $(MAKELXOBJS) $(IRSRVROBJS) $(GENLDSOBJS))))
+
+util/host/firmdl.o: util/host/fastdl_2400.h util/host/fastdl_4800.h util/host/fastdl_9600.h util/host/fastdl_19200.h  util/host/fastdl_38400.h
+
+util/host/fastdl_%.h: util/host/fastdl_%.srec $(MKIMG) 
+	$(MKIMG) $< > $@
+
+util/host/fastdl_%.coff: util/host/fastdl_%.o
+	$(CROSSLD) -o $@ $^ $(KLDFLAGS)
+
+util/host/fastdl_2400.o: util/host/fastdl.S
+	$(CROSSCC) -MD -DB2400 $(CROSSCFLAGS) -c $< -o $@
+util/host/fastdl_4800.o: util/host/fastdl.S
+	$(CROSSCC) -MD -DB4800 $(CROSSCFLAGS) -c $< -o $@
+util/host/fastdl_9600.o: util/host/fastdl.S
+	$(CROSSCC) -MD -DB9600 $(CROSSCFLAGS) -c $< -o $@
+util/host/fastdl_19200.o: util/host/fastdl.S
+	$(CROSSCC) -MD -DB19200 $(CROSSCFLAGS) -c $< -o $@
+util/host/fastdl_38400.o: util/host/fastdl.S
+	$(CROSSCC) -MD -DB38400 $(CROSSCFLAGS) -c $< -o $@
+
+
+CFLAGS += -Iutil/host
+
+$(MKIMG): $(MKIMGOBJS)
+	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
+util/$(FONTTARGET): $(FONTOBJS)
+	$(CC) -o $@ $^ $(CFLAGS)
+util/$(FIRMDLTARGET): $(FIRMDLOBJS)
+	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
+util/$(LNPMSGTARGET): $(LNPMSGOBJS)
+	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
+util/$(IRSRVRTARGET): $(IRSRVROBJS)
+	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
+
+util/dll$(EXT): $(DLLOBJS)
+	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
+$(MAKELX): $(MAKELXOBJS)
+	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
+$(GENLDS): $(GENLDSOBJS)
+	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
+
+### --------------------------------------------------------------------------
+###                   End of FILE: util/host/Makefile.sub
+### ==========================================================================

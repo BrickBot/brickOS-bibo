@@ -1,0 +1,178 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH firmdl 1 "January  6, 2001" "brickOS" "brickOS Utility"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" ---------------------------------------
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.\" ---------------------------------------
+.SH NAME
+firmdl \- A firmware downloader for the RCX.  Version 3.0.
+.\"
+.SH SYNOPSIS
+.B firmdl
+.RI [ options ] " srecfile"
+.\"
+.SH DESCRIPTION
+This manual page documents the
+.B firmdl
+kernel download command.
+.P
+\fBfirmdl\fP is a program which is used to download the brickOS kernel (firmware).
+.B firmdl
+Supports single and quad rate downloading (quad-rate is default).
+.P
+Quad-rate downloading is a feature that significantly reduces firmware
+download times.  It is implemented on top of a fast serial protocol that
+has a 2x baud rate with no complements or parity bits.  The fast protocol
+is enabled by a short firmware stub that reconfigures some control
+registers and tweaks some ROM program state.  Once the firmware stub is
+downloaded and executed, the ROM responds to the fast serial protocol,
+which the downloader then uses to transfer the actual firmware file.
+Because the initial firmware stub is small, all but the most trivial
+programs see a download time improvement when using quad-speed downloading.
+.P
+The caveat to using quad-speed downloading is its sensitivity to lighting
+conditions.  Getting quad-speed downloading to work right might require
+some trial and error.  In addition to avoiding harsh lighting conditions,
+it is important to place the RCX around 4-12 inches from the IR tower.
+.\"
+.SH OPTIONS
+This program follows the usual GNU command line syntax, with long
+options starting with two dashes (`-').
+The options supported by \fBfirmdl\fP are:
+.TP
+.B \-h, \-\-help
+Show built-in help (summery of options)
+.TP
+.B \-f, \-\-fast
+Use 'fast' (4x) download algorithm (default)
+.TP
+.B \-s, \-\-slow
+Use 'slow' (1x) download algorithm (Use if experiencing download problems)
+.TP
+.B \-\-tty={ttydevice}
+Specify serial serial tty where IR tower is connected.
+.br
+.sp
+NOTE: The environment variable RCXTTY may be used in place of \-tty
+.TP
+.B \-\-debug
+Enable debugging. (Mostly displays raw bytes).
+.\"
+.SH ENVIRONMENT VARIABLES
+.B firmdl
+will respond to the environment variable RCXTTY.  This should be
+set to the serial device to which the IR tower is connected.  Use of
+RCXTTY is equivalent the using the -tty command-line option.
+.\"
+.SH EXAMPLES
+.B firmdl
+is a simple command to use.  The following examples show most of the uses.
+.P
+\fBEx1:\fP download the brickOS kernal to ttyS0.
+.sp
+.nf
+   $ firmdl -tty=/dev/ttyS0 /usr/lib/brickos/brickOS.srec
+   Transferring "Fast Download Image" to RCX...
+   100%
+   Transferring "/usr/lib/brickos/brickOS.srec" to RCX...
+   100%
+   $
+.fi
+.P
+\fBEx2:\fP download the brickOS kernal to ttyS1 (set env var 1st).
+.sp
+.nf
+   $ export RCXTTY=/dev/ttyS1
+   $ firmdl /usr/lib/brickos/brickOS.srec
+   Transferring "Fast Download Image" to RCX...
+   100%
+   Transferring "/usr/lib/brickos/brickOS.srec" to RCX...
+   100%
+   $
+.fi
+.P
+\fBEx3:\fP download the brickOS kernal using slow protocol (assumes
+RCXTTY is already set).
+.sp
+.nf
+   $ firmdl --slow /usr/lib/brickos/brickOS.srec
+   Transferring "/usr/lib/brickos/brickOS.srec" to RCX...
+   100%
+   $
+.fi
+.sp
+NOTE: the missing indication of the "Fast Download Image" being sent.
+.P
+We'll leave the experiment of running \fBfirmdl\fP with --debug
+set as an exercise for you our reader... (You really interested in
+seeing all the bytes fly by? ;-)
+.\"
+.SH ERROR MESSAGES
+.P
+(excerpt from brickOS HOWTO)
+.TP
+.B delete firmware failed
+Because of a limitation in the Lego firmware, \fBfirmdl\fP cannot delete LegOS.
+Instead, before downloading the new firmware, you must first stop the old
+LegOS program, and then hold down the Prgm button while hitting the On/Off
+switch. This will delete the old LegOS firmware, allowing a new download.
+Alternately, if you see no green light on the IR box and get this error
+message, it may indicate you have a dead battery in the IR tower.
+.TP
+.B /dev/ttyS0: Permission denied, com1: Permission denied, or a similar message.
+The first part of the error message is the output port that \fBfirmdl\fP
+is trying to use. This can mean two things. Either you have specified the
+wrong device or you have specified the correct device but do not have
+permission to access it. If it is an access problem, speak to your sysadmin.
+If not, you can use the --tty argument to specify another device. For
+example, to specify the standard device under linux, try
+\'firmdl --tty /dev/ttyS0\'. Under cygwin, you probably probably want to
+use \'firmdl --tty com1\'. If you discover that this is the case, you may wish
+to recompile \fBfirmdl\fP to make your setting the default.
+.TP
+.B /dev/ttyS0: Input/output error or a similar message.
+You forgot to plug the tower in, most likely.
+.TP
+.B unlock firmware failed
+This indicates that there was a slight corruption in the download. Clear
+brickOS and download it again.
+.TP
+.B no response from RCX
+This error should be called "you forgot to turn on your RCX, moron." If I
+hadn't done it about 10 million times, I'd submit the patch to change
+the error myself.
+.P
+If \fBfirmdl\fP gives you repeated problems, you may want to try using
+the --slow argument, which will make your download much slower but can
+correct for certain errors caused by ambient light.
+.\"
+.SH SEE ALSO
+.BR dll(1)
+.\"
+.SH AUTHOR
+.P
+Laurent Demailly, Allen Martin, Markus Noga, Gavin Smyth, and Luis Villa
+all contributed something to some version of \fBfirmdl\fP.
+.P
+\fBfirmdl was written by:\fP
+Kekoa Proudfoot 
+.br
+<kekoa@graphics.stanford.edu> - 10/13/99
+.P
+This manual page was written by Stephen M Moraco <stephen@debian.org>,
+for the Debian GNU/Linux system (but may be used by others).
+
+

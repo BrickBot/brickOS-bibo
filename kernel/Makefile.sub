@@ -1,0 +1,83 @@
+### ==========================================================================
+###  $Id: Makefile.sub 904 2009-05-13 11:00:45Z hoenicke $
+###  FILE: kernel/Makefile.sub - make the bibo kernel
+###  bibo - another LEGO Mindstorms OS
+### --------------------------------------------------------------------------
+
+# kernel source files
+KSOURCES1=kmain.c mm.c systime.c tm.c semaphore.c conio.c lcd.c \
+          lnp-logical.c lnp.c remote.c program.c vis.c battery.c \
+          dkey.c dmotor.c dsensor.c dsound.c swmux.c handlers.c \
+          mutex.c dcc.c
+KSOURCES=$(KSOURCES1:%=kernel/%)
+
+KASMSOURCES1=dccasm.S
+KASMSOURCES=$(KASMSOURCES1:%=kernel/%)
+
+KERNEL_TARGETS:=$(KERNEL).coff $(KERNEL).srec $(KERNEL).lds BaseAddresses
+
+# Files of the source distribution
+DISTFILES += kernel/Makefile.sub $(KSOURCES) $(KASMSOURCES)
+
+
+#
+# NOTE: uncomment out the first line if you need a kernel disassembly file.
+# This will not work on Windows unless you have perl installed.
+#
+#all: $(KERNEL).srec $(KERNEL).dis2 $(KERNEL).lds
+all:: $(KERNEL_TARGETS)
+
+install:: $(KERNEL_TARGETS)
+	test -d $(DESTDIR)$(pkgdatadir) || mkdir -p $(DESTDIR)$(pkgdatadir)
+	install -m 644 $(KERNEL_TARGETS) $(DESTDIR)$(pkgdatadir)
+
+clean::
+	rm -f kernel/*.srec kernel/*.o kernel/*.lds kernel/*.dis kernel/*.coff kernel/*.map kernel/*.d
+
+realclean::
+	rm -rf kernel/*~ kernel/*.bak kernel/*.tgz kernel/*.s kernel/tags kernel/*.dcoff kernel/*.dmap kernel/*.dsrec
+	rm -f  kernel/*.srec kernel/install-stamp
+
+.PHONY: all tag clean realclean depend
+
+##
+## no user servicable parts below
+##
+
+# kernel object files
+KOBJECTS=$(KSOURCES:.c=.o) $(KASMSOURCES:.S=.o)
+
+# Kernel libraries. Use second version to link all
+# libraries statically to kernel. Change Makefile.user, too.
+KLIBS=-Llib -lc -lmint
+KLIBRARIES=lib/libc.a lib/libmint.a
+#KLIBS=--whole-archive -lc -lmint -lfloat
+#KLIBRARIES=lib/libc.a lib/libmint.a lib/libfloat.a
+
+# linker command files for kernel
+KLDFLAGS=-Tbibo.ld -relax
+
+GET_BASE_FROM_FILE2 = $(shell [ -e $(2) ] && cat $(2) | grep -E ^$(1)[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$ | sed s/$(1)[[:space:]]*=[[:space:]]*// )
+
+
+############ kernel stuff
+
+# how to build coff kernel (for symbols, disassembly etc)
+$(KERNEL).coff: $(KOBJECTS) $(KLIBRARIES)
+	$(CROSSLD) $(KLDFLAGS) $(KOBJECTS) $(KLIBS) -o $@
+
+# how to make kernel lds files
+%.lds: %.coff $(GENLDS)
+	$(CROSSNM) $*.coff | sort -u | $(GENLDS) $* > $*.lds
+
+# Update the BASE1 and BASE2 addresses in Makefile.user only if there has been a change
+BaseAddresses: $(KERNEL).lds
+	[ -z '$(call BASE_CHANGED,BASE1)' ] || sed -i -r 's/^BASE1[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE1 = $(call GET_BASE,BASE1)/' Makefile.user
+	[ -z '$(call BASE_CHANGED,BASE2)' ] || sed -i -r 's/^BASE2[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE2 = $(call GET_BASE,BASE2)/' Makefile.user
+
+#  dependencies 
+-include $(KSOURCES:%.c=%.d)
+
+### --------------------------------------------------------------------------
+###                         End of FILE: boot/Makefile
+### ==========================================================================

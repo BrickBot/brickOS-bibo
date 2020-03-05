@@ -1,0 +1,21 @@
+### ==========================================================================
+###  $Id: Makefile.sub 606 2007-11-14 22:02:48Z hoenicke $
+###  FILE: kernel/Makefile.sub - make the bibo kernel
+###  bibo - another LEGO Mindstorms OS
+### --------------------------------------------------------------------------
+
+DISTFILES += util/Makefile.sub
+
+CFLAGS+=-Iutil/include
+
+include util/host/Makefile.sub
+
+LNPINCLUDES=lnp.h lnp-logical.h sys/lnp.h sys/lnp-logical.h
+$(NATIVEOBJS): $(LNPINCLUDES:%=util/include/%)
+
+clean::
+	rm -rf util/include
+
+$(LNPINCLUDES:%=util/include/%): util/include/%: include/%
+	@-mkdir -p util/include/sys
+	cp $< $@

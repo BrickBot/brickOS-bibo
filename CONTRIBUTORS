@@ -1,0 +1,244 @@
+bibo contributers
+-----------------
+
+Jochen Hoenicke (hoenicke@users.sourceforge.net)
+  bibo core designer
+
+
+Matthew Sheets (mesheets@users.sourceforge.net)
+  Updated utils to better facilitate using TCP as a tty.
+  Made NCD tty types a runtime option instead of a compile-time #define.
+  Merged patches for BrickOS with Bibo,
+    including LDCC, lnp_printf, and lnpmsg (formerly LegOShrink)
+  Reworked firmdl3, dll, and lnpmsg under utils as well as
+    lnp and lnp-logic in the kernel to facilitate better code reuse,
+    remove essentially duplicate code, and establish a set of common
+    functions for rcx_comm and LNP.  Merged the resulting code into
+    util/host, deprecating util/firmld, util/dll-src, and util/fontdesign.c.
+  Util dll: made fast mode a runtime option instead of a compile-time #define.
+  Added ability to send LNP messages directly from the lnpmsg command line.
+  Added ir-server from Jochen Hoenicke's BrickEmu package and used
+    the code reworked from above to add support for tty downlinking
+    (e.g. serial, USB, TCP) or TCP uplinking.
+  Merged XS (based on BrickOS 0.2.6.10) with Bibo.
+  Changed baud rate, carrier state, and timeout settings from compile-time
+    defines to run-time options
+  Standardized parity for all baud rates to "odd"
+  Added support for RCX-based communication that does not echo (e.g. bluetooth hacks)
+  Enabled more flexible communication options for downloading firmware
+  Modified conio to remove the CONF_ASCII dependency from CONF_PROGRAM
+  Updated Makefiles to support building programs written in Esterel
+
+Carl Troein (troein@users.sourceforge.net)
+  Fixed signedness and constness warnings
+  GCC now calls floatunsisf for ulong-to-float conversion.
+
+Mark Riley (http://home.surewest.net/markril/lego/dcc/)
+  LDCC - Digital Command Control implementation
+
+Taiichi Yuasa (http://www.xslisp.com/)
+  XS: Lisp on Lego MindStorms
+  Memtest program and debug code
+
+Martin Richard and Xavier Fornari (http://www.emn.fr/x-info/lego/)
+  Esterel synchronous programming language
+
+Mike LeSauvage (michael <dot> lesauvage <at> rmc <dot> ca)
+  Utility for LNP communication (lnpmsg, formerly LegOShrink)
+
+Stephan Höhrmann (http://lnphost.sourceforge.net/)
+  Hexdump display routine
+
+Brown.edu (http://www.cs.brown.edu/courses/cs148/old/2004fall/brickos.shtml)
+  lnp_printf
+
+
+bibo is heavily based on brickOS, written by Markus L. Noga.  The following
+lists the other contributers of brickOS.  I did not check, whether their
+contribution is still present in bibo.
+
+
+brickOS contributors
+--------------------
+
+V0.9.0
+_________
+
+
+Bernardo Dal Seno (dibbe@users.sourceforge.net)
+    Patch optimizing checksum calcs for LNP (Original work and final cleanup)
+    Patch fixing race conditions in LNP
+
+Ryan Cumming (bodnar42@users.sourceforge.net)
+    Rediff of LNP checksum patch against 0.2.5
+
+Zhengrong Zang (mikezang@users.sourceforge.net)
+  Remote Control & Standard Message Patch
+  Additional LNP Protocol Description
+
+Ross Crawford (roscohead@users.sourceforge.net)
+  Remote control patch 
+
+Ted Hess (thess@users.sourceforge.net)
+  Blended the best of each of the Remote Control and 
+   LNP Messaging patches resulting in our current 
+   implementation. Also, LCD status fixes
+   
+Joseph Woolley (jawoolley@users.sourceforge.net)
+  Various kernel/task code and comment changes.
+  Minor bug fix in mm_try_join.
+  Added kernel tasks to animate man and show/hide
+   battery indicator.
+
+Stephen M Moraco (stephen@debian.org)
+  Rewrite make system to handle installs and
+  document builds.
+  Upgrade inline documentation in support of our
+  always publishing brickOS API docs to our website.
+
+Evgeni Krimer <krimer at tx.technion.ac.il>
+Roman Barsky <barsky at cs.technion.ac.il>
+(while at Israel Institute of Technology Computer Science Department)
+  Fixes to lib/float/divsf3: Floating point divide single precision routines
+
+and many people testing and submitting fix requests including (but
+not limited to):
+    Michael Obenland, Joseph Woolley, Max Bowsher, and...
+    
+
+V0.2.6
+_________
+
+Hary D. Mahesan  (hdmahesa@engmail.uwaterloo.ca)
+  Patches enabling USB-IR tower support on Windows
+
+Paolo Masetti (paolo.masetti@itlug.org)
+  Added/Updated Cygwin support (B-20 and 1.x)
+
+Stephen M Moraco (stephen@debian.org)
+  Small makelx c++ fix (ctor/dtor alloc), created manpages for dll(1)
+  and firmdl3(1), added inline API documentation extractable by Doxygen
+
+and many people testing and submitting fix requests including (but
+not limited to):
+    Michael Obenland, Joseph Woolley, Max Bowsher, Kingsley Gifford,
+    Mathias N. Kjærgaard, Steve Hassenplug
+
+
+V0.2.5
+_________
+
+Jochen Hoenicke (Jochen.Hoenicke@Informatik.Uni-Oldenburg.DE)
+  Added VELOCITY_X to do velocity sensing with rotation sensors.
+
+Pat Welch (legOS@mousebrains.com)
+  Added full blown C++ support, including all sensors.
+
+Stig Neilsson (spiff@rhk.dk)
+  Extremely thorough kernel documentation.
+
+John Markus Bjorndalen (johnm@cs.uit.no)
+  Small makelx fix for gcc 2.96 (RH 7.0).
+
+V0.2.4
+---------
+Lars Berntzon <lasse@cecilia-data.se>
+        Added a missing wrapper to the C++ support.
+Luis Villa (luis.villa@duke.edu)
+  HOWTO (again), lots of very small fixes.
+Ross Crawford (rcrawford@csi.com)
+  Some assembler fixes to finally allow use of gcc 2.95.
+Eddie C. Dost (ecd@skynet.be)
+  Fixed bss alignment bug and improved lcd_refresh()
+Paolo Masetti (paolo.masetti@itlug.org)
+  Assortment of fixes and adds to dll, dsensor.h, firmdl3
+        and battery.h. More details in NEWS file.
+Rossz Vamos-Wentworth (rossz2@home.com)
+  Work on DJGPP port.
+
+V0.2.3
+---------
+Frank Cremer <frank@holly.demon.nl>
+        Better handling of re-sent packets in program downloads.
+
+Martin Cornelius <Martin.Cornelius@t-online.de>
+        Fixed collision handling in lnp-logical.c.
+        Initiated a useful sound driver at last.
+
+V0.2.2
+---------
+Frank Cremer <frank@holly.demon.nl>
+        Patch to shutdown motor/sensor/networking with the RUN button.
+  Found typing inconsistency in sensor code.
+  Reported hanging lnp_logical_write call.
+  Reported never ending story (rotation sensor problems)
+
+
+V0.2.1
+--------
+Sergey Ivanyuk <modemch@eventsdigital.com>
+        Found ON/OFF button bug in program module.
+
+Dave <froods@alphalink.com.au>
+        Found naming inconsistency in dsound.h
+
+Kekoa Proudfoot <kekoa@pixel.stanford.edu>
+        Floating point math
+
+
+V0.2.0
+--------
+Mark Falco <falcom@dialogic.com>
+Mario Ferrari <mario.ferrari@edis.it>
+        Rotation sensor fixes
+
+Frank Mueller <mueller@informatik.hu-berlin.de>
+        Touch sensor values
+
+Kekoa Proudfoot <kekoa@pixel.stanford.edu>
+        IR carrier setup
+
+
+Snapshot
+--------
+Tom Emerson <temerson@spyglass.com>
+        PDF documentation
+
+Lou Sortman <lou (at) sunsite (dot) unc (dot) edu>
+        Motor speed patch
+        Priority chain task model
+
+Luis Villa <liv@duke.edu>
+        HOWTO
+
+
+V0.1.7
+------
+Lou Sortman <lou (at) sunsite (dot) unc (dot) edu>
+        Optimized rotation sensor code with compile-time shifts
+
+David Van Wagner <davevw@alumni.cse.ucsc.edu>
+        Found inconsistencies in conditional defines
+        Pointed out problems with defines in assembler statements
+        For an example how to use those correctly, see systime.c
+
+Kekoa Proudfoot <kekoa@graphics.stanford.edu>
+        Integer math routines.
+
+V0.1.6
+------
+Michael Nielsen <mic@daimi.aau.dk>
+        Fixed sound driver IRQ bug
+
+Chris Dearman <chris@algor.co.uk>
+        Fixed the ugly volatile problem in the IR code
+
+Eric Habnerfeller <ehaberfe@atitech.ca>
+        Fixed rotation sensors with window-based approach
+
+
+V0.1.0
+------
+Ben Laurie <ben@algroup.co.uk>
+  Added Priority-based scheduler
+

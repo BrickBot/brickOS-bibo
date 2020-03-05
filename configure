@@ -1,0 +1,147 @@
+#!/bin/sh
+# $Id: configure 890 2009-04-21 17:14:44Z hoenicke $
+#
+# Generator for brickOS host-OS-dependend Makefile variables
+#
+# 15.10.02    -    Version 1.0        M. Obenland
+#                        obenland@t-online.de
+#
+# 21.10.02    -    Version 1.0    Updates      S. Moraco
+#                        stephen@debian.org
+#
+# 31.10.02  -  Version 1.0a Changed name separation routine
+#                           to use dirname / basename to handle
+#                           'gcc' in pathname    M. Obenland
+#                           obenland@t-online.de
+#
+# 01.06.03  -  Version 1.10 Changed array of search paths to a list
+#                           for compatibility with POSIX /bin/sh
+#                           F. Gifford fgiff@users.sourceforge.net
+#
+
+echo ""
+echo "Welcome to the brickOS Makefile configurator."
+echo "Attempting to find the Hitachi gcc compiler. (This may take some time.)"
+echo ""
+
+#
+#  check for known files in known locations, first,
+#    so can avoid expensive search
+#
+#   known PATHs in which h8*gcc may be found
+TOOL_PATH="/usr/local/bin
+           /usr/bin
+           /usr/local/brickos/bin
+           /usr/local/lego/bin
+           /usr/local/rcx/bin
+           /usr/local/h8300-hms/bin
+           /usr/h8300-hitachi-hms/bin
+           /usr/local/crossgcc/h8300-hitachi-hms/bin"
+
+#   known PREFIXs of h8*gcc
+TOOL_PREFIX="h8300-hms-
+             h8300hms-
+             h8300-hitachi-hms-
+             h8300-hitachi-coff-"
+
+HMSFULL=""
+#  for each path, do...
+for TOOL_PATH_CANDIDATE in $TOOL_PATH
+do
+  #  for each basename prefix. do...
+  for TOOL_PREFIX_CANDIDATE in $TOOL_PREFIX
+  do
+    GCCBASE="$TOOL_PATH_CANDIDATE/${TOOL_PREFIX_CANDIDATE}gcc"
+    #echo "(DBG)Testing GCCBASE=[$GCCBASE]"
+    #  for each suffix (.exe and empty str), do...
+    for EXT in ".exe" ""
+    do
+      GCCFSPEC="${GCCBASE}$EXT"
+      if test -f "$GCCFSPEC"
+      then
+        HMSFULL="$GCCFSPEC"
+        break  #  have answer, exit inner loop
+      fi
+    done
+    if test -n "$HMSFULL"
+    then
+      break  #  have answer, exit middle
+    fi
+  done
+  if test -n "$HMSFULL"
+  then
+    break  #  have answer, exit outer loop
+  fi
+done
+
+#
+#  if didn't find in expected location...
+#   search filesystem for full name of hitachi gcc compiler and path
+#
+#  This can be quite harmful. Uncomment if you really want it.
+#if test -z "$HMSFULL"
+#then
+#  HMSFULL=`find / -type f \( -name 'h8*gcc' -o -name 'h8*gcc.exe' \) -print`
+#fi
+
+#
+# if no compiler is found, exit
+#
+if test -z "$HMSFULL"
+then
+   echo "No hitachi gcc compiler found, please install compiler or edit" \
+		"the configure script and try again."
+   exit 1
+fi
+
+#
+# CrossToolPrefix is full path and compiler name without 'gcc'
+#
+DIRNAME=`dirname $HMSFULL`
+BASENAME=`basename $HMSFULL`
+
+CROSSTOOLPREFIX=$DIRNAME/`echo $BASENAME | sed "s/gcc.*//"`
+
+echo " - CrossToolPrefix = "$CROSSTOOLPREFIX
+
+#
+#  look for .exe in the compiler name. This indicates Windows environment
+#   which means that CYGWIN or DJGPP toolset is being used
+#
+case "$HMSFULL" in
+*.exe)
+       echo " - Found Cygwin/DJGPP system"
+       SED_SFLAG=1
+       EXT=.exe
+       CC=gcc
+       CFLAGS="-D_WIN32 -O2 -Wall"
+       CFLG_PE='+'
+       ;;
+
+*)
+       echo " - Found Linux/Unix system"
+       SED_SFLAG=""
+       EXT=""
+       CC=gcc
+       CFLAGS="-O2 -Wall"
+       CFLG_PE=""
+       ;;
+esac
+echo ""
+
+MAKEDEPEND="\$(CC) -M"
+BRICKOS_ROOT=`pwd`
+
+CURR_MAKEFILE=Makefile.common
+NEW_MAKEFILE=${CURR_MAKEFILE}.new
+PRIOR_MAKEFILE=${CURR_MAKEFILE}.bak
+
+cat > Makefile.config <<EOF
+CROSSTOOLPREFIX=$CROSSTOOLPREFIX
+SED_SFLAG=$SED_SFLAG
+EXT=$EXT
+CC=\$(TOOLPREFIX)$CC
+CFLAGS+=$CFLAGS
+EOF
+
+exit 0

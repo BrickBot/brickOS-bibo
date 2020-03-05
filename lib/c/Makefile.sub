@@ -1,0 +1,22 @@
+### ==========================================================================
+###  $Id: Makefile.sub 893 2009-04-21 17:24:04Z hoenicke $
+###  FILE: lib/c/Makefile.sub - make the c library
+###  bibo - another LEGO Mindstorms OS
+### --------------------------------------------------------------------------
+
+LIBCSRC:= memcpy.c memset.c strcmp.c strcpy.c strlen.c random.c \
+          calloc.c printf.c
+
+DISTFILES += $(patsubst %,lib/c/%, Makefile.sub $(LIBCSRC))
+
+LIBRARIES+=lib/libc.a
+LIBCOBJS=$(LIBCSRC:%.c=lib/c/%.o)
+
+clean::
+	rm -f lib/c/*.d lib/c/*.o
+realclean::
+	rm -f lib/c/*~ lib/c/*.bak lib/c/tags
+
+lib/libc.a: $(LIBCOBJS)
+	rm -f $@
+	$(CROSSAR) -sq $@ $^

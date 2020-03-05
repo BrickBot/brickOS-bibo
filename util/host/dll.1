@@ -1,0 +1,144 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH dll 1 "May  12, 2002" "brickOS" "brickOS Utility"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" ---------------------------------------
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.\" ---------------------------------------
+.SH NAME
+dll \- A user-program downloader for the RCX.
+.\"
+.SH SYNOPSIS
+.B dll
+.RI [ options ] " command | {file}.lx"
+.\"
+.SH DESCRIPTION
+This manual page documents the
+.B dll
+user-program download command.
+.P
+\fBdll\fP is a program which is used to download user programs
+written for brickOS to the RCX.
+.P
+.\"
+.SH OPTIONS
+This program follows the usual GNU command line syntax, with long
+options starting with two dashes (`-').
+The options supported by \fBdll\fP are:
+.TP
+.B (run with no parms)
+Show built-in help (summary of options)
+.TP
+.B \-e, \-\-execute
+Execute program after download.
+.TP
+.B \-i{0|1}, \-\-irmode={0|1}
+Set IR mode (on RCX) to near(0) or far(1)
+.TP
+.B \-p{1-8}, \-\-program={1-8}
+Download program to program-slot-number {1-8}
+.br
+.sp
+NOTE: LegOS supports 8 program slots where the Mindstorms original firmware only supports 5.
+.TP
+.B \-r{hostaddress}, \-\-rcxaddr={hostaddress}
+Send to RCX LNP at host address {0-15}.  Default is 0. See also \--node={hostaddress}
+.TP
+.B \-s{srcport}, \-\-srcport={srcport}
+Send to RCX LNP source port {0-15}
+.TP
+.B \-t{ttydevice} \-\-tty={ttydevice}
+Specify serial tty device where IR tower is connected.
+.br
+.sp
+NOTE: The environment variable RCXTTY may be used in place of \-tty
+.TP
+.B \-v, \-\-verbose
+Enable verbose output
+.\"
+.SH COMMANDS
+.TP
+.B \-d{1-8}, \-\-delete={1-8}
+Delete program from program-slot-number {1-8}
+.TP
+.B \-n{hostaddress}, \-\-node={hostaddress}
+Set RCX LNP host address to {0-15}
+.\"
+.SH ENVIRONMENT VARIABLES
+.B dll
+will respond to the environment variable RCXTTY.  This should be
+set to the serial device to which the IR tower is connected.  Use of
+RCXTTY is equivalent the using the -tty command-line option.
+.\"
+.SH EXAMPLES
+.B dll
+is a simple command to use.  The following examples show most of the uses.
+.P
+\fBEx1:\fP download demo/robots.lx to the RCX as program 0.
+.sp
+.nf
+   $ dll -tty=/dev/ttyS0 demo/robots.lx
+   $
+.fi
+.br
+.sp
+NOTE: there is no response from dll(1) on a successful download.  You can, however
+watch the RCX display during the download and see activity.
+.P
+\fBEx2:\fP download the demo/linetrack.lx into program-slot 7. (note we are first
+setting RCXTTY so we don't have to keep specifying the tty device each download).
+.sp
+.nf
+   $ export RCXTTY=/dev/ttyS1
+   $ dll -p7 demo/linetrack.lx
+   $
+.fi
+.P
+\fBEx3:\fP download demo/rover.lx but we are leaving the RCX powered off
+(assume RCXTTY is already set).
+.sp
+.nf
+   $ dll -p2 demo/rover.lx
+   error deleting program
+   $
+.fi
+.sp
+NOTE: \fBdll\fP first deletes the existing program from the specified
+program slot and then downloads the new one.  This error indicates that
+the first thing \fBdll\fP tried to do did not succeed.
+.P
+We'll leave the experiment of running \fBdll\fP with --verbose
+set as an exercise for you our reader... (This is actually a combination
+of progress infromation and debug ouput.)
+.\"
+.SH ERROR MESSAGES
+Unfortunately, there is basically only one dll error message, and it
+applies to most possible errors, including a disconnected IR tower,
+an RCX that is turned off, an RCX that doesn't have brickOS, and an
+RCX that has brickOS and is already running a program.
+So, check all those things when dll fails.
+.\"
+.SH SEE ALSO
+.BR firmdl(1)
+.\"
+.\"
+.SH AUTHOR
+\fBdll was written by:\fP Markus L. Noga.
+.P
+Addiitonal Contributor(s): everyone discussing LNP at LUGNET
+.P
+This manual page was written by Stephen M Moraco <stephen@debian.org>,
+for the Debian GNU/Linux system (but may be used by others).
+

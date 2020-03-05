@@ -1,0 +1,112 @@
+### -*- Makefile -*-==========================================================
+###  $Id: Makefile.user 606 2007-11-14 22:02:48Z hoenicke $
+###  FILE: Makefile.user - support for building programs run under brickOS
+###  bibo - another LEGO Mindstorms OS
+### --------------------------------------------------------------------------
+###       (this file is included by the  demo/ and demo/c++  Makefiles)
+
+all::
+
+#  User application libraries. Comment out if linking
+#  them statically to kernel in Makefile.kernel.
+CROSSLIBS = -lc -lmint -lfloat -lc++
+
+#  Linker command files dynamic executables.
+DYNAMIC_LDS = $(KERNEL).lds
+DLDFLAGS    = -T $(DYNAMIC_LDS) -relax -L$(LIBDIR)
+
+#  Base addresses to determine relocation info.
+BASE1_DEFAULT = 0xb000
+BASE2_DEFAULT = 0xb210
+
+BASE1 = 0xb000
+BASE2 = 0xb210
+
+# Use precedence ordering for obtaining BASE1 and BASE2 values:
+# $(BASEx) value from $(DYNAMIC_LDS) file, $(BASEx), and then $(BASEx)_DEFAULT
+GET_BASE_FROM_FILE = $(shell [ -e $(2) ] && cat $(2) | grep -E ^$(1)[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$ | sed s/$(1)[[:space:]]*=[[:space:]]*// )
+GET_BASE = $(or $(call GET_BASE_FROM_FILE,$(1),$(DYNAMIC_LDS)),$($(1)),$($(1)_DEFAULT))
+
+# Empty if the base has not changed, new base value if it has changed
+BASE_CHANGED = $(if $(findstring $(call GET_BASE_FROM_FILE,$(1),Makefile.user),$(call GET_BASE,$(1))),,$(call GET_BASE,$(1)))
+
+LIBDIR?=lib
+
+############ new dynamic executables stuff
+#  How to build executables dynamically linked to the kernel 
+#  Set DYNAMIC_TEXT, DOBJECTS, DYNAMIC_LDS appropriately.
+
+%.dcoff: %.o %.a $(DYNAMIC_LDS)
+	$(CROSSLD) $(DLDFLAGS) $*.o $*.a $(CROSSLIBS) -o $@ -Ttext $(call GET_BASE,BASE1) --oformat coff-h8300
+
+#  How to make barebones dymanic executable map files
+%.dmap: %.dcoff
+	$(CROSSNM) $< | sort > $@
+
+#  How to disassemble coff kernel
+%.dis: %.dcoff
+	$(CROSSOBJDUMP) $(ODFLAGS) $*.dcoff > $@
+
+#  How to merge map files with symbols
+%.dis2: %.dmap %.dis
+	$(MERGEMAP) $*.dmap $*.dis > $@
+
+
+# how to assemble
+%.o: %.s
+	$(CROSSAS) $< -o $@
+
+# how to compile hitachi assembler source
+%.o: %.S
+	$(CROSSCC) -MD $(CROSSCFLAGS) -c $< -o $@
+
+# how to compile hitachi C source
+%.o: %.c
+	$(CROSSCC) -MD $(CROSSCFLAGS) -c $< -o $@
+
+%.s: %.c
+	$(CROSSCC) $(CROSSCFLAGS) -S $< -o $@
+
+# how to compile hitachi C++ source
+%.o: %.cpp
+	$(CROSSCXX) $(CROSSCXXFLAGS) -c $< -o $@
+
+# how to compile hitachi C++ source
+%.o: %.C
+	$(CROSSCXX) $(CROSSCXXFLAGS) -c $< -o $@
+
+# how to compile hitachi Esterel source (use Automaton mode by default [smallest generated code footprint])
+%.c: %.strl
+	esterel -D $(@D) -ALego $<
+
+
+#  How to make archive for extra object files
+#$(PROGRAMS:%.lx=%.a): %.a: $(filter %.o,$(%_SRC:%.c=%.o) $(%_SRC:%.cpp=%.o) $(%_SRC:%.s=%.o) $(%_SRC:%.S=%.o))
+#.SECONDEXPANSION:
+#%.a: %.o $$($$(notdir $$*)_OBJS)
+%.a: _SRC_OBJS = $(filter %.o, $($(notdir $*)_SRC:%.c=%.o) \
+        $($(notdir $*)_SRC:%.cpp=%.o) $($(notdir $*)_SRC:%.s=%.o) $($(notdir $*)_SRC:%.S=%.o))
+%.a: %.o
+	rm -f $@
+	$(CROSSAR) -sq $@ $^ $(_SRC_OBJS)
+
+#  How to make coff files of dynamic executables (twice, for makelx)
+%.dc1: %.o %.a $(CROSSLIBS:-l%=$(LIBDIR)/lib%.a) $(KERNEL).lds
+	$(CROSSLD) $(DLDFLAGS) $*.o $*.a $(CROSSLIBS) -o $@ --oformat coff-h8300 -Ttext $(call GET_BASE,BASE1)
+
+%.dc2: %.o %.a $(CROSSLIBS:-l%=$(LIBDIR)/lib%.a) $(KERNEL).lds
+	$(CROSSLD) $(DLDFLAGS) $*.o $*.a $(CROSSLIBS) -o $@ --oformat coff-h8300 -Ttext $(call GET_BASE,BASE2)
+
+#  How to make srec files from coff files (twice, for makelx)
+%.ds2: %.dc2
+	$(CROSSOBJCOPY) -I coff-h8300 -O symbolsrec $< $@
+
+%.ds1: %.dc1
+	$(CROSSOBJCOPY) -I coff-h8300 -O symbolsrec $< $@
+
+%.lx: %.ds1 %.ds2 $(MAKELX)
+	$(MAKELX) $*.ds1 $*.ds2 $@
+
+### --------------------------------------------------------------------------
+###                          End of FILE: Makefile.user
+### ==========================================================================

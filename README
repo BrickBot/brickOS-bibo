@@ -1,0 +1,113 @@
+====================
+ bibo isn't brickOS
+====================
+
+Bibo is a brickOS clone; the kernel was written from scratch to give better
+performance.  From the side of the average brickOS programmer not much should
+change.  There is a lot of code borrowed from brickOS.
+
+This software will run on Linux and Windows (using the Cygwin tool suite.)
+
+To start with brickOS:
+
+- Type ./configure. Environment should be autodetected (hopefully).
+- Type make. Utilities, libraries, a default kernel and some demos will
+  be made.
+- Type make install.  You can change the destination directory by
+  editing prefix in Makefile.config.
+- Be sure to add ${prefix}/bin to your PATH. Set RCXTTY if you use a non-
+  standard port for the IR tower. Use firmdl3 to download boot/brickOS.srec
+  to your RCX.
+- Type "dll demo/helloworld.lx". If all is well, it should be automatically
+  relocated and transmitted to program slot 1. Press the RUN key to run. The
+  program stops automatically.
+- Type "dll -p2 demo/rover.lx" to transmit another demo to program slot 2.
+  Use the PRGM key to select the desired program. Try RUN.
+
+- Stop your program with the RUN or ON/OFF key. Programs are preserved over
+  ON/OFF.  Press ON/OFF and VIEW simultaneously to erase brickOS.
+
+If things don't quite work, work at it.
+
+For your own projects,
+
+- Make a directory in the brickOS root directory.
+- Copy /usr/local/brickos/lib/bibo/Makefile.
+- Put your main routine into myproject.c. (.C if using C++)
+- If you need more source files, add them in the Makefile.
+- "make myproject.lx && dll myproject.lx".
+
+In case anyone is wondering, dll is short for dynamic linker and loader.
+
+For more documentation, see in docs on the web at
+
+http://hoenicke.ath.cx/rcx/bibo.html
+
+or send me an email (you can find my address on the web page).
+
+------------------------------------------------------------------------
+bibo Copyright (C) 2007 by Jochen Hoenicke
+legOS/brickOS Copyright (C) 1998-2005 by Markus L. Noga
+
+
+=================================================================
+
+USB support on Linux for bibo / brickOS
+---------------------------------------
+
+USB support for IR Towers is now working for Linux and 
+Windows (using the Cygwin tool suite.)
+
+This file describes the Linux environment setup
+
+Recognition of the LEGO USB Infrared Tower is now built into the
+2.6.x Linux Kernels.
+
+When you plug the USB IR Tower into a USB port the device will
+automatically be connected.
+
+I have usbutils installed which provides 'lsusb'. In my case
+lsusb shows the following when I have the IR Tower connected:
+
+   $ lsusb
+   Bus 004 Device 001: ID 0000:0000
+   Bus 003 Device 001: ID 0000:0000
+   Bus 002 Device 001: ID 0000:0000
+   Bus 001 Device 002: ID 0694:0001 Lego Group Mindstorms Tower
+   Bus 001 Device 001: ID 0000:0000
+
+I had to create my device file with something like:
+
+	sudo mknod /dev/usb/legotower0 c 180 160
+    sudo chmod 666 /dev/usb/legotower0
+
+To use the Tower then, I set RCXTTY to point to it:
+
+	export RCXTTY=/dev/usb/legotower0
+
+And then I use firmdl3 and dll just as before.
+
+- to load brickos
+	- reset RCX removing prior brickOS firmware
+	  (press and hold [Prgm] and simultaneously press [On-Off] to
+	   turn the power off and then press [On-Off] to turn the
+	   power back on. You should hear the two startup beeps 
+	   indicating that you are now running original firmware, not
+	   brickOS.)
+	- run the OS downloader
+		$ firmdl3 /usr/local/lib/brickos/brickOS.srec
+
+- to load a program into slot 2
+	- assuming you build the demos in the current directory, run
+        $ dll -p2 sound.lx
+	  you should see the standing-man and 2 indicating that the
+	  download was successful.
+
+	  Now press [Run] to play the song...
+
+I hope this works for you. Please report issues with the USB support
+per the instructions found at http://brickos.sourceforge.net/rptrvwbugs.htm
+
+
+------------------------------------------------------------------------
+Stephen M Moraco (stephen@debian.org) - Mon, 17 Jan 2005 20:18:52 -0700

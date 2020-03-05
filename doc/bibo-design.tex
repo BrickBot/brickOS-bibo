@@ -1,0 +1,228 @@
+\documentclass[twocolumn]{article}
+\begin{document}
+  \title{Introduction to the bibo kernel}
+  \author{Jochen Hoenicke}
+  \maketitle
+
+  \tableofcontents
+
+  \section{Task Management}
+
+  \subsection{Priorities}
+  
+  The bibo kernel contains a priority based scheduler.  The following
+  table shows the priorities ordered by highest priority first.
+  
+  \begin{center}
+    \begin{tabular}{|c|}
+      \hline
+      Interrupts \\
+      Handlers \\
+      \hline
+      \tt PRIO\_HIGHEST \\
+      $\vdots$ \\
+      \tt PRIO\_LOWEST \\
+      \hline
+      Idle thread\\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  Tasks with higher priority always preempt tasks with lower priority.
+  Tasks with the same priority have to cooperate by calling yield().  Tasks
+  with lower priority are only executed when all tasks with a higher priority
+  are waiting.
+  
+  Interrupts can preempt all code, even code that locks the kernel.  Therefore
+  they must not call functions like \verb|malloc|/\verb|free|, \verb|wakeup|,
+  etc.  The only safe function is \verb|enqueue_handler_irq|.  This function
+  enqueues a handler that will run as soon as the interrupt is finished and
+  the kernel lock is released.  Interrupts can run in any task context; hence
+  they should not use much stack.
+  
+  Handlers are short functions that run with the second highest priority.
+  They cannot preempt each other; they run sequentially.  Handlers do
+  not preempt code that locks the kernel.  Instead they are delayed until the
+  kernel lock is released.  The effect is that locked code runs on the same
+  priority as handlers.  Handlers always run in the idle task and have their
+  own stack space.
+
+  You can register handlers for various purposes.  For example
+  \verb|lnp_addressing_set_handlers()| can be used to register
+  a handler that is called whenever a lnp packet is received.  
+
+  \subsection{Kernel Lock}
+
+  For atomic operations you should grab the global kernel lock, with
+  \verb|grab_kernel_lock()| and release it afterwards with
+  \verb|release_kernel_lock()|.  While you grab the lock, your process is
+  given the handler priority.  Hence, no task switch can occur and no handler
+  can be called.  The kernel lock can be nested: it is safe to call a function
+  the grabs the kernel lock even if you have already grabbed it yourself.
+
+  Because interrupts preempt code that locked the kernel you cannot grab the
+  lock from an interrupt.  However, it is perfectly fine for handlers; it is
+  not necessary though as handlers always hold the lock.  You can do almost
+  anything in handlers except calling \verb|wait| or a function that uses
+  \verb|wait| like the \verb|lnp_XXX_write| routines.
+
+  The following functions must always be called with grabbed kernel lock.
+
+  \begin{center}
+  \begin{tabular}{|c|}
+    \hline
+    \verb|add_timer|, \verb|remove_timer|,  \\
+    \verb|add_to_waitqueue|, \verb|remove_waitqueue|, \\
+    \verb|wait|, \verb|wait_timeout|, \\
+    \verb|wakeup_single|, \verb|wakeup|\\
+    \hline
+  \end{tabular}
+  \end{center}
+  
+  Many functions use kernel locks internally:
+  \begin{quote}
+    \verb|malloc|, \verb|free|,
+    \verb|sem_wait|, \verb|sem_trywait|, \verb|sem_post|
+    \verb|execi|, \verb|msleep|, \verb|yield|
+  \end{quote}
+
+  \subsection{Wait Queues}
+
+  A process that waits for an event should do the following: First grab
+  the kernel lock. This should prevent that the event occurs before it is
+  ready waiting for it.  Then check if the event has not yet occured.  
+  Register the process on the wait queues, call \verb|wait()| or
+  \verb|wait_timeout()|, and remove process from all wait queues afterwards.
+  Finally release kernel lock.  Here is the pseudo code:
+
+  \begin{verbatim}
+waitqueue_t entry[2];
+grab_kernel_lock();
+if (event_has_not_occured()) {
+   add_to_waitqueue(&queue1, &entry[0]);
+   add_to_waitqueue(&queue2, &entry[1]);
+
+   wait();
+
+   remove_from_waitqueue(&entry[0]);
+   remove_from_waitqueue(&entry[1]);
+}
+release_kernel_lock();
+\end{verbatim}
+
+  To wake up tasks on a wait queue you can just run \verb|wakeup| or
+  \verb|wakeup_single|.  This function must be called with grabbed kernel
+  lock.  Normally, it is invoked from a handler.
+
+  \subsection{Timers}
+  
+  Timers invoke handler functions after a few milli seconds.  This handler
+  function may also reschedule its timer to be called periodically.  Like all
+  handlers they run with handler priority on the idle. The following timer
+  functions methods must be called with grabbed kernel lock.
+
+  The function \verb|add_timer(delay, timer)| adds a timer to be scheduled
+  after \verb|delay| milli seconds.  The members \verb|code| and \verb|data|
+  must be set appropriately.  All other members are filled by
+  \verb|add_timer|.
+  
+  The function \verb|remove_timer(timer)| removes a timer.  It is guaranteed
+  that the timer will not be scheduled after this call.
+
+  The function \verb|get_timer_count(timer)| can be used to check whether a
+  timer is running and how long it will take to be scheduled.
+
+  When a timer handler is called the timer is already dequeued from the timer
+  list.  The timer can be added by the handler, again, to implement periodic
+  behaviour.
+
+
+  \subsection{Internals}
+
+  Whenever an interrupt is about to finish, it checks if an handler was
+  enqueued or we need to reschedule a different process.  This is remembered
+  in the high bit of \verb|kernel_lock|.  In that case, the idle thread is
+  activated by \verb|tm_switcher(&td_idle)|.  The idle thread runs all
+  handlers that are enqueued.  Then it activates the first thread on the run
+  queue, which is always the thread with highest priority.  If there is no
+  thread on the run queue the idle thread issues the \verb|sleep| instruction.
+
+  The \verb|kernel_lock| is a single 8 bit variable.  The highest bit is
+  normally set.  It gets cleared when handlers are enqueued or a new task is
+  to be scheduled.  The variable is increased by \verb|grab_kernel_lock()|.
+  This will tell the interrupts that the kernel is locked and no task switch
+  to idle thread should occur.  The macro \verb|release_kernel_lock()|
+  decreases the variable and checks for zero.  If it is zero, the lock was
+  released completely and there are handlers enqueued or a task switch
+  requested.  Therefore the macro switches to the idle thread by invoking
+  \verb|tm_switch_handlers()|.  The idle thread will take care of running
+  handlers and scheduling a new task.
+
+  The active timers are kept on a linked list sorted by activation time.  The
+  activation delay of the first timer is held in a global variable.  The
+  global time interrupt \verb|secondary_handler|, which is triggered by
+  \verb|OCIB| decrements this variable.  When the variable gets zero, the
+  \verb|run_timers| handler is enqueued.  This handler calls all timer
+  handlers that have expired and removes them from the list.
+
+  \section{Semaphores}
+  The bibo kernel provides the classical semaphore operations invented by
+  Dijkstra.  The names of the operations mostly follow the POSIX 1003.1b
+  standard.  The semaphore is a shared counter that can be used for
+  synchronisation of parallel processes.  The \verb|sem_wait| function waits
+  until the counter gets non-zero and atomically decreases it.  The
+  \verb|sem_post| operation atomically increases the counter and, if it was
+  zero, wakes up the process with highest priority waiting for the semaphore.
+  Furthermore there is the non-blocking \verb|sem_trywait| methods that works
+  just like \verb|sem_wait| but return an error if the semaphore is zero
+  instead of blocking.  The \verb|sem_getvalue| operation returns the current
+  value of the semaphore counter.
+
+  \section{Memory Manager}
+  The bibo kernel supports dynamic memory via standard \verb|malloc()| and
+  \verb|free()| calls.  It uses a very simple \emph{first fit} algorithm and
+  provides no mechanism to avoid memory fragmentation.  When a block is freed
+  it merges it with adjacent free blocks.  All memory blocks are word aligned
+  and rounded up to an even size.  The overhead of the memory manager
+  structures is two words (four bytes) per memory block.
+
+  The memory blocks are all on a large linked list.  A memory block starts
+  with the following header:
+  \begin{center}
+  \begin{tabular}{r|ll|}
+    \cline{2-3}
+    0: & previous block & (only if previous free)\\
+    \cline{2-3}
+    2: & next block  &(bit 0: prev free)   \\
+    4: & owner &(0 for free block) \\
+    \cline{2-3}
+    6: & next free block & (only if this free)\\
+    \cline{2-3}
+  \end{tabular}
+  \end{center}
+  The previous block pointer is only present if the previous block is free.
+  It points to the header of the previous block. This is used by \verb|free()|
+  to quickly merge adjacent free blocks.  If the previous block contains data,
+  this data will use this field and it must not be touched.
+
+  The next block pointer contains a pointer to the next memory block, which
+  can be free, used or reserved.  Thus the memory blocks form a linked
+  list. The list is always kept sorted by block address. The lowest bit of the
+  address is always zero, so we can reuse this bit for other purposes.  We
+  store whether the previous block is free.
+
+  The owner field contains the thread id of the owner.  It is \verb$0$ for
+  free blocks and \verb$0xffff$ for reserved blocks.  This field is used to
+  clean up orphaned memory when a thread is killed.
+
+  The next free block field points to the next free block, but only if the
+  current block is free.  Thus the free blocks form another singly linked list
+  that is a sub list of the list of all memory blocks.  The list is always
+  kept sorted by block address.  If the block is used this field contains the
+  first word of the payload data.
+
+  For used blocks the memory header has only two words storage overhead.  The
+  other fields contain payload data of this or the previous block.  This makes
+  the minimum size of the payload 2 words.  If a smaller block was requested
+  it will be rounded up to this size.
+\end{document}

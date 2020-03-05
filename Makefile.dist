@@ -1,0 +1,64 @@
+### ==========================================================================
+###  $Id$
+###  FILE: Makefile.dist - make the Lego Programs
+###  bibo - another LEGO Mindstorms OS
+### --------------------------------------------------------------------------
+
+# installation paths
+
+# name for the brickOS kernel
+KERNEL = $(DATADIR)/bibo
+
+SOURCES?=helloworld.c
+
+PROGRAMS?=$(filter %.lx, $(SOURCES:%.c=%.lx) $(SOURCES:%.cpp=%.lx) \
+        $(SOURCES:%.s=%.lx) $(SOURCES:%.S=%.) \
+        $(SOURCES:%.strl=%.lx) )
+
+# extra dynamic sources  - program name (e.g. helloworld.c/.cpp) is always assumed
+helloworld_SRC?= 
+
+COPT   = -g -Os -fno-builtin -fomit-frame-pointer
+CWARN  = -Wall
+CINC   = -I$(INCLUDEDIR)
+CFLAGS = $(COPT) $(CWARN) $(CINC)
+CROSSCFLAGS=$(COPT) -mquickcall $(CWARN) $(CINC) $(CDEFINES)
+CROSSCXXFLAGS=-DCXX -fno-rtti -fno-exceptions $(CROSSCFLAGS)
+
+CROSSAS=$(CROSSTOOLPREFIX)as
+CROSSAR=$(CROSSTOOLPREFIX)ar
+CROSSLD=$(CROSSTOOLPREFIX)ld
+CROSSNM=$(CROSSTOOLPREFIX)nm
+CROSSOBJCOPY=$(CROSSTOOLPREFIX)objcopy
+CROSSOBJDUMP=$(CROSSTOOLPREFIX)objdump
+CROSSCC= $(CROSSTOOLPREFIX)gcc
+CROSSCXX= $(CROSSTOOLPREFIX)g++
+MAKELX=$(BINDIR)/makelx
+
+
+include $(DATADIR)/Makefile.user
+
+
+all:: $(PROGRAMS) 
+
+TAGS:
+	-etags *.c $(DATADIR)/include/*.h ../include/*/*.h 
+
+clean::
+	rm -f *.o *.dis *.dis2 *.s *.ds1 *.ds2 *.dmap *.dcoff 
+	rm -f *.srec *.coff
+
+realclean:: clean
+	rm -f *~ *.bak *.lx *.a TAGS
+
+.PHONY: all clean realclean
+
+# depencencies
+#
+SRC = $(foreach $prog,$(PROGRAMS:%.lx=%),$($(prog)_SRC))
+OBJS = $(filter %.o,$(SRC:%.c=%.o) $(SRC:%.cpp=%.o) $(SRC:%.s=%.o) $(SRC:%.S=%.o) $(SRC:%.strl=%.o) )
+-include $(PROGRAMS:%.lx=%.d) $(OBJS:%.o=%.d)
+
+### --------------------------------------------------------------------------
+###                          End of FILE: demo/Makefile
+### ==========================================================================

@@ -1,0 +1,71 @@
+### ==========================================================================
+###  $Id: Makefile.sub 606 2007-11-14 22:02:48Z hoenicke $
+###  FILE: xs/lisp/Makefile.sub - make xs
+###  bibo - another LEGO Mindstorms OS
+### --------------------------------------------------------------------------
+
+#UTIL=$(XSROOT)util/dll-src/
+#UTILOBJS=ircom.o $(UTIL)rcxtty.o $(UTIL)keepalive.o $(UTIL)lnp.o
+
+UTILINCDIR = util/include
+COMMDIR = util/host
+COMMOBJS = $(COMMDIR)/rcx_comm.o $(COMMDIR)/lnp.o $(COMMDIR)/lnp-logical.o
+
+XS_STACKSIZE=1024
+#STACKSIZE=512
+
+#OPTIONS=-DDEBUG
+#OPTIONS=-DLISTLIB
+OPTIONS=
+
+XSTARGET     = xs$(EXT)
+XSHOSTTARGET = xs-host$(EXT)
+XSRCXTARGET  = xs-rcx$(EXT)
+XSIRTARGET   = xs-ir$(EXT)
+
+# XSSRC   = front.c eval.c wtobj.c test.c errmsg.c
+XSFRONT = xs/lisp/front.c
+XSEVAL  = xs/lisp/eval.c
+XSFILES = wtobj.c test.c rcxtest.c errmsg.c object.h include.h
+XSSRC  := $(XSFILES:%=xs/lisp/%)
+
+DISTFILES += xs/lisp/Makefile.sub $(XSFRONT) $(XSEVAL) $(XSSCR)
+
+XSBIN = $(XSTARGET:%=xs/%) $(XSHOSTTARGET:%=xs/%) $(XSRCXTARGET:%=xs/%) $(XSIRTARGET:%=xs/%)
+XSLX = xs/eval-ir.lx
+
+#NATIVEOBJS += $(XSOBJS)
+
+#all: ircom.o xs$(EXT) xs-ir$(EXT) xs-host$(EXT) xs-rcx$(EXT) eval-ir.lx eval-host$(EXT) eval-rcx.lx
+all:: $(XSBIN) $(XSLX)
+
+clean::
+	rm -f xs/lisp/*.d xs/lisp/*.o xs/lisp/*.a
+	rm -f xs/lisp/*.dc1 xs/lisp/*.dc2
+	rm -f xs/lisp/*.ds1 xs/lisp/*.ds2
+	rm -f xs/lisp/xsout-rcx xs/lisp/xsout-host
+	rm -f xs/lisp/eval-ir.lx
+
+realclean::
+	rm -f $(XSBIN) $(XSLX)
+
+#ircom.o: ircom.c
+#	$(CC) -o ircom.o -c ircom.c -O2 -Wall -O2 -Wall -I$(UTIL) -I$(XSROOT)include/lnp
+
+xs/$(XSTARGET): $(XSFRONT) $(XSEVAL) $(XSSRC)
+	$(CC) -o $@ $(XSFRONT) $(XSEVAL) -DJOINT -DONLINE -DSTACKSIZE=$(XS_STACKSIZE) $(OPTIONS)
+
+xs/$(XSHOSTTARGET): $(XSFRONT) $(XSSRC)
+	$(CC) -o $@ $< $(OPTIONS)
+
+xs/$(XSRCXTARGET): $(XSFRONT) $(XSSRC)
+	$(CC) -o $@ $< -DRCX $(OPTIONS)
+
+xs/$(XSIRTARGET): $(XSFRONT) $(XSSRC) $(COMMOBJS)
+	$(CC) -o $@ $< -DRCX -DIRCOM -DONLINE $(OPTIONS) $(COMMOBJS) -O2 -Wall -I. -I$(UTILINCDIR) -I$(COMMDIR)
+
+xs/lisp/eval-ir.o: $(XSEVAL) $(XSSRC)
+	$(CROSSCC) -DRCX -DIRCOM -DONLINE -DSTACKSIZE=$(XS_STACKSIZE) $(OPTIONS) -MD $(CROSSCFLAGS) -c $< -o $@
+
+$(XSLX): xs/lisp/eval-ir.lx
+	cp $< $@

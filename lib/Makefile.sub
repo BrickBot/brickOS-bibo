@@ -1,0 +1,23 @@
+### ==========================================================================
+###  $Id: Makefile.sub 904 2009-05-13 11:00:45Z hoenicke $
+###  FILE: lib/Makefile.sub - make the libraries
+###  bibo - another LEGO Mindstorms OS
+### --------------------------------------------------------------------------
+
+include lib/c/Makefile.sub
+include lib/c++/Makefile.sub
+include lib/mint/Makefile.sub
+include lib/float/Makefile.sub
+
+DISTFILES += lib/Makefile.sub
+
+clean::
+	rm -f $(LIBRARIES)
+
+
+all:: $(LIBRARIES)
+
+install::
+	test -d $(DESTDIR)$(pkglibdir) || mkdir -p $(DESTDIR)$(pkglibdir)
+	install -m 644 $(LIBRARIES) $(DESTDIR)${pkglibdir}
+

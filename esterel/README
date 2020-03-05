@@ -1,0 +1,91 @@
+This Esterel language information is taken from http://www.emn.fr/x-info/lego/.
+For more information, please visit that website.
+
+There are three C code generators for Esterel--
+
+Interpreted C code
+    esterel -ILego foo.strl
+
+Automaton C code
+    esterel -ALego foo.strl
+
+Equation C code
+    esterel -LLego foo.strl
+
+Of these three, Automaton code seems to have the smallest footprint,
+so given the space constraints of the RCX, that code generator
+is used as the default generator by Makefile.user.
+
+
+% STANDARD ESTEREL / LEGO INTERFACE
+%----------------------------------
+% Inputs are related to Lego sensors 1, 2 or 3.
+% If input i is contected to a given type of sensor, say contact
+% sensor, then one cannot use the inputs associated to another
+% type. This will be checked at compile time.
+% Constants without initial value are already known. There is no
+% need to set them in the C generated file.
+
+% time control
+%-------------
+% Tells how many times the controller is called within one second.
+% User can change the default value of 100, which may be omitted.
+% Automaton is run each 1000 / TICKS_PER_SECOND ms.
+constant TICKS_PER_SECOND = 100 : integer;
+
+% Engine control
+%---------------
+constant MOTOR_OFF   : integer,
+         MOTOR_FWD   : integer,
+         MOTOR_REV   : integer,
+         MOTOR_BRAKE : integer;
+
+% If argument is MOTOR_FWD, return MOTOR_REV and vice versa
+function CHANGE_MOTOR_DIR (integer) : integer;
+
+constant MAX_SPEED = 255 : integer;
+
+output MOTOR_A_DIR   := MOTOR_OFF : integer,
+       MOTOR_A_SPEED := 0         : integer;
+
+output MOTOR_B_DIR   := MOTOR_OFF : integer,
+       MOTOR_B_SPEED := 0         : integer;
+
+output MOTOR_C_DIR   := MOTOR_OFF : integer,
+       MOTOR_C_SPEED := 0         : integer;
+
+% Contact sensors
+%----------------
+input TOUCH_1;
+input TOUCH_2;
+input TOUCH_3;
+
+% Light sensors
+%--------------
+constant DEFAULT_LIGHT_THRESHHOLD = 50 : integer;
+
+sensor LIGHT_1_VALUE : integer;  % current light measure
+                                 % set light sensor threshhold
+output SET_LIGHT_1_THRESHHOLD := DEFAULT_LIGHT_THRESHHOLD : integer;
+input  LIGHT_LOW_1;              % pure signal if below threshhold
+input  LIGHT_HIGH_1;             % pure signal if above threshhold
+
+sensor LIGHT_2_VALUE : integer;
+output SET_LIGHT_2_THRESHHOLD := DEFAULT_LIGHT_THRESHHOLD : integer;
+input  LIGHT_LOW_2;
+input  LIGHT_HIGH_2;
+
+sensor LIGHT_3_VALUE : integer;
+output SET_LIGHT_3_THRESHHOLD : integer;
+input  LIGHT_LOW_3;
+input  LIGHT_HIGH_3;
+
+% If argument is MOTOR_FWD, returns MOTOR_REV and vice versa.
+% Else returns argument. Automatically defined in C generated
+% code.
+function CHANGE_MOTOR_DIR(integer) : integer;
+
+
+% Screen display
+%---------------
+output CPUTS : string;
