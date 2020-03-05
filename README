@@ -2,9 +2,16 @@
  bibo isn't brickOS
 ====================
 
-Bibo is a brickOS clone; the kernel was written from scratch to give better
-performance.  From the side of the average brickOS programmer not much should
-change.  There is a lot of code borrowed from brickOS.
+Bibo is an alternative Lego MindStorms RCX operating system and firmware that
+is a brickOS clone.  The kernel was written from scratch to give better
+performance, but to the average brickOS programmer, not much should change.
+There is a lot of code borrowed from brickOS, and numerous patches originally
+targeted for brickOS have been conceptually incorporated.  While this project
+is based on bibo, as brickOS still seems to be the more recognizable name, it
+has been retained as part of the name.
+
+This repository is believed to be the most progressed version of either brickOS
+or bibo.
 
 This software will run on Linux and Windows (using the Cygwin tool suite.)
 
@@ -49,6 +56,9 @@ or send me an email (you can find my address on the web page).
 bibo Copyright (C) 2007 by Jochen Hoenicke
 legOS/brickOS Copyright (C) 1998-2005 by Markus L. Noga
 
+Over 40 updates to bibo have been incorporated by Matthew Sheets
+and are part of this code base.  These updates are enumerated at
+https://news.lugnet.com/robotics/rcx/legos/?n=4057
 
 =================================================================
 
