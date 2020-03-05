@@ -96,7 +96,7 @@ static timer_t allow_tx_timer = {
 static waitqueue_t *lnp_waitqueue;   //!< wait queue for transmitter
 
 #ifdef CONF_TM
-static sem_t tx_sem;                //!< transmitter access semaphore
+sem_t tx_sem;                //!< transmitter access semaphore
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////

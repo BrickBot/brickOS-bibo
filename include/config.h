@@ -86,12 +86,14 @@
 //#define CONF_DSENSOR_VELOCITY           //!< rotation sensor velocity
 //#define CONF_DSENSOR_MUX                //!< sensor multiplexor
 //#define CONF_DSENSOR_SWMUX              //!< techno-stuff swmux sensor
-//#define CONF_DSENSOR_EDGECOUNT          //!< edge counting for touch/light sensors
+#define CONF_DSENSOR_EDGECOUNT          //!< edge counting for touch/light sensors
+//#define CONF_POWERFUNCTIONS               //!< act as power functions remote control
+
 
 // dependencies
 //
 #if defined(CONF_ASCII) && !defined(CONF_CONIO)
-#error "Ascii needs console IO"
+#error "ASCII needs console IO."
 #endif
 
 #if defined(CONF_DKEY) && !defined(CONF_TIME)
@@ -123,11 +125,11 @@
 #endif
 
 #if defined(CONF_LR_HANDLER) && !defined(CONF_TM)
-#error "Remote support needs task managment"
+#error "Remote support needs task managment."
 #endif
 
 #if defined(CONF_PROGRAM) && (!defined(CONF_TM) || !defined(CONF_LNP) || !defined(CONF_DKEY) || !defined(CONF_CONIO))
-#error "Program support needs task management, networking, key debouncing, and ASCII."
+#error "Program support needs task management, networking, key debouncing, and console IO."
 #endif
 
 #if defined(CONF_DCC) && !defined(CONF_DMOTOR)

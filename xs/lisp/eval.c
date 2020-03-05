@@ -18,9 +18,12 @@
  *  Contributor(s): Taiichi Yuasa <yuasa@kuis.kyoto-u.ac.jp>
  */
 
+#ifdef RCX
+#include <config.h>
 // Due to the size of XS, we will allow building without CONF_ASCII and instead just limit character and string functionality
-#if defined(RCX) && !defined(CONF_ASCII)
+#ifndef CONF_ASCII
 #warning CONF_ASCII is disabled, so string and character functions will only output preset characters on the RCX
+#endif
 #endif
 
 #ifndef RCX
@@ -1352,15 +1355,17 @@ LOOP:
 			break;
 
 		case Lputs: {
-#if (defined(RCX) && defined(CONF_ASCII)) || (!defined(RCX))
 			int i;
-			for (i = 4, e = base[0]; i >=0 && PAIRP(e); i--, e = CDR(e))
+			for (i = 4, e = base[0]; i >=0 && PAIRP(e); i--, e = CDR(e)) {
+#if ((defined(RCX) && defined(CONF_ASCII)) || (!defined(RCX))
 				cputc(INTval(CAR(e)), i);
-#else
-                // ASCII is not enabled on the RCX, so we cannot display the string
-                // Display a default text message instead
-                cputc_native_user(CHAR_A, CHAR_S, CHAR_C, CHAR_PARALLEL);  // ASCII
+#elif (defined(RCX) && defined(CONF_CONIO))
+				// ASCII is not enabled on the RCX, so we cannot display the string
+				// Display a default text message instead: "-ASCII"
+				cputc_native_5(CHAR_DASH);
+				cputc_native_user(CHAR_A, CHAR_S, CHAR_C, CHAR_PARALLEL);  // ASCII
 #endif
+			}
 #ifndef RCX
 			show_lcd();
 #endif
@@ -1369,11 +1374,12 @@ LOOP:
 		case Lputc:
 			if (check_int_args(base)) goto LERROR;
 			// the second arg is between 0 (right-most) and 4 (left-most)
-#if (defined(RCX) && defined(CONF_ASCII)) || (!defined(RCX))
+#if ((defined(RCX) && defined(CONF_ASCII)) || (!defined(RCX))
 			cputc(INTval(e = base[0]), INTval(base[1]));
-#else
-            // ASCII is not enabled on the RCX, so we cannot display the string
+#elif (defined(RCX) && defined(CONF_CONIO))
+            // ASCII is not enabled on the RCX, so we cannot display the ASCII character
             // Display a generic '-' in the requested position instead
+            e = base[0];
             cputc_native(CHAR_DASH, INTval(base[1]));
 #endif
 #ifndef RCX

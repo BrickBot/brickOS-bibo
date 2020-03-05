@@ -75,6 +75,13 @@ extern inline void lnp_logical_range(int far) {
 extern inline int lnp_logical_range_is_far(void) {
   return !(*((char*)&PORT4)&1);
 }
+
+//! disable IR carrier frequency.
+extern inline void carrier_shutdown(void);
+
+//! enable IR carrier frequency.
+extern void carrier_init(void);
+
 #endif  // ! CONF_HOST
 
 //! Write buffer to IR port

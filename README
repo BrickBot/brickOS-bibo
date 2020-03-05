@@ -5,7 +5,7 @@
 Bibo is an alternative Lego MindStorms RCX operating system and firmware that
 is a brickOS clone.  The kernel was written from scratch to give better
 performance, but to the average brickOS programmer, not much should change.
-There is a lot of code borrowed from brickOS, and numerous patches originally
+A lot of code was borrowed from brickOS, and numerous patches originally
 targeted for brickOS have been conceptually incorporated.  While this project
 is based on bibo, as brickOS still seems to be the more recognizable name, it
 has been retained as part of the name.
@@ -48,7 +48,7 @@ In case anyone is wondering, dll is short for dynamic linker and loader.
 
 For more documentation, see in docs on the web at
 
-http://hoenicke.ath.cx/rcx/bibo.html
+https://jochen-hoenicke.de/rcx/bibo.html
 
 or send me an email (you can find my address on the web page).
 

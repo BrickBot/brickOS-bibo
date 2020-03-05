@@ -296,7 +296,7 @@ int main (int argc, char **argv)
     if (usage || argc - optind != 1) {
         char *usage_string =
             RCX_COMM_OPTIONS
-            "  -s           , --standard            standard mode download (2400 buad only)\n"
+            "  -s           , --standard            standard mode download (2400 baud only)\n"
             "\n"
             RCX_COMM_OPTIONS_INFO
             "\n"
@@ -361,11 +361,15 @@ int main (int argc, char **argv)
 
     int currently_uses_complements;
     int i = 0;
+    int max_mode = (tty_t_usb == tty.type ? 1 : sizeof(baud_modes)/sizeof(int));
     int found_rcx = FALSE;
 
-     fprintf(stdout, "Attempting to determine current baud rate...\n");
+    if(max_mode > 1) {
+        fprintf(stdout, "Attempting to determine current baud rate...\n");
+    }
+    
     // Loop through the baud modes to try to find the current baud rate
-    for (i = 0; i < sizeof(baud_modes); i++) {
+    for (i = 0; i < max_mode; i++) {
         fprintf(stdout, "  ...checking %d baud\n", baud_modes[i]);
         rcx_init(&tty, tty_name, baud_modes[i], timeout, FALSE);
         if (BADFILE == tty.fd) {
@@ -407,7 +411,7 @@ int main (int argc, char **argv)
     }
 
     if (use_complements && baud_modes[i] != 2400) {
-        fprintf(stderr, "%s: reset the rcx to use standared mode\n", progname);
+        fprintf(stderr, "%s: reset the rcx to use standard mode\n", progname);
         exit(1);
     }
 

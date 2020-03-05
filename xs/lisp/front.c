@@ -828,9 +828,11 @@ Object sharpSignMacroReader(FILE *in) {
 	case '\\':
 		c = inRead(in);
 		readToken(in);
-		if (tokenBuffer[0] == '\0')
+		if (tokenBuffer[0] == '\0') {
+			// NOTE: Processing of character literals happens here
+			// TODO: Convert ASCII characters to CONIO predefined characters for non-ASCII RCX
 	    	return newInteger(c);
-	    else if (c == 's') {
+	    } else if (c == 's') {
 	    	if (strcmp(tokenBuffer, "pace") == 0) return newInteger(' ');
 	    } else if (c == 'n') {
 	    	if (strcmp(tokenBuffer, "ewline") == 0) return newInteger('\n');
@@ -930,8 +932,10 @@ Object charMacroReader(char c, FILE *in, int tokenAllowed) {
 	case '"':
 		openTokenBuffer();
 		while ((c = inRead(in)) != '"') {
-			if (cat(c) == CAsingleEscape)
+			if (cat(c) == CAsingleEscape) {
 				c = inRead(in);
+			}
+			// TODO: Convert ASCII character string to a string of CONIO predefined characters for non-ASCII RCX
 			addToToken(c);
 		}
 		closeTokenBuffer();

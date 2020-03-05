@@ -469,7 +469,7 @@ int rcx_wakeup_tower (tty_t *tty, int timeout, int wakeup_timeout)
 
         do {
             if (__comm_debug) {
-                printf("wakeup tower writelen = %u\n", sizeof(msg));
+                printf("wakeup tower writelen = %u\n", (unsigned)sizeof(msg));
                 rcx_hexdump("WTW", msg, sizeof(msg), FALSE);
             }
             // We are looking for the echo, so we use lnp_logical_write_host

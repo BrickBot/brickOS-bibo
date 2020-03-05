@@ -179,7 +179,7 @@ const char ascii_display_codes[] =
    CHAR_u,				// 117 u v w
    CHAR_v,				// 118 v
    CHAR_w,				// 119 w
-   CHAR_x				// 120 X
+   CHAR_x,				// 120 X
    CHAR_y,				// 121 Y
    CHAR_z,				// 122 Z
 

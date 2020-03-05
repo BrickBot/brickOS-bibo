@@ -140,7 +140,11 @@ void kmain(void)
 #endif
 	
 	dkey_multi = KEY_ONOFF;
+#if defined(CONF_DSOUND) && defined(CONF_ON_OFF_SOUND)
 	show_on_off(on_text, on_sound);
+#else
+	show_on_off(on_text, NULL);
+#endif
 	
 	cls();
 #ifndef CONF_PROGRAM
@@ -164,8 +168,11 @@ void kmain(void)
 #endif
 
 	// ON/OFF + VIEW -> erase firmware
+#if defined(CONF_DSOUND) && defined(CONF_ON_OFF_SOUND)
 	reset_after_shutdown = show_on_off(off_text, off_sound);
-	
+#else
+	reset_after_shutdown = show_on_off(off_text, NULL);
+#endif	
 	
 #ifdef CONF_PROGRAM
 	program_shutdown();
