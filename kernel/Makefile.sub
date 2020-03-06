@@ -8,7 +8,7 @@
 KSOURCES1=kmain.c mm.c systime.c tm.c semaphore.c conio.c lcd.c \
           lnp-logical.c lnp.c remote.c program.c vis.c battery.c \
           dkey.c dmotor.c dsensor.c dsound.c swmux.c handlers.c \
-          mutex.c dcc.c
+          mutex.c dcc.c powerfunctions.c
 KSOURCES=$(KSOURCES1:%=kernel/%)
 
 KASMSOURCES1=dccasm.S

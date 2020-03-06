@@ -7,8 +7,8 @@
 
 
 HEADERS=config.h conio.h dbutton.h dirpd.h dkey.h dlcd.h dmotor.h dcc.h \
-	dsensor.h dsound.h lnp.h lnp-logical.h mem.h persistent.h remote.h \
-	semaphore.h setjmp.h stdio.h stdlib.h string.h swmux.h \
+	dsensor.h dsound.h lnp.h lnp-logical.h mem.h persistent.h powerfunctions.h \
+	remote.h semaphore.h setjmp.h stdio.h stdlib.h string.h swmux.h \
 	time.h tm.h unistd.h \
 	rom/lcd.h rom/registers.h rom/system.h \
 	sys/battery.h sys/bitops.h sys/dmotor.h sys/dsensor.h sys/dsound.h \
