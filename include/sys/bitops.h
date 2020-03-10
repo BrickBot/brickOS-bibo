@@ -77,11 +77,30 @@ __asm__ ASMCONST ( "bld %0,%1l\n" : : "i" (bit),"r" (mask):"cc")
 #define bit_iload(mask,bit)	\
 __asm__ ASMCONST ( "bild %0,%1l\n" : : "i" (bit),"r" (mask):"cc")
 
-//! store the carry flag to a single single bit in memory
+//! store the carry flag to a single bit in memory
 /*! *((char*)byte)= ( (*((char*)byte)) & (~(1<<bit)) ) | (carry<<bit)
 */
 #define bit_store(byte,bit)	\
 __asm__ ASMCONST ( "bst %0,@%1\n" : : "i" (bit),"r" (byte))
+
+//! invert a single bit in memory
+/*! *((char*)byte)= ( (*((char*)byte)) ^ (1<<bit) )
+*/
+#define bit_invert(byte,bit)	\
+__asm__ ASMCONST ( "bnot %0,@%1\n" : : "i" (bit),"r" (byte))
+
+//! set a single bit in memory, where the bit position can be a variable
+/*! *((char*)byte)|=(1<<bit)
+*/
+#define vbit_set(byte,bit)       \
+__asm__ ASMCONST ( "bset %0l,@%1\n" : : "r" (bit),"r" (byte))
+
+//! clear a single bit in memory, where the bit position can be a variable
+/*! ((char*)byte)&=~(1<<bit)
+*/
+#define vbit_clear(byte,bit)       \
+__asm__ ASMCONST ( "bclr %0l,@%1\n" : : "r" (bit),"r" (byte))
+
 
 #ifdef  __cplusplus
 }

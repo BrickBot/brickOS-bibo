@@ -2,16 +2,49 @@
  bibo isn't brickOS
 ====================
 
+From the BrickBot/brickOS-bibo repository on GitHub
+---------------------------------------------------
+
 Bibo is an alternative Lego MindStorms RCX operating system and firmware that
 is a brickOS clone.  The kernel was written from scratch to give better
 performance, but to the average brickOS programmer, not much should change.
 A lot of code was borrowed from brickOS, and numerous patches originally
 targeted for brickOS have been conceptually incorporated.  While this project
-is based on bibo, as brickOS still seems to be the more recognizable name, it
-has been retained as part of the name.
+is based on bibo, as brickOS still seems to be the more commonly recognizable
+name, it has been retained as part of this repository’s name.
 
 This repository is believed to be the most progressed version of either brickOS
-or bibo.
+or bibo.  Since the last official release, over 40 updates to bibo have been
+incorporated by Matthew Sheets and are part of this code base.  While these
+updates are enumerated at https://news.lugnet.com/robotics/rcx/legos/?n=4057 on
+the LEGO Users Group Network (LUGNET), some key changes include the following:
+
+- Updated utils to better facilitate using TCP as a tty.
+- Made NCD tty types a runtime option instead of a compile-time #define.
+- Merged patches for BrickOS with Bibo, including
+    LDCC, lnp_printf, and lnpmsg (formerly LegOShrink)
+- Reworked firmdl3, dll, and lnpmsg under utils as well as
+    lnp and lnp-logic in the kernel to facilitate better code reuse,
+    remove essentially duplicate code, and establish a set of common
+    functions for rcx_comm and LNP.  Merged the resulting code into
+    util/host, deprecating util/firmld, util/dll-src, and util/fontdesign.c.
+- Util dll: made fast mode a runtime option instead of a compile-time #define.
+- Added ability to send LNP messages directly from the lnpmsg command line.
+- Added ir-server from Jochen Hoenicke's BrickEmu package and used
+    the code reworked from above to add support for tty downlinking
+    (e.g. serial, USB, TCP) or TCP uplinking.
+- Merged XS (based on BrickOS 0.2.6.10) with Bibo.  (XS offers LISP programming support.)
+- Changed baud rate, carrier state, and timeout settings from compile-time
+    defines to run-time options
+- Standardized parity for all baud rates to "odd"
+- Added support for RCX-based communication that does not echo (e.g. bluetooth hacks)
+- Enabled more flexible communication options for downloading firmware
+- Modified conio to remove the CONF_ASCII dependency from CONF_PROGRAM
+- Updated Makefiles to support building programs written in Esterel
+
+
+SETUP
+-----
 
 This software will run on Linux and Windows (using the Cygwin tool suite.)
 
@@ -34,7 +67,7 @@ To start with brickOS:
 - Stop your program with the RUN or ON/OFF key. Programs are preserved over
   ON/OFF.  Press ON/OFF and VIEW simultaneously to erase brickOS.
 
-If things don't quite work, work at it.
+If things don't quite work, work at it.  :-)
 
 For your own projects,
 
@@ -56,9 +89,7 @@ or send me an email (you can find my address on the web page).
 bibo Copyright (C) 2007 by Jochen Hoenicke
 legOS/brickOS Copyright (C) 1998-2005 by Markus L. Noga
 
-Over 40 updates to bibo have been incorporated by Matthew Sheets
-and are part of this code base.  These updates are enumerated at
-https://news.lugnet.com/robotics/rcx/legos/?n=4057
+Major bibo updates integrated by Matthew Sheets
 
 =================================================================
 

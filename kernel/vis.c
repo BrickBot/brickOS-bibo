@@ -70,14 +70,14 @@ static void vis_refresh(void* dummy) {
 
 #ifdef CONF_PROGRAM
     if(nb_tasks <= nb_system_tasks) {
-	vis_animated_man = 0;
-	lcd_show(man_stand);
+		vis_animated_man = 0;
+		lcd_show(man_stand);
     } else {
-	if (vis_animated_man_ctr-- == 0) {
-	    vis_animated_man ^= 1;
-	    vis_animated_man_ctr = 4;
-	    lcd_show(vis_animated_man == 0 ? man_stand : man_run);
-	}
+		if (vis_animated_man_ctr-- == 0) {
+		    vis_animated_man ^= 1;
+		    vis_animated_man_ctr = 4;
+		    lcd_show(vis_animated_man == 0 ? man_stand : man_run);
+		}
     }
 #endif
     
