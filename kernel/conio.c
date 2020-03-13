@@ -224,6 +224,21 @@ _delay:\n\
 
 #ifdef CONF_CONIO
 
+//! clear the user portion of screen
+void cls() {
+#ifdef CONF_ASCII
+  cputs("");
+#else
+  unsigned char i = 0;
+  for (i = 5; i >= 1; i--) {
+    cputc_native(0, i);
+  }
+#endif
+
+  // reset the program number display
+  show_program_num();
+}
+
 //! display native mode segment mask
 /*! \param mask the segment mask.
    \param pos  the desired display position.
@@ -366,8 +381,8 @@ void cputc_native_4(char mask)
 }
 
 //! display native mode segment mask at display position 5
-/*! \param mask the mask to display. only the middle segment is 
-   present on the display.
+/*! \param mask the mask to display. only the middle segment ('-')
+   is present on the display.
  */
 void cputc_native_5(char mask)
 {
@@ -407,21 +422,6 @@ void cputw(unsigned word)
 #if !defined(CONF_LCD_REFRESH)
   lcd_refresh();
 #endif
-}
-
-//! clear user portion of screen
-void cls() {
-#ifdef CONF_ASCII
-  cputs("");
-#else
-  unsigned char i = 0;
-  for (i = 5; i >= 1; i--) {
-    cputc_native(0, i);
-  }
-#endif
-
-  // reset the program number display
-  show_program_num();
 }
 
 #ifdef CONF_ASCII

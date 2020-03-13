@@ -13,6 +13,9 @@ targeted for brickOS have been conceptually incorporated.  While this project
 is based on bibo, as brickOS still seems to be the more commonly recognizable
 name, it has been retained as part of this repository’s name.
 
+The original bibo project site is accessible at the following link:
+- https://jochen-hoenicke.de/rcx/bibo.html
+
 This repository is believed to be the most progressed version of either brickOS
 or bibo.  Since the last official release, over 40 updates to bibo have been
 incorporated by Matthew Sheets and are part of this code base.  While these
@@ -41,6 +44,9 @@ the LEGO Users Group Network (LUGNET), some key changes include the following:
 - Enabled more flexible communication options for downloading firmware
 - Modified conio to remove the CONF_ASCII dependency from CONF_PROGRAM
 - Updated Makefiles to support building programs written in Esterel
+
+The inclusion of the enhanced ir-server is expected to supercede lnpd.
+As an alternative to ir-server, there is also lnphost, which was itself design to replace lnpd.
 
 
 SETUP

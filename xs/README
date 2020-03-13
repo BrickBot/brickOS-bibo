@@ -1,5 +1,8 @@
 This is XS: Lisp on Lego MindStorms.
 
+Archive of original website:
+ * https://web.archive.org/web/20121118111227/http://www.xslisp.com/
+
 -----------------------------------------------------------------------
 IMPORTANT USAGE NOTES
  * XS memory requirements may dictate use of a reduced kernel.  Back in
@@ -15,6 +18,8 @@ IMPORTANT USAGE NOTES
    functionality will be limited.  Without CONF_ASCII defined, puts
    will always display "ASCII" and putc will dispaly a '-' in the
    specified position.
+    - It appears XS putc and even puts could perhaps be adapted to
+      be supported via putc_native, which does not require ASCII
  * For autonomous programs, the demo program rover-watcher is suggested
    as a starting point for testing basic, autonomous XS programming.
 -----------------------------------------------------------------------
@@ -29,7 +34,8 @@ Agency (IPA) of Japan as an Exploratory Software Project.
 -----------------------------------------------------------------------
 
 XS was originally written for a slightly modified version of
-brickOS-0.2.6; effort has been made to bring XS up to a current version.
+brickOS-0.2.6; effort to bring XS up to the mainstream version was
+undertaken by Matthew Sheets.
 
 XS executables:
 

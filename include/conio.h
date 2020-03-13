@@ -205,6 +205,9 @@ extern void delay(unsigned ms);
 
 #ifdef CONF_CONIO
 
+//! clear user portion of LCD
+extern void cls();
+
 //
 // display native mode segment mask at fixed display position
 //
@@ -278,9 +281,6 @@ extern inline void cputc_hex(char c, int pos)
 
 //! Write a HEX word to LCD
 extern void cputw(unsigned word);
-
-//! clear user portion of LCD
-extern void cls();
 
 #ifdef CONF_ASCII
 //! write ASCII char to position 0 of LCD
