@@ -4,6 +4,7 @@
 % students from the École Centrale de Nantes.
 
 % Follow a border using only one light sensor
+% https://web.imt-atlantique.fr/x-info/lego/exemples-esterel.html
 
 module border1 : 
 input LIGHT_LOW_1; 

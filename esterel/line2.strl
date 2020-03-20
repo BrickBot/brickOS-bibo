@@ -4,6 +4,7 @@
 % students from the École Centrale de Nantes.
 
 % Follow a line using two light sensors
+% https://web.imt-atlantique.fr/x-info/lego/exemples-esterel.html
 
 module example4 : 
 input LIGHT_LOW_1,LIGHT_HIGH_1; 
