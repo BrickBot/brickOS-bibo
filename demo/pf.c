@@ -14,6 +14,8 @@
 //bob@fial.com
 //v1.0.1
 
+#ifdef CONF_POWERFUNCTIONS
+
 #include <dsensor.h>
 #include <dbutton.h>
 #include <powerfunctions.h>
@@ -92,3 +94,4 @@ int main(int argc, char **argv)
 	return 0;
 }
 
+#endif // CONF_POWERFUNCTIONS

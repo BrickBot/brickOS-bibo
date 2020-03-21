@@ -1357,7 +1357,7 @@ LOOP:
 		case Lputs: {
 			int i;
 			for (i = 4, e = base[0]; i >=0 && PAIRP(e); i--, e = CDR(e)) {
-#if ((defined(RCX) && defined(CONF_ASCII)) || (!defined(RCX))
+#if ((defined(RCX) && defined(CONF_ASCII)) || (!defined(RCX)))
 				cputc(INTval(CAR(e)), i);
 #elif (defined(RCX) && defined(CONF_CONIO))
 				// ASCII is not enabled on the RCX, so we cannot display the string
@@ -1374,7 +1374,7 @@ LOOP:
 		case Lputc:
 			if (check_int_args(base)) goto LERROR;
 			// the second arg is between 0 (right-most) and 4 (left-most)
-#if ((defined(RCX) && defined(CONF_ASCII)) || (!defined(RCX))
+#if ((defined(RCX) && defined(CONF_ASCII)) || (!defined(RCX)))
 			cputc(INTval(e = base[0]), INTval(base[1]));
 #elif (defined(RCX) && defined(CONF_CONIO))
             // ASCII is not enabled on the RCX, so we cannot display the ASCII character

@@ -74,6 +74,10 @@ Note that Windows users now also have the option of using the
 Regardless of platform, key toolchain components include the following:
 - binutils-h8300-hms
 - gcc-h8300-hms
+- make
+- gcc
+  - linux-libc-dev
+- g++
 
 
 SETUP

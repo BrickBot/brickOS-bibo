@@ -25,9 +25,9 @@
 
 ******************************************************************************/
 
-#include <dcc.h>
-
 #if defined(CONF_DCC) && defined(CONF_DSENSOR_ROTATION)
+
+#include <dcc.h>
 
 #include <unistd.h>
 #include <dmotor.h>
