@@ -125,34 +125,49 @@ extern volatile lnp_message_handler_t lnp_message_handler;
 //
 ///////////////////////////////////////////////////////////////////////
 
+#ifndef CONF_HOST
+extern
+#endif
 //! set the integrity layer packet handler
-extern inline void lnp_integrity_set_handler(lnp_integrity_handler_t handler)
+inline void lnp_integrity_set_handler(lnp_integrity_handler_t handler)
 {
   lnp_integrity_handler = handler;
 }
 
+#ifndef CONF_HOST
+extern
+#endif
 //! set an addressing layer packet sniffer handler
-extern inline void lnp_addressing_sniffer_set_handler(lnp_addressing_sniffer_handler_t handler){
+inline void lnp_addressing_sniffer_set_handler(lnp_addressing_sniffer_handler_t handler){
    lnp_addressing_sniffer_handler = handler;
 }
 
+#ifndef CONF_HOST
+extern
+#endif
 //! set an addressing layer packet handler for a port.
-extern inline void lnp_addressing_set_handler(unsigned char port, lnp_addressing_handler_t handler)
+inline void lnp_addressing_set_handler(unsigned char port, lnp_addressing_handler_t handler)
 {
   if (!(port & CONF_LNP_HOSTMASK))  // sanity check.
 
     lnp_addressing_handler[port] = handler;
 }
 
+#ifndef CONF_HOST
+extern
+#endif
 //! set new LNP host address
-extern inline void lnp_set_hostaddr(unsigned char host)
+inline void lnp_set_hostaddr(unsigned char host)
 {
     lnp_hostaddr = ((host << 4) & CONF_LNP_HOSTMASK);
 }
 
 #ifdef CONF_RCX_PROTOCOL
+#ifndef CONF_HOST
+extern
+#endif
 //! set the remote packet handler
-extern inline void lnp_remote_set_handler(lnp_remote_handler_t handler)
+inline void lnp_remote_set_handler(lnp_remote_handler_t handler)
 {
   lnp_remote_handler = handler;
 }
@@ -160,8 +175,11 @@ extern inline void lnp_remote_set_handler(lnp_remote_handler_t handler)
 
 
 #if defined(CONF_RCX_MESSAGE) || defined(CONF_HOST)
+#ifndef CONF_HOST
+extern
+#endif
 //! set the standard firmware message handler
-extern inline void lnp_message_set_handler(lnp_message_handler_t handler)
+inline void lnp_message_set_handler(lnp_message_handler_t handler)
 {
   lnp_message_handler = handler;
 }
