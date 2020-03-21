@@ -49,6 +49,33 @@ The inclusion of the enhanced ir-server is expected to supercede lnpd.
 As an alternative to ir-server, there is also lnphost, which was itself design to replace lnpd.
 
 
+HISTORY
+-------
+The brickOS project itself was originally named legOS.  Early information
+and documentation about the project are available
+[here](https://arcb.csc.ncsu.edu/~mueller/rt/mindstorm/www.multimania.com/legos/).
+The project then moved to SourceForge as legOS
+([homepage](http://legos.sf.net/) / [project site](http://sf.net/projects/legos))
+before taking up residence in a new SourceForge site as brickOS
+([homepage](http://brickos.sf.net/) / [project site](https://sf.net/projects/brickos/)).
+
+
+ENVIRONMENT CONFIGURATION
+-------------------------
+A DJGPP setup for legOS on Windows—with downloads—was described at
+http://legos.sf.net/files/windows/djgpp/
+
+Slightly more recent setup instructions for Windows and Debian/Linux are
+available at http://brickos.sourceforge.net/documents.htm#INSTALLATION
+
+Note that Windows users now also have the option of using the
+[Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/initialize-distro).
+
+Regardless of platform, key toolchain components include the following:
+- binutils-h8300-hms
+- gcc-h8300-hms
+
+
 SETUP
 -----
 
@@ -85,11 +112,6 @@ For your own projects,
 
 In case anyone is wondering, dll is short for dynamic linker and loader.
 
-For more documentation, see in docs on the web at
-
-https://jochen-hoenicke.de/rcx/bibo.html
-
-or send me an email (you can find my address on the web page).
 
 ------------------------------------------------------------------------
 bibo Copyright (C) 2007 by Jochen Hoenicke
