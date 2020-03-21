@@ -80,7 +80,7 @@ void dcc_power_off()
 
 void dcc_ops_packet(unsigned char* data, unsigned char length)
   {
-  dcc_packet(14, data, length);
+  dcc_packet(16, data, length);
   dcc_flip();
   }
 
