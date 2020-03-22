@@ -9,7 +9,7 @@
 PACKAGE = bibo
 
 #  version of this release
-VERSION = 0.01
+VERSION = 0.05
 
 # kernel used (w/o extension)
 KERNEL=kernel/$(PACKAGE)
@@ -58,8 +58,6 @@ upgrade-doxygen:
 #
 #  doc/html-c subdirectory: make C docs
 #
-
-pkghtmldir = /usr/local/share/doc/brickos/html
 
 html-c: Doxyfile-c-report
 
