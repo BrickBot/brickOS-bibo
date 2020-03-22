@@ -4,8 +4,7 @@
 ###  bibo - another LEGO Mindstorms OS
 ### --------------------------------------------------------------------------
 
-#XS_STACKSIZE=1024
-#XS_STACKSIZE=512
+DEMO_XS_STACKSIZE?=$(XS_STACKSIZE)
 
 #OPTIONS=-DDEBUG
 #OPTIONS=-DLISTLIB
@@ -31,12 +30,12 @@ realclean::
 
 #eval-host$(EXT): $(XSEVAL) $(XSSRC)
 #	cd xs/lisp && ../xs-host < ../../$<
-#	$(CC) -o $@ -DSTACKSIZE=$(XS_STACKSIZE) $(OPTIONS) $(XSEVAL)
+#	$(CC) -o $@ -DSTACKSIZE=$(DEMO_XS_STACKSIZE) $(OPTIONS) $(XSEVAL)
 
 
 %.o: %.lsp $(XSEVAL) $(XSSRC)
 	cd xs/lisp && ../xs-rcx < ../../$<
-	$(CROSSCC) -DRCX -DSTACKSIZE=$(XS_STACKSIZE) $(OPTIONS) -MD $(CROSSCFLAGS) -c $(XSEVAL) -o $@
+	$(CROSSCC) -DRCX -DSTACKSIZE=$(DEMO_XS_STACKSIZE) $(OPTIONS) -MD $(CROSSCFLAGS) -c $(XSEVAL) -o $@
 
 # depencencies
 #

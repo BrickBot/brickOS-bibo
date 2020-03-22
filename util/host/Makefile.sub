@@ -38,6 +38,7 @@ DISTFILES += $(patsubst %,util/host/%, Makefile.sub $(sort $(FONTSRC) $(FIRMDLSR
         $(MKIMGSRC) $(LNPMSGSRC) $(DLLSRC) $(MAKELXSRC) $(IRSRVRSRC) $(GENLDSSRC) \
         config.h fastdl.S srec.h srecload.h lx.h rcx_comm.h lnpmsg_comm.h \
         $(DLLALLMAN1) $(FIRMDLMAN1) ))
+DISTFILES := $(filter-out util/host/lnp.c util/host/lnp-logical.c, $(DISTFILES))
 LIBS=
 
 BIN = $(FONTTARGET:%=util/%) $(FIRMDLTARGET:%=util/%) $(DLLALLTARGETS:%=util/%) \
