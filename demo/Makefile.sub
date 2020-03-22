@@ -1,41 +1,10 @@
+### ==========================================================================
+###  $Id: Makefile.sub  |  Matthew Sheets
+###  FILE: demo/Makefile.sub - make the demo programs
+###  bibo - another LEGO Mindstorms OS
+### --------------------------------------------------------------------------
 
-DSOURCES1=helloworld.c helloworld_lnp.c rover.c linetrack.c robots.c \
-          c++.cpp sound.c trailerbot.c cpu.c dccthrottle.c memtest.c \
-          edgecounting.c pf.c
-DSOURCES=$(DSOURCES1:%=demo/%)
-PROGRAMS=$(patsubst %.c,%.lx,$(patsubst %.cpp,%.lx,$(DSOURCES)))
-
-# extra dynamic sources  - program name (e.g. helloworld.c/.cpp) is always assumed
-# NOTE: must specify path (is relative to the directory of the main Makefile)
-helloworld_SRC =
-helloworld_lnp_SRC =
-rover_SRC =
-linetrack_SRC =
-robots_SRC =
-c++_SRC =
-sound_SRC = 
-trailerbot_SRC =
-dccthrottle_SRC =
-memtest_SRC =
-edgecounting_SRC =
-pf_SRC =
-
-DSOURCES_ALL = $(DSOURCES) \
-        $(foreach prog,$(PROGRAMS:%.lx=%),$($(notdir $(prog))_SRC))
-DOBJS = $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(DSOURCES_ALL)))
-DISTFILES += demo/Makefile.sub $(DSOURCES_ALL)
-
-all:: $(PROGRAMS) $(patsubst %.lx,%.a,$(PROGRAMS))
-
-clean::
-	rm -f demo/*.o demo/*.dis demo/*.dis2 demo/*.s demo/*.ds1 demo/*.ds2
-	rm -f demo/*.dc1 demo/*.dc2 demo/*.d
-	rm -f demo/*.dmap demo/*.dcoff 
-	rm -f demo/*~ demo/*.bak demo/*.srec demo/*.map demo/*.coff
-
-realclean:: clean
-	rm -f demo/*.lx demo/*.a
-
-# depencencies
-#
--include $(DOBJS:%.o=%.d)
+include demo/c/Makefile.sub
+include demo/c++/Makefile.sub
+include demo/esterel/Makefile.sub
+include demo/xs-lisp/Makefile.sub

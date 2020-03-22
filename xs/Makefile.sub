@@ -1,5 +1,5 @@
 ### ==========================================================================
-###  $Id: Makefile.sub 606 2007-11-14 22:02:48Z hoenicke $
+###  $Id: Makefile.sub  |  Matthew Sheets
 ###  FILE: xs/Makefile.sub - make xs
 ###  bibo - another LEGO Mindstorms OS
 ### --------------------------------------------------------------------------
@@ -7,5 +7,3 @@
 DISTFILES += $(patsubst %,xs/%, README Makefile.sub)
 
 include xs/lisp/Makefile.sub
-
-include xs/demo/Makefile.sub

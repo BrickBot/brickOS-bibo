@@ -1,0 +1,43 @@
+### ==========================================================================
+###  $Id: Makefile.sub  |  Matthew Sheets
+###  FILE: demo/c++/Makefile.sub - make the XS:Lisp language demo programs
+###  bibo - another LEGO Mindstorms OS
+### --------------------------------------------------------------------------
+
+#XS_STACKSIZE=1024
+#XS_STACKSIZE=512
+
+#OPTIONS=-DDEBUG
+#OPTIONS=-DLISTLIB
+#OPTIONS=
+
+DEMO_XS_SOURCES1=fact.lsp lib.lsp range.lsp remote.lsp rover.lsp rover-watcher.lsp trace.lsp
+# sample.lsp is too large to build under a typical kernel configuration
+DEMO_XS_SOURCES=$(DEMO_XS_SOURCES1:%=demo/xs-lisp/%)
+DEMO_XS_PROGRAMS=$(patsubst %.lsp, %.lx, $(DEMO_XS_SOURCES))
+
+DISTFILES += demo/xs-lisp/Makefile.sub $(DEMO_XS_SOURCES) demo/xs-lisp/sample.lsp
+
+all:: $(DEMO_XS_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_XS_PROGRAMS))
+
+clean::
+	rm -f demo/xs-lisp/*.d   demo/xs-lisp/*.o
+	rm -f demo/xs-lisp/*.dis demo/xs-lisp/*.dis2
+	rm -f demo/xs-lisp/*.dc1 demo/xs-lisp/*.dc2
+	rm -f demo/xs-lisp/*.ds1 demo/xs-lisp/*.ds2
+
+realclean::
+	rm -f demo/xs-lisp/*.lx  demo/xs-lisp/*.a
+
+#eval-host$(EXT): $(XSEVAL) $(XSSRC)
+#	cd xs/lisp && ../xs-host < ../../$<
+#	$(CC) -o $@ -DSTACKSIZE=$(XS_STACKSIZE) $(OPTIONS) $(XSEVAL)
+
+
+%.o: %.lsp $(XSEVAL) $(XSSRC)
+	cd xs/lisp && ../xs-rcx < ../../$<
+	$(CROSSCC) -DRCX -DSTACKSIZE=$(XS_STACKSIZE) $(OPTIONS) -MD $(CROSSCFLAGS) -c $(XSEVAL) -o $@
+
+# depencencies
+#
+-include $(DEMO_XS_PROGRAMS:%.lx=%.d)

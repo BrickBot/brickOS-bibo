@@ -21,7 +21,7 @@ KERNEL=kernel/$(PACKAGE)
 #
 #  makefile to build the brickOS operating system and demo files
 # 
-SUBDIRS=util lib include kernel demo doc xs esterel
+SUBDIRS=util lib include kernel xs demo doc
 
 all::
 
