@@ -72,12 +72,14 @@ Note that Windows users now also have the option of using the
 [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/initialize-distro).
 
 Regardless of platform, key toolchain components include the following:
-- binutils-h8300-hms
-- gcc-h8300-hms
-- make
-- gcc
+* binutils-h8300-hms
+  - Provided by the binutils-cil project (https://github.com/BrickBot/binutils-cil)
+* gcc-h8300-hms
+  - provided by the gcc-cil project  (https://github.com/BrickBot/gcc-cil)
+* make
+* gcc
   - linux-libc-dev
-- g++
+* g++
 
 
 SETUP
