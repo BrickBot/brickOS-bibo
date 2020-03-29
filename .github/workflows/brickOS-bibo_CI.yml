@@ -16,7 +16,9 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - name: install h8300-hms toolchain
-      run: sudo apt-get install binutils-h8300-hms gcc-h8300-hms
+    - name: apt-get update
+      run: sudo apt-get --assume-yes update
+    - name: install build dependencies
+      run: sudo apt-get --assume-yes install binutils-h8300-hms gcc-h8300-hms
     - name: make
       run: make
