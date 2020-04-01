@@ -91,7 +91,7 @@ _kmain:
     
     ; End: Set the carrier frequency
 
-    ; Turn off parity
+    ; Turn off parity; if commented out, parity remains at odd
 
     ; bclr    #5,@0xd8:8
 	
