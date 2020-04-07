@@ -68,4 +68,4 @@ xs/lisp/eval-ir.o: $(XSEVAL) $(XSSRC)
 	$(CROSSCC) -DRCX -DIRCOM -DONLINE -DSTACKSIZE=$(XS_STACKSIZE) $(OPTIONS) -MD $(CROSSCFLAGS) -c $< -o $@
 
 $(XSLX): xs/lisp/eval-ir.lx
-	mv $< $@
+	cp $< $@

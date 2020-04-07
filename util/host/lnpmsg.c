@@ -105,7 +105,7 @@ int main(int argc, char **argv)
   int baud=RCX_DEFAULT_BAUD;
   int timeout=RCX_DEFAULT_TIMEOUT;
   int overWrite=0;
-  char errorMsg[60]="";
+  char errorMsg[65]="";
   char *logFileName=NULL;
   //char *sendFileName=NULL;
   //char *rtrWord=NULL;

@@ -122,8 +122,29 @@ int main()
   
 #else
 #warning dccthrottle.c requires CONF_DCC and CONF_DSENSOR_ROTATION, at least one of which is not set
-#warning dcc throttle demo will do nothing
+
+#include <conio.h>
+
 int main(int argc, char *argv[]) {
+	
+#ifndef CONF_DCC
+  cputc_native_user(CHAR_n, CHAR_o, CHAR_SPACE, CHAR_SPACE); // no
+  sleep(1);
+  cputc_native_user(CHAR_d, CHAR_c, CHAR_c, CHAR_SPACE);     // dcc
+  sleep(1);
+  cls();
+  sleep(1);
+#endif
+
+#ifndef CONF_DSENSOR_ROTATION
+  cputc_native_user(CHAR_n, CHAR_o, CHAR_SPACE, CHAR_SPACE); // no
+  sleep(1);
+  cputc_native_user(CHAR_r, CHAR_o, CHAR_t, CHAR_r);         // rotr
+  sleep(1);
+  cls();
+  sleep(1);
+#endif
+
   return 0;
 }
 #endif  //  defined(CONF_DCC) && defined(CONF_DSENSOR_ROTATION)

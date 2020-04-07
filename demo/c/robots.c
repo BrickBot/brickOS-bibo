@@ -25,6 +25,14 @@ int main(int argc,char *argv[]) {
 #warning robots.c requires CONF_DSOUND
 #warning robots demo will do nothing
 int main(int argc, char *argv[]) {
+#ifndef CONF_DSOUND
+  cputc_native_user(CHAR_n, CHAR_o, CHAR_SPACE, CHAR_SPACE); // no
+  sleep(1);
+  cputc_native_user(CHAR_S, CHAR_n, CHAR_d, CHAR_SPACE);     // snd
+  sleep(1);
+  cls();
+  sleep(1);
+#endif
   return 0;
 }
 #endif // CONF_DSOUND
