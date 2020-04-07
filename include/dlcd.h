@@ -154,7 +154,7 @@ extern "C" {
 #define LCD_IR_LOWER	0xef49,0x2
 #define LCD_IR_UPPER	0xef49,0x3
 
-// the crossed out battery
+// the crossed-out battery
 //
 #define LCD_BATTERY_X	0xef47,0x0
 

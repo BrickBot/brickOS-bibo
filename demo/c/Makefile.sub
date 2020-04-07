@@ -5,7 +5,7 @@
 ### --------------------------------------------------------------------------
 
 DEMO_C_SOURCES1=helloworld.c helloworld_lnp.c rover.c linetrack.c robots.c \
-          sound.c trailerbot.c cpu.c dccthrottle.c memtest.c \
+          screen.c sound.c trailerbot.c cpu.c dccthrottle.c memtest.c \
           edgecounting.c pf.c
 DEMO_C_SOURCES=$(DEMO_C_SOURCES1:%=demo/c/%)
 DEMO_C_PROGRAMS=$(patsubst %.c,%.lx,$(DEMO_C_SOURCES))
@@ -17,7 +17,8 @@ helloworld_lnp_SRC =
 rover_SRC =
 linetrack_SRC =
 robots_SRC =
-sound_SRC = 
+screen_SRC =
+sound_SRC =
 trailerbot_SRC =
 dccthrottle_SRC =
 memtest_SRC =
