@@ -39,10 +39,10 @@ extern "C" {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#define	BUTTON_ONOFF	0x0002	//!< the on/off button
-#define BUTTON_RUN	0x0004	//!< the run button
-#define BUTTON_VIEW	0x4000	//!< the view button
-#define BUTTON_PROGRAM	0x8000	//!< the program button
+#define BUTTON_ONOFF    0x0002  //!< the on/off button
+#define BUTTON_RUN      0x0004  //!< the run button
+#define BUTTON_VIEW     0x4000  //!< the view button
+#define BUTTON_PROGRAM  0x8000  //!< the program button
 
 // buttons are active low
 //

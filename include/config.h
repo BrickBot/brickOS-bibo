@@ -37,7 +37,7 @@
 #define CONF_TIME                       //!< system time
 #define CONF_MM                         //!< memory management
 #define CONF_TM                         //!< task management
-#define CONF_SETJMP			//!< non local goto
+#define CONF_SETJMP                     //!< non local goto
 #define CONF_SEMAPHORES                 //!< POSIX semaphores
 #define CONF_PROGRAM                    //!< dynamic program loading support
 #define CONF_VIS                        //!< generic visualization.
@@ -56,7 +56,7 @@
 #define CONF_LNP_STARTUP_BAUD_RATE B2400 //!< LNP baud rate
 #endif
 #define CONF_LNP_IR_CARRIER_ENABLED 1   //!< IR carrier state
-#define CONF_LNP_TX_ECHOES 1        //!< TX echoes
+#define CONF_LNP_TX_ECHOES 1            //!< TX echoes  (IR echoes; Bluetooth mods do not)
 
 // 16 nodes x 16 ports (affects size of lnp_addressing_handler[] table)
 #define CONF_LNP_HOSTMASK 0xf0          //!< LNP host mask
@@ -64,7 +64,7 @@
 // remote control services
 //
 #define CONF_RCX_PROTOCOL               //!< RCX protocol handler
-#define CONF_LR_HANDLER                 //!< remote control keys handler service
+#define CONF_LR_HANDLER                 //!< Lego remote control keys handler service
 #define CONF_RCX_MESSAGE                //!< standard firmware message service
 
 // drivers

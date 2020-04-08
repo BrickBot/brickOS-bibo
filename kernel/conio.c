@@ -265,6 +265,7 @@ void cputc_native(char mask, int pos)
     break;
   case 5:
     cputc_native_5(mask);
+    break;
   }
 }
 
@@ -275,7 +276,7 @@ void cputc_native_0(char mask)
 {
   // gcc is stupid
   // doesn't re-use constant values in registers.
-  // re-ordered stores to help him.
+  // re-ordered stores to help it.
 
   bit_load(mask, 0x2);
   dlcd_store(LCD_0_TOP);
@@ -402,6 +403,10 @@ void cputc_native_user(char mask_left, char mask_lcenter, char mask_rcenter, cha
   cputc_native_3(mask_lcenter);
   cputc_native_2(mask_rcenter);
   cputc_native_1(mask_right);
+
+#if !defined(CONF_LCD_REFRESH)
+  lcd_refresh();
+#endif
 }
 
 //! display a hexword in the four leftmost positions.

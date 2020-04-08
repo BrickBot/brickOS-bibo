@@ -19,11 +19,15 @@
   
 ******************************************************************************/
 
+// NOTE: This program demonstrates usage of <dlcd.h>.
+//    Please see <rom/lcd.h> for some alternate LCD segment capabilities.
+
 #include <config.h>
 #include <dlcd.h>
 #include <mem.h>
 #include <unistd.h>
 #include <conio.h>
+#include <rom/lcd.h>
 
 #define MSEC_PAUSE 750
 
@@ -200,9 +204,8 @@ void cycle_display(unsigned char do_set, unsigned char do_clear, unsigned int ms
 
 int main(int argc,char *argv[]) {
   unsigned int msec_pause = MSEC_PAUSE;
-  
-  cls();
-  cputc_native_0(CHAR_SPACE);
+
+  lcd_clear();
   
   // Cycle through the LCD segments individually
   // Note that some segments actively controlled by the OS
@@ -214,9 +217,7 @@ int main(int argc,char *argv[]) {
   // Show all the LCD segments concurrently
   cycle_display(1, 0, 0);
   msleep(msec_pause * 8);
-  cycle_display(0, 1, 0);
-  
-  cls();
+  lcd_clear();
 
   return 0;
 }
