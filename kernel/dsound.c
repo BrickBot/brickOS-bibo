@@ -225,7 +225,7 @@ int dsound_wait(void) {
     grab_kernel_lock();
     add_to_waitqueue(&dsound_finished, &entry);
     while (dsound_next_note && !shutdown_requested())
-	wait();
+        wait();
     remove_from_waitqueue(&entry);
     release_kernel_lock();
     return !shutdown_requested();

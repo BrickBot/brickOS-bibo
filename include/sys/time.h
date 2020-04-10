@@ -102,6 +102,7 @@ extern int get_timer_count(timer_t *timer);
 extern void remove_timer(timer_t *timer);
 
 time_t get_system_up_time(void);
+
 #endif  // CONF_TIME
 
 #ifdef  __cplusplus
