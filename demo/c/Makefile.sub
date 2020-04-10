@@ -6,7 +6,7 @@
 
 DEMO_C_SOURCES1=helloworld.c helloworld_lnp.c rover.c linetrack.c robots.c \
           screen.c sound.c trailerbot.c cpu.c dccthrottle.c memtest.c \
-          edgecounting.c pf.c
+          edgecounting.c powerfunctions.c
 DEMO_C_SOURCES=$(DEMO_C_SOURCES1:%=demo/c/%)
 DEMO_C_PROGRAMS=$(patsubst %.c,%.lx,$(DEMO_C_SOURCES))
 
@@ -23,7 +23,7 @@ trailerbot_SRC =
 dccthrottle_SRC =
 memtest_SRC =
 edgecounting_SRC =
-pf_SRC =
+powerfunctions_SRC =
 
 DEMO_C_SOURCES_ALL = $(DEMO_C_SOURCES) \
         $(foreach prog,$(DEMO_C_PROGRAMS:%.lx=%),$($(notdir $(prog))_SRC))
