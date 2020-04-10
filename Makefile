@@ -21,7 +21,18 @@ KERNEL=kernel/$(PACKAGE)
 #
 #  makefile to build the brickOS operating system and demo files
 # 
-SUBDIRS=util lib include kernel xs demo doc
+SUBDIRS=util lib include kernel xs
+
+# Only build the demo programs if program support is enabled
+ifeq ($(shell grep --quiet '^\#define CONF_PROGRAM' include/config.h && echo 1),1)
+  SUBDIRS += demo
+else
+  $(info NOTE: CONF_PROGRAM support for programs disabled; skipping building of demo programs)
+endif
+
+# Add docs to the subdirs list last
+SUBDIRS += doc
+
 
 all::
 
