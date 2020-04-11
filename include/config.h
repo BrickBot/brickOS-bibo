@@ -100,12 +100,8 @@
 #error "Key debouncing needs system time."
 #endif
 
-#if defined(CONF_TM) && !defined(CONF_TIME)
-#error "Task management needs system time."
-#endif
-
-#if defined(CONF_TM) && !defined(CONF_MM)
-#error "Task management needs memory management."
+#if defined(CONF_TM) && (!defined(CONF_TIME) || !defined(CONF_MM))
+#error "Task management needs system time and memory management."
 #endif
 
 #if defined(CONF_LNP) && defined(CONF_TM) && !defined(CONF_SEMAPHORES)
@@ -137,11 +133,11 @@
 #endif
 
 #if defined(CONF_DSENSOR_ROTATION) && !defined(CONF_DSENSOR)
-#error "Rotation sensor needs general sensor code."
+#error "Rotation sensor needs general sensor support."
 #endif
 
 #if defined(CONF_DSENSOR_VELOCITY) && !defined(CONF_DSENSOR_ROTATION)
-#error "Velocity sensor needs rotation sensor code."
+#error "Velocity sensor needs rotation sensor support."
 #endif
 
 //! macro used to put some legOS function in high memory area.
