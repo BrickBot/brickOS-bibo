@@ -14,9 +14,11 @@
 
   The Initial Developer of the Original Code is Mark Riley. Portions
   created by Mark Riley are Copyright (C) 2003 Mark Riley. All Rights
-  Reserved. 
+  Reserved.
+  
+  Updates by Matthew Sheets
 
-     File : dccdemo.c
+     File : dccthrottle.c
   Created : 6/12/2003
   Purpose : DCC demonstration program for DCC library
   

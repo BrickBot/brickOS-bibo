@@ -132,7 +132,7 @@ __TEXT_INIT__ void tm_init(void) {
 }
 
 
-//! idle and call handlers appropriatly
+//! idle and call handlers appropriately
 /*! May only be called from idle task with kernel lock set and interrupts off
 */
 void tm_idle(void) {
@@ -355,7 +355,7 @@ static void reap_to_death(tid_t tid) {
     tid->prev->next = tid->next;
     tid->next->prev = tid->prev;
     if ((tid->tflags & T_KERNEL)==T_KERNEL)
-	--nb_system_tasks;
+        --nb_system_tasks;
     --nb_tasks;
     free(tid);                               // free task data
 }
@@ -518,7 +518,7 @@ void add_to_waitqueue(waitqueue_t **queue, waitqueue_t *entry) {
     entry->thread = ctid;
     entry->next = *queue;
     if (*queue)
-	(*queue)->prev = &entry->next;
+        (*queue)->prev = &entry->next;
     *queue = entry;
     entry->prev = queue;
 }
@@ -527,9 +527,8 @@ wakeup_t wait_event(wakeup_t (*func)(wakeup_t), wakeup_t data)
 {
     wakeup_t result = 0;
     while (!shutdown_requested() && !(result = func(data)))
-	msleep(5);
+        msleep(5);
     return result;
 }
 
 #endif // CONF_TM
-

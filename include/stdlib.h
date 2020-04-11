@@ -41,6 +41,8 @@ extern "C" {
 //
 ///////////////////////////////////////////////////////////////////////
 
+#ifdef CONF_MM
+
 //
 // Standard memory management.
 // See the Linux man pages for details.
@@ -78,6 +80,8 @@ extern void *malloc(size_t size);
  *  \return Nothing
  */
 extern void free(void *ptr);
+
+#endif // CONF_MM
 
 //! generate a random number
 /*! The random() function returns successive pseudo-random numbers 

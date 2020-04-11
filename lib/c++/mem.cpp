@@ -18,6 +18,10 @@
  *  Contributor(s): Henner Zeller <H.Zeller@acm.org>
  */
 
+#include <config.h>
+
+#ifdef CONF_MM
+
 #include <stdlib.h>	// for malloc(), free(), size_t def'ns
 
 // if we are using 3.x compiler then define new style new/delete
@@ -42,5 +46,6 @@ void operator delete[] (void *p) {
   free(p);
 }
 
-#endif
+#endif  // __GNUC__ >= 3
 
+#endif // CONF_MM

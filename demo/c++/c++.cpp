@@ -31,6 +31,8 @@
  *  Contributor(s): Markus L. Noga <markus@noga.de>
  */
 
+#include <config.h>
+
 #include <conio.h>
 #include <unistd.h>
 #include <dsound.h>

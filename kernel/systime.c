@@ -39,6 +39,7 @@
 
 #ifdef CONF_TIME
 
+#include <mem.h>
 #include <sys/time.h>
 #include <sys/h8.h>
 #include <sys/irq.h>
@@ -230,7 +231,7 @@ _timer_interrupt:\n\
 
 #ifdef CONF_DKEY
 "	jsr _dkey_interrupt             ; call key handler\n"
-#endif // CONF_DMOTOR
+#endif // CONF_DKEY
         "\n\
 	mov.w @_sys_time+2,r6           ; lower 16 bits\n\
 	adds  #1,r6                     ; inc lower 16 bits\n\

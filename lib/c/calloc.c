@@ -22,6 +22,9 @@
  *
  *  Contributor(s): Markus L. Noga <markus@noga.de>
  */
+
+#ifdef CONF_MM
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -48,3 +51,5 @@ void *calloc(size_t nmemb, size_t size) {
     
   return ptr;
 }
+
+#endif // CONF_MM
