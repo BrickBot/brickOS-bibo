@@ -2141,7 +2141,7 @@ object newRcxSymbol() {
 int messageBytes;
 
 void wtInit() {
-	fputs("wtbufp_online = rdbuf_online;\n", xsout);
+	fputs("wtbufp = rdbuf;\n", xsout);
 	messageBytes = 0;
 	vs_len = 0;
 	partly_transmitted = 0;
@@ -2152,7 +2152,7 @@ static void checkBufferSpace(int n) {
 		fputs("wtCMD(CMDMORE);\n", xsout);
 		fputs("toplevel();\n", xsout);
 
-		fputs("wtbufp_online = rdbuf_online;\n", xsout);
+		fputs("wtbufp = rdbuf;\n", xsout);
 		messageBytes = 0;
 		partly_transmitted = 1;
 	}
