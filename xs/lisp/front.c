@@ -1379,7 +1379,7 @@ void writeObject(FILE* fp, Object x) {
 #include "test.c"
 #endif
 
-#define BUFSIZE (256 - 3) // size of wtbuf[]
+#define BUFSIZE (256 - 3) // size of wtbuf_online[]
 
 #define VSSIZE 256
 int vs_len;
@@ -1446,11 +1446,11 @@ void simulate_vs(object e) {
 }
 
 #ifdef ONLINE
-unsigned char wtbuf[BUFSIZE];
+unsigned char wtbuf_online[BUFSIZE];
 unsigned char CMDbuf[1];
-unsigned char rdbuf[BUFSIZE];
-unsigned char *wtbufp;
-const unsigned char *rdbufp;
+unsigned char rdbuf_online[BUFSIZE];
+unsigned char *wtbufp_online;
+const unsigned char *rdbufp_online;
 
 #ifdef IRCOM
 
@@ -1466,14 +1466,14 @@ const unsigned char *rdbufp;
 tty_t tty = { BADFILE, tty_t_undefined };
 char lnp_buffer[RCX_BUFFERSIZE];
 
-int rdbuf_ready = 0;
+int rdbuf_online_ready = 0;
 
 void input_handler(const unsigned char *buf, unsigned char len,
                     unsigned char src)
 {
 	int i;
 
-	if (rdbuf_ready) {
+	if (rdbuf_online_ready) {
 		printf("lost a packet: ");
     	for (i = 0; i < len; i++)
     		printf("0x%x ", buf[i]);
@@ -1483,9 +1483,9 @@ void input_handler(const unsigned char *buf, unsigned char len,
     	CMDbuf[0] = CMDACK;
     	lnp_addressing_write(CMDbuf, 1, 1, 0);
     	for (i = 0; i < len; i++)
-    		rdbuf[i] = buf[i];
-    	rdbufp = rdbuf;
-    	rdbuf_ready = 1;
+    		rdbuf_online[i] = buf[i];
+    	rdbufp_online = rdbuf_online;
+    	rdbuf_online_ready = 1;
     }
 }
 
@@ -1501,8 +1501,8 @@ void begin_rcx() {
 		lnp_addressing_write(CMDbuf, 1, 1, 0);
 		for (j = 0; j < 10; j++) {
             rcx_recv_lnp(&tty, lnp_buffer, sizeof(lnp_buffer), timeout);
-			if (rdbuf_ready) {
-				rdbuf_ready = 0;
+			if (rdbuf_online_ready) {
+				rdbuf_online_ready = 0;
 				return;
 			}
 			usleep(100000);
@@ -1517,13 +1517,13 @@ void end_rcx() {
 }
 
 static void transmit() {
-	rdbuf_ready = 0;
-	lnp_addressing_write(wtbuf, wtbufp-wtbuf, 1, 0);
+	rdbuf_online_ready = 0;
+	lnp_addressing_write(wtbuf_online, wtbufp_online - wtbuf_online, 1, 0);
 }
 
 static void transmitCMD(object x) {
 	CMDbuf[0] = x;
-	rdbuf_ready = 0;
+	rdbuf_online_ready = 0;
 	lnp_addressing_write(CMDbuf, 1, 1, 0);
 }
 
@@ -1551,7 +1551,7 @@ void sigint(int x) {
 
 #ifdef JOINT
 static void transmit() {
-	copy_buf(wtbuf, wtbufp - wtbuf);
+	copy_buf(wtbuf_online, wtbufp_online - wtbuf_online);
 	interrupt_enabled = 1;
 	toplevel0();
 	interrupt_enabled = 0;
@@ -1567,27 +1567,27 @@ static void transmitCMD(object x) {
 #endif
 
 void wtInit() {
-	wtbufp = wtbuf;
+	wtbufp_online = wtbuf_online;
 	vs_len = 0;
 	partly_transmitted = 0;
 }
 
 static void checkBufferSpace(int n) {
-	if (wtbufp >= wtbuf + BUFSIZE - n) {
-		*wtbufp++ = (CMDMORE & 0xff);
+	if (wtbufp_online >= wtbuf_online + BUFSIZE - n) {
+		*wtbufp_online++ = (CMDMORE & 0xff);
 		transmit();
 
 #ifdef IRCOM
-		while (!rdbuf_ready) {
+		while (!rdbuf_online_ready) {
             rcx_recv_lnp(&tty, lnp_buffer, sizeof(lnp_buffer), timeout);
 			usleep(10000);
 		}
 #else
-		rdbufp = rdbuf;
+		rdbufp_online = rdbuf_online;
 #endif
-		if (*rdbufp != CMDMORE)
+		if (*rdbufp_online != CMDMORE)
 			fputs("RCX cannot receive more message\n", stdout);
-		wtbufp = wtbuf;
+		wtbufp_online = wtbuf_online;
 		partly_transmitted = 1;
 	}
 }
@@ -1595,7 +1595,7 @@ static void checkBufferSpace(int n) {
 static void wtCMD(object e) {
 	simulate_vs(e);
 	checkBufferSpace(1);
-	*wtbufp++ = e & 0xff;
+	*wtbufp_online++ = e & 0xff;
 }
 
 static void wt(object e) {
@@ -1605,14 +1605,14 @@ static void wt(object e) {
 		vs_inc();
 #ifdef RCX
 		checkBufferSpace(2);
-		*wtbufp++ = e & 0xff;
-		*wtbufp++ = e >> 8;
+		*wtbufp_online++ = e & 0xff;
+		*wtbufp_online++ = e >> 8;
 #else
 		checkBufferSpace(4);
-		*wtbufp++ = e & 0xff;
-		*wtbufp++ = e >> 8;
-		*wtbufp++ = e >> 16;
-		*wtbufp++ = e >> 24;
+		*wtbufp_online++ = e & 0xff;
+		*wtbufp_online++ = e >> 8;
+		*wtbufp_online++ = e >> 16;
+		*wtbufp_online++ = e >> 24;
 #endif
 	}
 }
@@ -1681,10 +1681,10 @@ void print_message(int id, Object val, Object bt) {
 
 Object receive() {
 #ifndef IRCOM
-	rdbufp = rdbuf;
+	rdbufp_online = rdbuf_online;
 #endif
 	while (1) {
-		object b = *rdbufp++;
+		object b = *rdbufp_online++;
 		if (COMMANDP(b))
 			switch(CMDindex(b)) {
 			case CXERR:
@@ -1973,10 +1973,10 @@ Object receive() {
 				baboon("wrong command received -- default");
 			}
 		else {
-			b |= (*rdbufp++ << 8);
+			b |= (*rdbufp_online++ << 8);
 #ifndef RCX
-			b |= (*rdbufp++ << 16);
-			b |= (*rdbufp++ << 24);
+			b |= (*rdbufp_online++ << 16);
+			b |= (*rdbufp_online++ << 24);
 #endif
 			rs_push(newWrapper(b));
 		}
@@ -1997,7 +1997,7 @@ Object receive1() {
 	interrupt_enabled = 1;
 	while (1) {
         rcx_recv_lnp(&tty, lnp_buffer, sizeof(lnp_buffer), timeout);
-		if (rdbuf_ready) {
+		if (rdbuf_online_ready) {
 			interrupt_enabled = 0;
 			x = receive();
 			interrupt_enabled = 1;
@@ -2005,7 +2005,7 @@ Object receive1() {
 				if (x == errorObject) {
 					break;
 				} else {
-					rdbuf_ready = 0;
+					rdbuf_online_ready = 0;
 					continue;
 				}
 			}
@@ -2018,7 +2018,7 @@ Object receive1() {
 				transmit();
 				continue;
 			} else if (x == pingObject) {
-				rdbuf_ready = 0;
+				rdbuf_online_ready = 0;
 				continue;
 			}
 			rs_top = receive_stack;
@@ -2086,7 +2086,7 @@ Object receive1() {
 
 void receive0(unsigned char *src, int n) {
 	int i;
-	unsigned char *p = rdbuf;
+	unsigned char *p = rdbuf_online;
 	Object x;
 	for (i = 0; i < n; i++)
 		*p++ = src[i];
@@ -2098,7 +2098,7 @@ void receive0(unsigned char *src, int n) {
 		CMDbuf[0] = CMDABORT;
 		copy_buf(CMDbuf, 1);
 	} else if (x == READObject || x == WRITEObject) {
-		copy_buf(wtbuf, wtbufp - wtbuf);
+		copy_buf(wtbuf_online, wtbufp_online - wtbuf_online);
 	} else
 		received_value = x;
 }
@@ -2141,7 +2141,7 @@ object newRcxSymbol() {
 int messageBytes;
 
 void wtInit() {
-	fputs("wtbufp = rdbuf;\n", xsout);
+	fputs("wtbufp_online = rdbuf_online;\n", xsout);
 	messageBytes = 0;
 	vs_len = 0;
 	partly_transmitted = 0;
@@ -2152,7 +2152,7 @@ static void checkBufferSpace(int n) {
 		fputs("wtCMD(CMDMORE);\n", xsout);
 		fputs("toplevel();\n", xsout);
 
-		fputs("wtbufp = rdbuf;\n", xsout);
+		fputs("wtbufp_online = rdbuf_online;\n", xsout);
 		messageBytes = 0;
 		partly_transmitted = 1;
 	}
