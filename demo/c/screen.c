@@ -13,7 +13,7 @@
   The Initial Developer of the Original Code is Matthew Sheets.  All Rights
   Reserved. 
 
-     File : dccdemo.c
+     File : screen.c
   Created : 4/7/2020
   Purpose : Demonstration program for LCD screen
   
@@ -194,8 +194,7 @@ void cycle_display(unsigned char do_set, unsigned char do_clear, unsigned int ms
         }
         if (msec_pause != 0) { msleep(msec_pause); }
         if (do_clear) {
-          cls();
-          cputc_native_0(CHAR_SPACE);
+          lcd_clear();
         }
     }
   }
