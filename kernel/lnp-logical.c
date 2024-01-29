@@ -93,7 +93,7 @@ static void run_allow_tx(void *data);
 static timer_t allow_tx_timer = {
     0, run_allow_tx, 0, 0
 };
-static waitqueue_t *lnp_waitqueue;   //!< wait queue for transmitter
+static waitqueue_t *lnp_waitqueue = NULL;   //!< wait queue for transmitter
 
 #ifdef CONF_TM
 sem_t tx_sem;                //!< transmitter access semaphore

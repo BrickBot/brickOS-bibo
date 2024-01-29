@@ -79,7 +79,7 @@ const note_t volatile * dsound_next_note;  	//!< pointer to current note
 
 static volatile int internote; 	      	      	//!< internote delay
 static int repcnt = 0;
-waitqueue_t *dsound_finished;
+waitqueue_t *dsound_finished = NULL;
 
 
 //////////////////////////////////////////////////////////////////////////////

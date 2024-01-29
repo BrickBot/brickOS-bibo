@@ -118,7 +118,7 @@ volatile lnp_message_handler_t lnp_message_handler = LNP_DUMMY_MESSAGE;
 #if defined(CONF_RCX_MESSAGE)
 //! message from standard firmware
 unsigned char lnp_rcx_message;
-static waitqueue_t *msg_waitqueue;   //!< wait queue for message
+static waitqueue_t *msg_waitqueue = NULL;   //!< wait queue for message
 
 #endif
 
