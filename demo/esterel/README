@@ -89,3 +89,5 @@ function CHANGE_MOTOR_DIR(integer) : integer;
 % Screen display
 %---------------
 output CPUTS : string;
+
+By Xavier Fornari (Xavier.Fornari@sophia.inria.fr) as posted to https://web.imt-atlantique.fr/x-info/lego/scLego.html
