@@ -11,7 +11,7 @@ DEMO_ESTEREL_SOURCES=$(DEMO_ESTEREL_SOURCES1:%=demo/esterel/%)
 ifneq ($(shell which esterel),)
 	DEMO_ESTEREL_PROGRAMS=$(patsubst %.strl,%.lx,$(DEMO_ESTEREL_SOURCES))
 else
-	$(warning Esterel compiler not found; skipping Esterel programs)
+ $(warning Esterel compiler not found; skipping Esterel programs)
 endif
 
 DISTFILES += demo/esterel/Makefile.sub demo/esterel/README $(DEMO_ESTEREL_SOURCES)
