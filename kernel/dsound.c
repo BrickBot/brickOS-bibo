@@ -88,6 +88,11 @@ waitqueue_t *dsound_finished = NULL;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+//! start playing a pause/rest (aka stop playing freq)
+static inline void play_pause() {
+  T0_CR  = 0x00;      	      	 // timer 0 off
+}
+
 //! start playing a given frequency
 static inline void play_freq(unsigned freq) {
   if (0 == freq) {
@@ -112,11 +117,6 @@ static inline void play_freq(unsigned freq) {
     T0_CORA = match;               // set compare match A
     T0_CR   = CR_CLEAR_ON_A | (CKSmask &0x3);
   }
-}
-
-//! start playing a pause/rest (aka stop playing freq)
-static inline void play_pause() {
-  T0_CR  = 0x00;      	      	 // timer 0 off
 }
 
  
