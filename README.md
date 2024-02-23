@@ -40,6 +40,7 @@ incorporated by Matthew Sheets and are part of this code base.  While these
 updates are enumerated at https://news.lugnet.com/robotics/rcx/legos/?n=4057 on
 the LEGO Users Group Network (LUGNET), some key changes include the following:
 
+* Support for Power Functions IR control (Carl Troein)
 * Updated utils to better facilitate using TCP as a tty.
 * Made NCD tty types a runtime option instead of a compile-time #define.
 * Merged patches for BrickOS with Bibo, including
