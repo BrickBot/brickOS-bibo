@@ -14,7 +14,8 @@ KSOURCES=$(KSOURCES1:%=kernel/%)
 KASMSOURCES1=dccasm.S
 KASMSOURCES=$(KASMSOURCES1:%=kernel/%)
 
-KERNEL_TARGETS:=$(KERNEL).coff $(KERNEL).srec $(KERNEL).lds BaseAddresses
+KERNEL_FILES:=$(KERNEL).coff $(KERNEL).srec $(KERNEL).lds
+KERNEL_TARGETS:=$(KERNEL_FILES) BaseAddresses
 
 # Files of the source distribution
 DISTFILES += kernel/Makefile.sub $(KSOURCES) $(KASMSOURCES)
@@ -29,7 +30,7 @@ all:: $(KERNEL_TARGETS)
 
 install:: $(KERNEL_TARGETS)
 	test -d $(DESTDIR)$(pkgdatadir) || mkdir -p $(DESTDIR)$(pkgdatadir)
-	install -m 644 $(KERNEL_TARGETS) $(DESTDIR)$(pkgdatadir)
+	install -m 644 $(KERNEL_FILES) $(DESTDIR)$(pkgdatadir)
 
 clean::
 	rm -f kernel/*.srec kernel/*.o kernel/*.lds kernel/*.dis kernel/*.coff kernel/*.map kernel/*.d
