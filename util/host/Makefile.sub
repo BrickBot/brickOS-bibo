@@ -58,7 +58,7 @@ realclean:: clean
 	rm -f util/host/*~ util/host/*.bak 
 	rm -f $(BIN)
 
-install:: $(BIN) $(MAN1) $(mandir)/man1
+install:: $(BIN) $(MAN1)
 	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
 	test -d $(DESTDIR)$(mandir)/man1 || mkdir -p $(DESTDIR)$(mandir)/man1
 	install -s -m 755  $(BIN) $(DESTDIR)$(bindir)/
@@ -67,9 +67,6 @@ install:: $(BIN) $(MAN1) $(mandir)/man1
 uninstall::
 	rm -f $(mandir)/man1/$(MAN1) $(bindir)/$(EXE1)
 
-
-$(mandir)/man1:
-	mkdir -p $@
 
 util/host/lnp.o: kernel/lnp.c
 	$(CC) -MMD $(CFLAGS) -c -o $@ $^

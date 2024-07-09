@@ -25,7 +25,7 @@ jobs:
     - name: Execute the build
       run:  make
     - name: Test-run “make install”
-      run:  make install DESTDIR=./build/destdir
+      run:  make DESTDIR=$(pwd)/build/destdir install
     - name: Archive the “make install” output
       uses: actions/upload-artifact@v4
       with:
