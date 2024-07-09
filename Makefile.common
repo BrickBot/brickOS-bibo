@@ -62,7 +62,7 @@ CROSSOBJDUMP=$(CROSSTOOLPREFIX)objdump
 CROSSCC=$(CROSSTOOLPREFIX)gcc
 CROSSCXX=$(CROSSTOOLPREFIX)g++
 
-MERGEMAP=util/merge-map
+MERGEMAP=util/merge-map$(EXT)
 FIXDEPS	=util/fixdeps$(EXT)
 GENLDS 	=util/genlds$(EXT)
 MAKELX	=util/makelx$(EXT)
