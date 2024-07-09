@@ -21,7 +21,7 @@
 
 echo ""
 echo "Welcome to the brickOS Makefile configurator."
-echo "Attempting to find the Hitachi gcc compiler. (This may take some time.)"
+echo "Attempting to find the gcc compiler for the h8300. (This might take some time.)"
 echo ""
 
 #
@@ -89,7 +89,7 @@ done
 #
 if test -z "$HMSFULL"
 then
-   echo "No hitachi gcc compiler found, please install compiler or edit" \
+   echo "No gcc compiler found for the h8300, please install compiler or edit" \
 		"the configure script and try again."
    exit 1
 fi
