@@ -55,7 +55,7 @@ KLIBRARIES=lib/libc.a lib/libmint.a
 #KLIBRARIES=lib/libc.a lib/libmint.a lib/libfloat.a
 
 # linker command files for kernel
-KLDFLAGS=-Tbibo.ld -relax
+KLDFLAGS=-T$(PACKAGE).ld -relax
 
 GET_BASE_FROM_FILE2 = $(shell [ -e $(2) ] && cat $(2) | grep -E ^$(1)[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$ | sed s/$(1)[[:space:]]*=[[:space:]]*// )
 

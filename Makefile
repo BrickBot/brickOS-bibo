@@ -207,7 +207,7 @@ tag::
 # ------------------------------------------------------------
 #
 
-DISTFILES += Doxyfile Doxyfile-c Doxyfile-c++ bibo.ld configure \
+DISTFILES += Doxyfile Doxyfile-c Doxyfile-c++ $(PACKAGE).ld configure \
         README CONTRIBUTORS LICENSE \
 	Makefile Makefile.common Makefile.dist Makefile.user
 
