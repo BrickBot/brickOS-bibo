@@ -9,7 +9,7 @@
 #  Define our default install locations (overridden by packaging systems)
 #
 DESTDIR ?= 
-prefix ?= /usr/local/brickos
+prefix ?= /usr/local/$(PACKAGE)
 exec_prefix ?= ${prefix}
 
 bindir ?= ${exec_prefix}/bin
