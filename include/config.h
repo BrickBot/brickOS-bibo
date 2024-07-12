@@ -87,7 +87,7 @@
 //#define CONF_DSENSOR_MUX                //!< sensor multiplexor
 //#define CONF_DSENSOR_SWMUX              //!< techno-stuff swmux sensor
 #define CONF_DSENSOR_EDGECOUNT          //!< edge counting for touch/light sensors
-//#define CONF_POWERFUNCTIONS               //!< act as power functions remote control
+#define CONF_POWERFUNCTIONS               //!< act as power functions remote control
 
 
 // dependencies
