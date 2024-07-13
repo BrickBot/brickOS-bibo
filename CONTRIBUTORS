@@ -28,6 +28,9 @@ Matthew Sheets (mesheets@users.sourceforge.net)
   Enabled more flexible communication options for downloading firmware
   Modified conio to remove the CONF_ASCII dependency from CONF_PROGRAM
   Updated Makefiles to support building programs written in Esterel
+  Enable configurable package/kernel naming
+  Refactor "makelx" to "writelx"
+  Various code cleanups...
 
 Carl Troein (troein@users.sourceforge.net)
   Fixed signedness and constness warnings
@@ -116,7 +119,7 @@ Paolo Masetti (paolo.masetti@itlug.org)
   Added/Updated Cygwin support (B-20 and 1.x)
 
 Stephen M Moraco (stephen@debian.org)
-  Small makelx c++ fix (ctor/dtor alloc), created manpages for dll(1)
+  Small writelx (formerly makelx) c++ fix (ctor/dtor alloc), created manpages for dll(1)
   and firmdl3(1), added inline API documentation extractable by Doxygen
 
 and many people testing and submitting fix requests including (but
@@ -138,7 +141,7 @@ Stig Neilsson (spiff@rhk.dk)
   Extremely thorough kernel documentation.
 
 John Markus Bjorndalen (johnm@cs.uit.no)
-  Small makelx fix for gcc 2.96 (RH 7.0).
+  Small writelx (formerly makelx) fix for gcc 2.96 (RH 7.0).
 
 V0.2.4
 ---------

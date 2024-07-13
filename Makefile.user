@@ -90,22 +90,22 @@ LIBDIR?=lib
 	rm -f $@
 	$(CROSSAR) -sq $@ $^ $(_SRC_OBJS)
 
-#  How to make coff files of dynamic executables (twice, for makelx)
+#  How to make coff files of dynamic executables (twice, for writelx)
 %.dc1: %.o %.a $(CROSSLIBS:-l%=$(LIBDIR)/lib%.a) $(KERNEL).lds
 	$(CROSSLD) $(DLDFLAGS) $*.o $*.a $(CROSSLIBS) -o $@ --oformat coff-h8300 -Ttext $(call GET_BASE,BASE1)
 
 %.dc2: %.o %.a $(CROSSLIBS:-l%=$(LIBDIR)/lib%.a) $(KERNEL).lds
 	$(CROSSLD) $(DLDFLAGS) $*.o $*.a $(CROSSLIBS) -o $@ --oformat coff-h8300 -Ttext $(call GET_BASE,BASE2)
 
-#  How to make srec files from coff files (twice, for makelx)
+#  How to make srec files from coff files (twice, for writelx)
 %.ds2: %.dc2
 	$(CROSSOBJCOPY) -I coff-h8300 -O symbolsrec $< $@
 
 %.ds1: %.dc1
 	$(CROSSOBJCOPY) -I coff-h8300 -O symbolsrec $< $@
 
-%.lx: %.ds1 %.ds2 $(MAKELX)
-	$(MAKELX) $*.ds1 $*.ds2 $@
+%.lx: %.ds1 %.ds2 $(WRITELX)
+	$(WRITELX) $*.ds1 $*.ds2 $@
 
 ### --------------------------------------------------------------------------
 ###                          End of FILE: Makefile.user

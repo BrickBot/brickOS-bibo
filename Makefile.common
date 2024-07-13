@@ -65,7 +65,7 @@ CROSSCXX=$(CROSSTOOLPREFIX)g++
 MERGEMAP=util/merge-map$(EXT)
 FIXDEPS	=util/fixdeps$(EXT)
 GENLDS 	=util/genlds$(EXT)
-MAKELX	=util/makelx$(EXT)
+WRITELX	=util/writelx$(EXT)
 
 ### --------------------------------------------------------------------------
 ###                         End of FILE: Makefile.common

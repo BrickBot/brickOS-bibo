@@ -9,33 +9,33 @@ FIRMDLTARGET=firmdl$(EXT)
 FIRMDLMAN1=firmdl.1
 LNPMSGTARGET=lnpmsg$(EXT)
 IRSRVRTARGET=ir-server$(EXT)
-DLLALLTARGETS=dll$(EXT) makelx$(EXT) genlds$(EXT)
+DLLALLTARGETS=dll$(EXT) writelx$(EXT) genlds$(EXT)
 DLLALLMAN1=dll.1
 MKIMG := util/host/mkimg$(EXT)
 
 RCX_COMM_SRCS = rcx_comm.c lnp-logical.c lnp.c
 
-FONTSRC   = fontdesign.c
-FIRMDLSRC = firmdl.c srec.c srecload.c $(RCX_COMM_SRCS)
-MKIMGSRC  = mkimg.c srec.c srecload.c
-LNPMSGSRC = lnpmsg.c lnpmsg_comm.c $(RCX_COMM_SRCS)
-DLLSRC    = loader.c lx.c $(RCX_COMM_SRCS)
-MAKELXSRC = convert.c srec.c srecload.c lx.c
-IRSRVRSRC = ir-server.c $(RCX_COMM_SRCS)
-GENLDSSRC = genlds.c
+FONTSRC    = fontdesign.c
+FIRMDLSRC  = firmdl.c srec.c srecload.c $(RCX_COMM_SRCS)
+MKIMGSRC   = mkimg.c srec.c srecload.c
+LNPMSGSRC  = lnpmsg.c lnpmsg_comm.c $(RCX_COMM_SRCS)
+DLLSRC     = loader.c lx.c $(RCX_COMM_SRCS)
+WRITELXSRC = convert.c srec.c srecload.c lx.c
+IRSRVRSRC  = ir-server.c $(RCX_COMM_SRCS)
+GENLDSSRC  = genlds.c
 
-FONTOBJS   := $(FONTSRC:%.c=util/host/%.o)
-FIRMDLOBJS := $(FIRMDLSRC:%.c=util/host/%.o)
-MKIMGOBJS  := $(MKIMGSRC:%.c=util/host/%.o)
-LNPMSGOBJS := $(LNPMSGSRC:%.c=util/host/%.o)
-DLLOBJS    := $(DLLSRC:%.c=util/host/%.o)
-MAKELXOBJS := $(MAKELXSRC:%.c=util/host/%.o)
-IRSRVROBJS := $(IRSRVRSRC:%.c=util/host/%.o)
-GENLDSOBJS := $(GENLDSSRC:%.c=util/host/%.o)
+FONTOBJS    := $(FONTSRC:%.c=util/host/%.o)
+FIRMDLOBJS  := $(FIRMDLSRC:%.c=util/host/%.o)
+MKIMGOBJS   := $(MKIMGSRC:%.c=util/host/%.o)
+LNPMSGOBJS  := $(LNPMSGSRC:%.c=util/host/%.o)
+DLLOBJS     := $(DLLSRC:%.c=util/host/%.o)
+WRITELXOBJS := $(WRITELXSRC:%.c=util/host/%.o)
+IRSRVROBJS  := $(IRSRVRSRC:%.c=util/host/%.o)
+GENLDSOBJS  := $(GENLDSSRC:%.c=util/host/%.o)
 
 
 DISTFILES += $(patsubst %,util/host/%, Makefile.sub $(sort $(FONTSRC) $(FIRMDLSRC) \
-        $(MKIMGSRC) $(LNPMSGSRC) $(DLLSRC) $(MAKELXSRC) $(IRSRVRSRC) $(GENLDSSRC) \
+        $(MKIMGSRC) $(LNPMSGSRC) $(DLLSRC) $(WRITELXSRC) $(IRSRVRSRC) $(GENLDSSRC) \
         config.h fastdl.S srec.h srecload.h lx.h rcx_comm.h lnpmsg_comm.h \
         $(DLLALLMAN1) $(FIRMDLMAN1) ))
 DISTFILES := $(filter-out util/host/lnp.c util/host/lnp-logical.c, $(DISTFILES))
@@ -75,7 +75,7 @@ util/host/lnp-logical.o: kernel/lnp-logical.c
 	$(CC) -MMD $(CFLAGS) -c -o $@ $^
 
 NATIVEOBJS+=$(patsubst util/host/lnp.o,, $(patsubst util/host/lnp-logical.o,, $(sort $(FONTOBJS) \
-    $(FIRMDLOBJS) $(MKIMGOBJS) $(LNPMSGOBJS) $(DLLOBJS) $(MAKELXOBJS) $(IRSRVROBJS) $(GENLDSOBJS))))
+    $(FIRMDLOBJS) $(MKIMGOBJS) $(LNPMSGOBJS) $(DLLOBJS) $(WRITELXOBJS) $(IRSRVROBJS) $(GENLDSOBJS))))
 
 util/host/firmdl.o: util/host/fastdl_2400.h util/host/fastdl_4800.h util/host/fastdl_9600.h util/host/fastdl_19200.h  util/host/fastdl_38400.h
 
@@ -112,7 +112,7 @@ util/$(IRSRVRTARGET): $(IRSRVROBJS)
 
 util/dll$(EXT): $(DLLOBJS)
 	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
-$(MAKELX): $(MAKELXOBJS)
+$(WRITELX): $(WRITELXOBJS)
 	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
 $(GENLDS): $(GENLDSOBJS)
 	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
