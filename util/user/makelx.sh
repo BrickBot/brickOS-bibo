@@ -7,8 +7,8 @@
 ###  bibo - another LEGO Mindstorms OS
 ### --------------------------------------------------------------------------
 
-echo Makes an LX program file from source
-echo Usage: $0 <main source file> [additional source files]...
+echo "Makes an LX program file from source"
+echo "Usage: $(basename $0) <main source file> [additional source files]..."
 
 echo ""
-echo (Placeholder only - functionality not yet implemented)
+echo "(Placeholder only - functionality not yet implemented)"
