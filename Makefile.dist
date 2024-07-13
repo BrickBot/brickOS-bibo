@@ -4,10 +4,11 @@
 ###  bibo - another LEGO Mindstorms OS
 ### --------------------------------------------------------------------------
 
+# IMPORTANT: Do not modify the commented placeholder line below without also updating the "install" target in the main Makefile.
 # installation paths
 
-# name for the brickOS kernel
-KERNEL = $(DATADIR)/bibo
+# name for the kernel
+KERNEL = $(DATADIR)/$(PACKAGE)
 
 SOURCES?=helloworld.c
 

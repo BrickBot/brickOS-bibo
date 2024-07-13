@@ -43,6 +43,7 @@ install::
 	test -d $(DESTDIR)$(pkgdatadir) || mkdir -p $(DESTDIR)$(pkgdatadir)
 	install -m 644 Makefile.user $(DESTDIR)$(pkgdatadir)
 	sed -e '/installation paths/a \
+	PACKAGE = $(PACKAGE)\
 	BINDIR = $(bindir)\
 	DATADIR = $(pkgdatadir)\
 	LIBDIR = $(pkglibdir)\
