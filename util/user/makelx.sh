@@ -12,3 +12,10 @@ echo "Usage: $(basename $0) <main source file> [additional source files]..."
 
 echo ""
 echo "(Placeholder only - functionality not yet implemented)"
+
+echo ""
+echo "Main source file: '$1'"
+echo "Additional source files for $(basename ${1%.*}):"
+shift
+echo " - $*"
+
