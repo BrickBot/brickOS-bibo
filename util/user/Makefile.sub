@@ -17,4 +17,4 @@ $(MAKELX): $(MAKELX_SCRIPT)
 
 install:: $(MAKELX)
 	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
-	install -s -m 755  $(MAKELX) $(DESTDIR)$(bindir)/
+	install -m 755  $(MAKELX) $(DESTDIR)$(bindir)/
