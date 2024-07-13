@@ -4,8 +4,8 @@
 ###  bibo - another LEGO Mindstorms OS
 ### --------------------------------------------------------------------------
 
-$(MAKELX) = util/makelx
-$(MAKELX_SCRIPT) = util/user/makelx.sh
+MAKELX = util/makelx
+MAKELX_SCRIPT = util/user/makelx.sh
 
 DISTFILES += util/user/Makefile.sub $(MAKELX_SCRIPT)
 
