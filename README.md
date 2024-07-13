@@ -1,4 +1,4 @@
- bibo isn’t brickOS
+ bibo isn’t brickOS  ![brickOS-bibo CI](https://github.com/BrickBot/brickOS-bibo/workflows/brickOS-bibo%20CI/badge.svg)
 ====================
 From the BrickBot/brickOS-bibo repository on GitHub
 
