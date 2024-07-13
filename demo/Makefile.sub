@@ -4,6 +4,8 @@
 ###  bibo - another LEGO Mindstorms OS
 ### --------------------------------------------------------------------------
 
+DISTFILES += demo/Makefile.sub
+
 include demo/c/Makefile.sub
 include demo/c++/Makefile.sub
 include demo/esterel/Makefile.sub
