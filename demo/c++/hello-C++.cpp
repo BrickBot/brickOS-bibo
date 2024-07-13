@@ -57,7 +57,7 @@ public:
 class DisplayState : public StateChanger {
 public:
   void enable() {
-    cputc_native_user(0, CHAR_o, CHAR_n, 0);  // on
+    cputc_native_user(CHAR_H, CHAR_E, CHAR_PARALLEL, CHAR_O);  // HEllO
   }
 
   void disable() {

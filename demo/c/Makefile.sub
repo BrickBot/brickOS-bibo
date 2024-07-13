@@ -4,7 +4,7 @@
 ###  bibo - another LEGO Mindstorms OS
 ### --------------------------------------------------------------------------
 
-DEMO_C_SOURCES1=helloworld.c helloworld_lnp.c rover.c linetrack.c robots.c \
+DEMO_C_SOURCES1=hello-C.c helloworld_lnp.c rover.c linetrack.c robots.c \
           screen.c sound.c trailerbot.c cpu.c dccthrottle.c memtest.c \
           edgecounting.c powerfunctions.c
 DEMO_C_SOURCES=$(DEMO_C_SOURCES1:%=demo/c/%)
@@ -12,7 +12,7 @@ DEMO_C_PROGRAMS=$(patsubst %.c,%.lx,$(DEMO_C_SOURCES))
 
 # extra dynamic sources  - program name (e.g. helloworld.c/.cpp) is always assumed
 # NOTE: must specify path (is relative to the directory of the main Makefile)
-helloworld_SRC =
+hello-C_SRC =
 helloworld_lnp_SRC =
 rover_SRC =
 linetrack_SRC =

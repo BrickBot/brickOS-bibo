@@ -4,13 +4,13 @@
 ###  bibo - another LEGO Mindstorms OS
 ### --------------------------------------------------------------------------
 
-DEMO_CPP_SOURCES1=c++.cpp
+DEMO_CPP_SOURCES1=hello-C++.cpp
 DEMO_CPP_SOURCES=$(DEMO_CPP_SOURCES1:%=demo/c++/%)
 DEMO_CPP_PROGRAMS=$(patsubst %.cpp,%.lx,$(DEMO_CPP_SOURCES))
 
 # extra dynamic sources  - program name (e.g. helloworld.c/.cpp) is always assumed
 # NOTE: must specify path (is relative to the directory of the main Makefile)
-c++_SRC =
+hello-C++_SRC =
 
 DEMO_CPP_SOURCES_ALL = $(DEMO_CPP_SOURCES) \
         $(foreach prog,$(DEMO_CPP_PROGRAMS:%.lx=%),$($(notdir $(prog))_SRC))
