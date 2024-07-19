@@ -34,18 +34,18 @@ jobs:
     # Before archiving, tar the host installation output to preserve file permission
     # c.f. https://github.com/actions/upload-artifact?tab=readme-ov-file#permission-loss
     - name: Tar the host installation snapshot to preserve file permissions
-      run:  tar -cvf build/install.tar  --strip-components=2  -C build/destdir/  ./
+      run:  tar -cvf build/install.tar  --strip-components=2  build/destdir/
 
     - name: Archive the host installation snapshot tar file
       uses: actions/upload-artifact@v4
       with:
-        name: brickOS-bibo-install~[runner_${{ matrix.os }}]
+        name: brickOS-bibo_install_[runner~${{ matrix.os }}]
         path: build/install.tar
 
     - name: Archive the firmware image
       uses: actions/upload-artifact@v4
       with:
-        name: brickOS-bibo-firmware~[runner_${{ matrix.os }}]
+        name: brickOS-bibo_firmware_[runner~${{ matrix.os }}]
         path: |
           kernel/*.srec
           kernel/*.coff
@@ -53,7 +53,7 @@ jobs:
     - name: Archive the demo program files
       uses: actions/upload-artifact@v4
       with:
-        name: brickOS-bibo-programs~[runner_${{ matrix.os }}]
+        name: brickOS-bibo_programs_[runner~${{ matrix.os }}]
         path: |
           demo/**/*.lx
           demo/**/*.a
