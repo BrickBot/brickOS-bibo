@@ -18,26 +18,43 @@ jobs:
     steps:
     - name: Get latest from version control
       uses: actions/checkout@v4
+
     - name: Update build environment
       run:  sudo apt-get --assume-yes update
+
     - name: Install build dependencies
       run:  sudo apt-get --assume-yes install binutils-h8300-hms gcc-h8300-hms
+
     - name: Execute the build
       run:  make
+
     - name: Test-run “make install”
       run:  make DESTDIR=$(pwd)/build/destdir install
+
+    # Tar the “make install” output before archiving to preserve file permission
+    # c.f. https://github.com/actions/upload-artifact?tab=readme-ov-file#permission-loss
+    - name: Archive the “make install” output
+      run:  tar -cvzf build/install.tgz  build/destdir/
+
     - name: Archive the “make install” output
       uses: actions/upload-artifact@v4
       with:
         name: brickOS-bibo-install-${{ matrix.os }}
-        path: build/destdir/
+        compression-level: 0 # No compression (since the tgz is compressed)
+        path: build/install.tgz
+
     - name: Archive the firmware image
       uses: actions/upload-artifact@v4
       with:
         name: brickOS-bibo-srec-${{ matrix.os }}
-        path: kernel/bibo.srec
+        path: |
+          kernel/*.srec
+          kernel/*.coff
+
     - name: Archive the demo program files
       uses: actions/upload-artifact@v4
       with:
         name: brickOS-bibo-progs-${{ matrix.os }}
-        path: demo/**/*.lx
+        path: |
+          demo/**/*.lx
+          demo/**/*.a
