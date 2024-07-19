@@ -34,7 +34,7 @@ jobs:
     # Before archiving, tar the host installation output to preserve file permission
     # c.f. https://github.com/actions/upload-artifact?tab=readme-ov-file#permission-loss
     - name: Tar the host installation snapshot to preserve file permissions
-      run:  tar -cvf build/install.tar  -C build/destdir/
+      run:  tar -cvf build/install.tar  --strip-components=1  -C build/destdir/  ./
 
     - name: Archive the host installation snapshot tar file
       uses: actions/upload-artifact@v4
