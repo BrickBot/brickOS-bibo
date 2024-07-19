@@ -28,25 +28,24 @@ jobs:
     - name: Execute the build
       run:  make
 
-    - name: Test-run “make install”
+    - name: Test-run a host installation
       run:  make DESTDIR=$(pwd)/build/destdir install
 
-    # Tar the “make install” output before archiving to preserve file permission
+    # Before archiving, tar the host installation output to preserve file permission
     # c.f. https://github.com/actions/upload-artifact?tab=readme-ov-file#permission-loss
-    - name: Archive the “make install” output
-      run:  tar -cvzf build/install.tgz  build/destdir/
+    - name: Tar the host installation snapshot to preserve file permissions
+      run:  tar -cvf build/install.tar  -C build/destdir/
 
-    - name: Archive the “make install” output
+    - name: Archive the host installation snapshot tar file
       uses: actions/upload-artifact@v4
       with:
-        name: brickOS-bibo-install-${{ matrix.os }}
-        compression-level: 0 # No compression (since the tgz is compressed)
-        path: build/install.tgz
+        name: brickOS-bibo-install~[runner_${{ matrix.os }}]
+        path: build/install.tar
 
     - name: Archive the firmware image
       uses: actions/upload-artifact@v4
       with:
-        name: brickOS-bibo-srec-${{ matrix.os }}
+        name: brickOS-bibo-firmware~[runner_${{ matrix.os }}]
         path: |
           kernel/*.srec
           kernel/*.coff
@@ -54,7 +53,7 @@ jobs:
     - name: Archive the demo program files
       uses: actions/upload-artifact@v4
       with:
-        name: brickOS-bibo-progs-${{ matrix.os }}
+        name: brickOS-bibo-programs~[runner_${{ matrix.os }}]
         path: |
           demo/**/*.lx
           demo/**/*.a
