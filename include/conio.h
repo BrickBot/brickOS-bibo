@@ -232,8 +232,6 @@ extern void cputc_native_3(char mask);
 extern void cputc_native_4(char mask);
 //! write bit-pattern for segments at position 5 of LCD
 extern void cputc_native_5(char mask);
-//! write bit-pattern for segments in positions 4 through 1 of the LCD (the main user portion)
-extern void cputc_native_user(char mask_left, char mask_lcenter, char mask_rcenter, char mask_right);
 
 //! Set/Clear individual segments at specified position of LCD
 /*! (this is essentially a dispatcher for cputc_native_[0-5] functions)
@@ -242,6 +240,10 @@ extern void cputc_native_user(char mask_left, char mask_lcenter, char mask_rcent
  *  \return Nothing
  */
 extern void cputc_native(char mask, int pos);
+
+//! write bit-pattern for segments in positions 4 through 1 of the LCD (the main user portion)
+extern void cputc_native_user(char mask_left, char mask_lcenter, char mask_rcenter, char mask_right);
+
 
 //! write HEX digit to position 0 of LCD
 extern inline void cputc_hex_0(unsigned nibble)
@@ -280,13 +282,14 @@ extern inline void cputc_hex_5(unsigned nibble)
  *  \param pos the location at which to display the HEX digit
  *  \return Nothing
  */
-extern inline void cputc_hex(char c, int pos)
+extern inline void cputc_hex(unsigned nibble, int pos)
 {
   cputc_native(get_hex_display_code(nibble), pos);
 }
 
 //! Write a HEX word to LCD
 extern void cputw(unsigned word);
+
 
 #ifdef CONF_ASCII
 //! write ASCII char to position 0 of LCD
