@@ -25,7 +25,7 @@ DISTFILES += kernel/Makefile.sub $(KSOURCES) $(KASMSOURCES)
 # NOTE: uncomment out the first line if you need a kernel disassembly file.
 # This will not work on Windows unless you have perl installed.
 #
-#all: $(KERNEL).srec $(KERNEL).dis2 $(KERNEL).lds
+#all:: $(KERNEL).srec $(KERNEL).dis2 $(KERNEL).lds
 all:: $(KERNEL_TARGETS)
 
 install:: $(KERNEL_TARGETS)
