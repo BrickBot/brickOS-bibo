@@ -103,6 +103,7 @@ extern "C" {
 #define PITCH_A0      1
 #define PITCH_Am0     2
 #define PITCH_Bb0     2
+#define PITCH_Hb0     2
 #define PITCH_B0      3
 #define PITCH_H0      3
 #define PITCH_C1      4
@@ -121,6 +122,7 @@ extern "C" {
 #define PITCH_A1     13
 #define PITCH_Am1    14
 #define PITCH_Bb1    14
+#define PITCH_Hb1    14
 #define PITCH_B1     15
 #define PITCH_H1     15
 #define PITCH_C2     16
@@ -139,6 +141,7 @@ extern "C" {
 #define PITCH_A2     25
 #define PITCH_Am2    26
 #define PITCH_Bb2    26
+#define PITCH_Hb2    26
 #define PITCH_B2     27
 #define PITCH_H2     27
 #define PITCH_C3     28
@@ -157,6 +160,7 @@ extern "C" {
 #define PITCH_A3     37
 #define PITCH_Am3    38
 #define PITCH_Bb3    38
+#define PITCH_Hb3    38
 #define PITCH_B3     39
 #define PITCH_H3     39
 #define PITCH_C4     40
@@ -175,6 +179,7 @@ extern "C" {
 #define PITCH_A4     49
 #define PITCH_Am4    50
 #define PITCH_Bb4    50
+#define PITCH_Hb4    50
 #define PITCH_B4     51
 #define PITCH_H4     51
 #define PITCH_C5     52
@@ -193,6 +198,7 @@ extern "C" {
 #define PITCH_A5     61
 #define PITCH_Am5    62
 #define PITCH_Bb5    62
+#define PITCH_Hb5    62
 #define PITCH_B5     63
 #define PITCH_H5     63
 #define PITCH_C6     64
@@ -211,6 +217,7 @@ extern "C" {
 #define PITCH_A6     73
 #define PITCH_Am6    74
 #define PITCH_Bb6    74
+#define PITCH_Hb6    74
 #define PITCH_B6     75
 #define PITCH_H6     75
 #define PITCH_C7     76
@@ -229,6 +236,7 @@ extern "C" {
 #define PITCH_A7     85
 #define PITCH_Am7    86
 #define PITCH_Bb7    86
+#define PITCH_Hb7    86
 #define PITCH_B7     87
 #define PITCH_H7     87
 #define PITCH_C8     88
