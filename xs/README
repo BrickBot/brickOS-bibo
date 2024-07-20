@@ -234,9 +234,9 @@ predefined functions:
 	(PLAYING?)
 
 		constants:
-			:A0  :Am0  ... :Gm8  :A8
-			:La0  :La#0  ... :So#8  :La8
-			:PAUSE
+			:PAUSE  :REST
+			:A0  :Am0  ... :Gm8  :Ab8  :A8
+			:LA0  :LA#0  ... :SO#8  :LAb8  :LA8
 
 	(PRESSED?)
 		Returns #t if the Prgm button has been pressed recently.
