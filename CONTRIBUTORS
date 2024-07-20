@@ -29,6 +29,7 @@ Matthew Sheets (mesheets@users.sourceforge.net)
   Modified conio to remove the CONF_ASCII dependency from CONF_PROGRAM
   Updated Makefiles to support building programs written in Esterel
   Enable configurable package/kernel naming
+  Expand musical scale note defines
   Added tempo calculation support for sound/music
   Refactor "makelx" to "writelx"
   Various code cleanups...
@@ -38,7 +39,7 @@ Carl Troein (troein@users.sourceforge.net)
   GCC now calls floatunsisf for ulong-to-float conversion.
 
 Mark Riley (http://home.surewest.net/markril/lego/dcc/)
-  LDCC - Digital Command Control implementation
+  LDCC - Digital Command Control (DCC) implementation
 
 Taiichi Yuasa (http://www.xslisp.com/)
   XS: Lisp on Lego MindStorms

@@ -251,6 +251,7 @@ extern "C" {
 #define PITCH_Gb8    94
 #define PITCH_G8     95
 #define PITCH_Gm8    96
+#define PITCH_Ab8    96
 #define PITCH_A8     97
 
 //@}
