@@ -29,6 +29,7 @@ Matthew Sheets (mesheets@users.sourceforge.net)
   Modified conio to remove the CONF_ASCII dependency from CONF_PROGRAM
   Updated Makefiles to support building programs written in Esterel
   Enable configurable package/kernel naming
+  Added tempo calculation support for sound/music
   Refactor "makelx" to "writelx"
   Various code cleanups...
 
