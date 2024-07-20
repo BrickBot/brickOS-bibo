@@ -177,20 +177,14 @@ extern "C" {
 //! Table lookup: list of native patterns, one for each HEX character
 /*! \param nibble HEX char value (0-9, a-f)
 */
-extern inline char get_hex_display_code(unsigned nibble)
-{
-  return hex_display_codes[(nibble) & 0x0f];
-}
+extern inline char get_hex_display_code(unsigned nibble);
 
 #ifdef CONF_ASCII
 
 //! Table lookup: list of native patterns, one for each ASCII character
 /*! \param c ASCII char value (least significant 7 bits ONLY)
 */
-extern inline char get_ascii_display_code(unsigned c)
-{
-  return ascii_display_codes[(c) & 0x7f];
-}
+extern inline char get_ascii_display_code(unsigned c);
 
 #endif // CONF_ASCII
 

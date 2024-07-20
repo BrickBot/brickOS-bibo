@@ -190,6 +190,14 @@ const char ascii_display_codes[] =
    0x00					// 127 "" 127 empty
 };
 
+//! Table lookup: list of native patterns, one for each ASCII character
+/*! \param c ASCII char value (least significant 7 bits ONLY)
+*/
+char get_ascii_display_code(unsigned c)
+{
+  return ascii_display_codes[(c) & 0x7f];
+}
+
 #endif // CONF_ASCII
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -408,6 +416,15 @@ void cputc_native_user(char mask_left, char mask_lcenter, char mask_rcenter, cha
   lcd_refresh();
 #endif
 }
+
+//! Table lookup: list of native patterns, one for each HEX character
+/*! \param nibble HEX char value (0-9, a-f)
+*/
+char get_hex_display_code(unsigned nibble)
+{
+  return hex_display_codes[(nibble) & 0x0f];
+}
+
 
 //! display a hexword in the four leftmost positions.
 /*! \param word the hexword
