@@ -40,13 +40,13 @@ jobs:
     - name: Archive the host installation snapshot tar file
       uses: actions/upload-artifact@v4
       with:
-        name: brickOS-bibo_install_[runner~${{ matrix.os }}]
+        name: brickOS-bibo_install_[runner~${{ matrix.os }}]_run${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
         path: build/install.tar
 
     - name: Archive the firmware image
       uses: actions/upload-artifact@v4
       with:
-        name: brickOS-bibo_firmware_[runner~${{ matrix.os }}]
+        name: brickOS-bibo_firmware_[runner~${{ matrix.os }}]_run${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
         path: |
           kernel/*.srec
           kernel/*.coff
@@ -54,7 +54,7 @@ jobs:
     - name: Archive the demo program files
       uses: actions/upload-artifact@v4
       with:
-        name: brickOS-bibo_programs_[runner~${{ matrix.os }}]
+        name: brickOS-bibo_programs_[runner~${{ matrix.os }}]_run${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
         path: |
           demo/**/*.lx
           demo/**/*.a
