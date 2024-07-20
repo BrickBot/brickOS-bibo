@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
   cputc_hex(0x03, 2);
   cputc_hex(0x04, 1);
   sleep(1);
-  cputw(0x0937);
+  cputw(0x0637);
   sleep(1);
   cls();
   sleep(1);
