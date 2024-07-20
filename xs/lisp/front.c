@@ -28,6 +28,9 @@
 
 #include "object.h"
 
+// Kernel includes
+#include "../../include/dmusic.h"
+
 // Command-line argument processing
 #if (defined(__sun__) && defined(__svr4__)) || defined(BSD)	// Solaris||BSD
 #undef HAVE_GETOPT_LONG
@@ -1082,6 +1085,9 @@ void initReader() {
 	defReaderConstant("stdout", 1);
 	defReaderConstant("stderr", 2);
 
+	defReaderConstant("pause", PITCH_PAUSE);
+	defReaderConstant("rest",  PITCH_REST);
+
 	defReaderConstant("A0", 0);
 	defReaderConstant("Am0", 1);
 	defReaderConstant("H0", 2);
@@ -1277,8 +1283,7 @@ void initReader() {
 	defReaderConstant("So8", 94);
 	defReaderConstant("So#8", 95);
 	defReaderConstant("La8", 96);
-
-	defReaderConstant("pause", 97);
+   
 }
 
 // The Printer
