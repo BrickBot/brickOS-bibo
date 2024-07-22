@@ -30,6 +30,7 @@
 
 // Kernel includes
 #include "../../include/dmusic.h"
+#include "../../include/dchars.h"
 
 // Command-line argument processing
 #if (defined(__sun__) && defined(__svr4__)) || defined(BSD)	// Solaris||BSD
@@ -1394,6 +1395,114 @@ void initReader() {
 	defReaderConstant("SO#8", PITCH_Gm8);
 	defReaderConstant("LAb8", PITCH_Ab8);
 	defReaderConstant("LA8" , PITCH_A8 );
+
+	defReaderConstant("char-space",         CHAR_SPACE        );       // 32 ' '
+	defReaderConstant("char-exclamation",   CHAR_EXCLAMATION  );       // 33 ! 1
+	defReaderConstant("char-double-quote",  CHAR_DOUBLE_QUOTE );       // 34 "
+	defReaderConstant("char-pound",         CHAR_POUND        );       // 35 #
+	defReaderConstant("char-dollar",        CHAR_DOLLAR       );       // 36 $ 5 S Z
+	defReaderConstant("char-percent",       CHAR_PERCENT      );       // 37 % /
+	defReaderConstant("char-ampersand",     CHAR_AMPERSAND    );       // 38 & 6
+	defReaderConstant("char-single-quote",  CHAR_SINGLE_QUOTE );       // 39 '  alt: ` 
+	defReaderConstant("char-l-paren",       CHAR_L_PAREN      );       // 40 ( C [ {
+	defReaderConstant("char-r-paren",       CHAR_R_PAREN      );       // 41 ) ] }
+	defReaderConstant("char-asterisk",      CHAR_ASTERISK     );       // 42 * H K X
+	defReaderConstant("char-plus",          CHAR_PLUS         );       // 43 +  alt: 0x19 (worse)
+	defReaderConstant("char-comma",         CHAR_COMMA        );       // 44 , .  alt: 0x40
+	defReaderConstant("char-minus",         CHAR_MINUS        );       // 45 -
+	defReaderConstant("char-dash",          CHAR_DASH         );       // 45 -
+	defReaderConstant("char-period",        CHAR_PERIOD       );       // 46 . alt: 0x40
+	defReaderConstant("char-forward-slash", CHAR_FORWARD_SLASH);       // 47 /
+
+	defReaderConstant("char-0",             CHAR_0            );       // 48 0 0
+	defReaderConstant("char-1",             CHAR_1            );       // 49 1
+	defReaderConstant("char-2",             CHAR_2            );       // 50 2
+	defReaderConstant("char-3",             CHAR_3            );       // 51 3
+	defReaderConstant("char-4",             CHAR_4            );       // 52 4
+	defReaderConstant("char-5",             CHAR_5            );       // 53 5
+	defReaderConstant("char-6",             CHAR_6            );       // 54 6
+	defReaderConstant("char-7",             CHAR_7            );       // 55 7
+	defReaderConstant("char-8",             CHAR_8            );       // 56 8
+	defReaderConstant("char-9",             CHAR_9            );       // 57 9
+
+	defReaderConstant("char-colon",         CHAR_COLON        );       // 58 : ; = alt:0x5 (worse)
+	defReaderConstant("char-semicolon",     CHAR_SEMICOLON    );       // 59 ;
+	defReaderConstant("char-less-than",     CHAR_LESS_THAN    );       // 60 < c alt:0xd (worse)       
+	defReaderConstant("char-equal",         CHAR_EQUAL        );       // 61 =
+	defReaderConstant("char-greater-than",  CHAR_GREATER_THAN );       // 62 >   alt: 0x7 (worse)
+	defReaderConstant("char-question",      CHAR_QUESTION     );       // 63 ?
+	defReaderConstant("char-at",            CHAR_AT           );       // 64 @ alt: e
+
+	defReaderConstant("char-A",             CHAR_A            );       // 65 A
+	defReaderConstant("char-B",             CHAR_B            );       // 66 b 
+	defReaderConstant("char-C",             CHAR_C            );       // 67 C
+	defReaderConstant("char-D",             CHAR_D            );       // 68 d
+	defReaderConstant("char-E",             CHAR_E            );       // 69 E
+	defReaderConstant("char-F",             CHAR_F            );       // 70 F
+	defReaderConstant("char-G",             CHAR_G            );       // 71 G
+	defReaderConstant("char-H",             CHAR_H            );       // 72 H
+	defReaderConstant("char-I",             CHAR_I            );       // 73 I 1
+	defReaderConstant("char-J",             CHAR_J            );       // 74 J
+	defReaderConstant("char-K",             CHAR_K            );       // 75 K
+	defReaderConstant("char-L",             CHAR_L            );       // 76 L
+	defReaderConstant("char-M",             CHAR_M            );       // 77 M N
+	defReaderConstant("char-N",             CHAR_N            );       // 78 N
+	defReaderConstant("char-O",             CHAR_O            );       // 79 O alt: o
+	defReaderConstant("char-P",             CHAR_P            );       // 80 P
+	defReaderConstant("char-Q",             CHAR_Q            );       // 81 Q 
+	defReaderConstant("char-R",             CHAR_R            );       // 82 r
+	defReaderConstant("char-S",             CHAR_S            );       // 83 S
+	defReaderConstant("char-T",             CHAR_T            );       // 84 T alt: t
+	defReaderConstant("char-U",             CHAR_U            );       // 85 U V W
+	defReaderConstant("char-V",             CHAR_V            );       // 86 V
+	defReaderConstant("char-W",             CHAR_W            );       // 87 W
+	defReaderConstant("char-X",             CHAR_X            );       // 88 X
+	defReaderConstant("char-Y",             CHAR_Y            );       // 89 Y
+	defReaderConstant("char-Z",             CHAR_Z            );       // 90 Z
+
+	defReaderConstant("char-l-bracket",     CHAR_L_BRACKET    );       // 91 [
+	defReaderConstant("char-back-slash",    CHAR_BACK_SLASH   );       // 92 '\\'
+	defReaderConstant("char-r-bracket",     CHAR_R_BRACKET    );       // 93 ]
+	defReaderConstant("char-caret",         CHAR_CARET        );       // 94 ^ ~
+	defReaderConstant("char-underscore",    CHAR_UNDERSCORE   );       // 95 _
+	defReaderConstant("char-backquote",     CHAR_BACKQUOTE    );       // 96 ` alt: '
+
+	defReaderConstant("char-lower-a",       CHAR_a            );       // 97 A R
+	defReaderConstant("char-lower-b",       CHAR_b            );       // 98 b 
+	defReaderConstant("char-lower-c",       CHAR_c            );       // 99 c
+	defReaderConstant("char-lower-d",       CHAR_d            );       // 100 d 
+	defReaderConstant("char-lower-e",       CHAR_e            );       // 101 E
+	defReaderConstant("char-lower-f",       CHAR_f            );       // 102 F
+	defReaderConstant("char-lower-g",       CHAR_g            );       // 103 G
+	defReaderConstant("char-lower-h",       CHAR_h            );       // 104 h
+	defReaderConstant("char-lower-i",       CHAR_i            );       // 105 I 1
+	defReaderConstant("char-lower-j",       CHAR_j            );       // 106 J alt 0x60 (worse)
+	defReaderConstant("char-lower-k",       CHAR_k            );       // 107 K alt h (worse?)
+	defReaderConstant("char-lower-l",       CHAR_l            );       // 108 L
+	defReaderConstant("char-lower-m",       CHAR_m            );       // 109 m n
+	defReaderConstant("char-lower-n",       CHAR_n            );       // 110 n
+	defReaderConstant("char-lower-o",       CHAR_o            );       // 111 o
+	defReaderConstant("char-lower-p",       CHAR_p            );       // 112 P
+	defReaderConstant("char-lower-q",       CHAR_q            );       // 113 q        
+	defReaderConstant("char-lower-r",       CHAR_r            );       // 114 r
+	defReaderConstant("char-lower-s",       CHAR_s            );       // 115 S
+	defReaderConstant("char-lower-t",       CHAR_t            );       // 116 t
+	defReaderConstant("char-lower-u",       CHAR_u            );       // 117 u v w
+	defReaderConstant("char-lower-v",       CHAR_v            );       // 118 v
+	defReaderConstant("char-lower-w",       CHAR_w            );       // 119 w
+	defReaderConstant("char-lower-x",       CHAR_x            );       // 120 X
+	defReaderConstant("char-lower-y",       CHAR_y            );       // 121 Y
+	defReaderConstant("char-lower-z",       CHAR_z            );       // 122 Z
+
+	defReaderConstant("char-l-brace",       CHAR_L_BRACE      );       // 123 {
+	defReaderConstant("char-vertical-bar",  CHAR_VERTICAL_BAR );       // 124 | (left) alt: 1 (worse)
+	defReaderConstant("char-r-brace",       CHAR_R_BRACE      );       // 125 }
+	defReaderConstant("char-tilde",         CHAR_TILDE        );       // 126 ~
+
+	defReaderConstant("char-parallel",      CHAR_PARALLEL     );       // Double vertical bars
+	defReaderConstant("char-equivalence",   CHAR_EQUIVALENCE  );       // Triple horizontal bars (tribar)
+	defReaderConstant("char-identity",      CHAR_IDENTITY     );       // Triple horizontal bars (tribar)
+	defReaderConstant("char-congruence",    CHAR_CONGRUENCE   );       // Triple horizontal bars (tribar)
 
 }
 

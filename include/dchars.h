@@ -165,7 +165,7 @@ extern "C" {
 #define CHAR_PARALLEL       0x5a			// Double vertical bars
 #define CHAR_EQUIVALENCE    0x26			// Triple horizontal bars (tribar)
 #define CHAR_IDENTITY       0x26			// Triple horizontal bars (tribar)
-#define CHAR_CONGRUENT       0x26			// Triple horizontal bars (tribar)
+#define CHAR_CONGRUENCE     0x26			// Triple horizontal bars (tribar)
 
 
 #ifdef  __cplusplus
