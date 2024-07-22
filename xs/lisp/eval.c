@@ -1373,14 +1373,13 @@ LOOP:
 		}
 		case Lputc:
 			if (check_int_args(base)) goto LERROR;
-			// the second arg is between 0 (right-most) and 4 (left-most)
+			// the second arg is between 0 (right-most) and 4 (left-most), or 5 for the '-' spot
 #if ((defined(RCX) && defined(CONF_ASCII)) || (!defined(RCX)))
+			// TODO: If not on the RCX and CONF_ASCII is not defined,
+			//   this value (which is the character mask), will not display the intended character
 			cputc(INTval(e = base[0]), INTval(base[1]));
 #elif (defined(RCX) && defined(CONF_CONIO))
-            // ASCII is not enabled on the RCX, so we cannot display the ASCII character
-            // Display a generic '-' in the requested position instead
-            e = base[0];
-            cputc_native(CHAR_DASH, INTval(base[1]));
+			cputc_native(INTval(e = base[0]), INTval(base[1]));
 #endif
 #ifndef RCX
 			show_lcd();

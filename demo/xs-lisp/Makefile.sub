@@ -10,7 +10,7 @@ DEMO_XS_STACKSIZE?=$(XS_STACKSIZE)
 #OPTIONS=-DLISTLIB
 #OPTIONS=
 
-DEMO_XS_SOURCES1=fact.lsp lib.lsp range.lsp remote.lsp rover.lsp rover-watcher.lsp trace.lsp
+DEMO_XS_SOURCES1=fact.lsp hello-lisp.lsp lib.lsp range.lsp remote.lsp rover.lsp rover-watcher.lsp trace.lsp
 # sample.lsp is too large to build under a typical kernel configuration
 DEMO_XS_SOURCES=$(DEMO_XS_SOURCES1:%=demo/xs-lisp/%)
 DEMO_XS_PROGRAMS=$(patsubst %.lsp, %.lx, $(DEMO_XS_SOURCES))
