@@ -13,18 +13,20 @@
 ;; hello world
 
 (begin
- (putc-native :char-H 4)
- (putc-native :char-E 3)
- (putc-native :char-parallel 2)
- (putc-native :char-O 1)
+ (putc-native-user :char-H :char-E :char-parallel :char-O)
  (msleep 1000)
 
- (putc-native :char-L 4)
- (putc-native :char-E 3)
- (putc-native :char-G 2)
- (putc-native :char-O 1)
+ (putc-native-user :char-L :char-E :char-G :char-O)
  (sleep 1)
 
  (cls)
  (sleep 1)
+
+ (putc-native-user :char-F :char-L :char-I :char-P)
+ (putc-native :char-dash 5)
+ (sleep 1)
+
+ (cls)
+ (sleep 1)
+
 )

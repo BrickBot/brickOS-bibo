@@ -1398,10 +1398,30 @@ LOOP:
 #if (defined(RCX) && defined(CONF_CONIO))
 			cputc_native(INTval(e = base[0]), INTval(base[1]));
 #elif (!defined(RCX))
-			// NOTE: If not on the RCX and CONF_ASCII is not defined,
-			//   this value (which is the character mask), will not display the intended character
+			// NOTE: If not on the RCX, this value (which is the character mask)
+			//   will not display the intended character.
+			//   Display a placeholder character instead.
 			e = base[0];
-			cputc(INTval(e = base[0]), INTval(base[1]));
+			cputc('*', INTval(base[1]));
+#else
+			// NOTE: CONF_CONIO is not enabled on the RCX, so character will not display
+			e = base[0];
+#endif
+#ifndef RCX
+			show_lcd();
+#endif
+			break;
+
+		case Lputc_native_user:
+			if (check_int_args(base)) goto LERROR;
+#if (defined(RCX) && defined(CONF_CONIO))
+			cputc_native_user(INTval(e = base[0]), INTval(base[1]), INTval(base[2]), INTval(base[3]));
+#elif (!defined(RCX))
+			// NOTE: If not on the RCX, these values (which are character mask values)
+			//   will not display the intended characters.
+			//   Display placeholder characters instead.
+			e = base[0];
+			cputc('*', 4); cputc('*', 3); cputc('*', 2); cputc('*', 1); 
 #else
 			// NOTE: CONF_CONIO is not enabled on the RCX, so character will not display
 			e = base[0];

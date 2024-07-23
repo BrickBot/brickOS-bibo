@@ -80,6 +80,7 @@ char *subr_name(int index) {
 		case Lputs: return "puts";
 		case Lputc: return "putc";
 		case Lputc_native: return "putc-native";
+		case Lputc_native_user: return "putc-native-user";
 		case Lcls: return "cls";
 		case Lbattery: return "battery";
 		case Lreset_time: return "reset-time";

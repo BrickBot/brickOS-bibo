@@ -272,6 +272,7 @@ typedef enum {
 	Lputs,
 	Lputc,
 	Lputc_native,
+	Lputc_native_user,
 	Lcls,
 	Lbattery,
 	Lreset_time,
