@@ -84,6 +84,7 @@ char *subr_name(int index) {
 		case Lreset_time: return "reset-time";
 		case Ltime: return "time";
 		case Lsleep: return "sleep";
+		case Lmsleep: return "msleep";
 		case Llinked: return "linked?";
 		case Lread: return "read";
 		case Lwrite: return "write";

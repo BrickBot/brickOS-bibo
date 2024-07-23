@@ -1435,17 +1435,46 @@ LOOP:
 			ts = INTval(e = base[0]);
 #ifdef RCX
 			while (ts-- > 0) {
-				if (interrupted()) goto LERROR;
-				msleep(100);
+				for (int i = 0; i < 10; i++) {
+					if (interrupted()) goto LERROR;
+					msleep(100);
+				}
 			}
 #else
 #ifdef JOINT
 			while (ts-- > 0) {
-				if (interrupted()) goto LERROR;
-				usleep(100000);
+				for (int i = 0; i < 10; i++) {
+					if (interrupted()) goto LERROR;
+					usleep(100000);
+				}
 			}
 #endif
-			usleep(ts*100000);
+			usleep(ts*1000000);
+#endif
+			break;
+		}
+		case Lmsleep: {
+			int ts;
+			if (check_int_args(base)) goto LERROR;
+			ts = INTval(e = base[0]);
+#ifdef RCX
+			while (ts > 0) {
+            if (interrupted()) goto LERROR;
+				if (ts >= 100) {
+					msleep(100);
+				} else {
+					msleep(ts);
+				}
+				ts -= 100;
+			}
+#else
+#ifdef JOINT
+			while (ts-- > 0) {
+            if (interrupted()) goto LERROR;
+            usleep(1000);
+			}
+#endif
+			usleep(ts*1000);
 #endif
 			break;
 		}

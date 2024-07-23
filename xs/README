@@ -261,7 +261,11 @@ predefined functions:
 		In 1/10 secs.  Overflows in about 13 minutes.
 
 	(SLEEP int)
-		In 1/10 secs.
+		In seconds.
+		Returns the argument.
+
+	(MSLEEP int)
+		In 1/10 second.
 		Returns the argument.
 
 	(READ)

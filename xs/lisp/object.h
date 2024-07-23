@@ -276,6 +276,7 @@ typedef enum {
 	Lreset_time,
 	Ltime,
 	Lsleep,
+	Lmsleep,
 	Llinked,
 	Lread,
 	Lwrite,

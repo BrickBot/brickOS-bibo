@@ -618,6 +618,7 @@ void initGlobals() {
 	def("reset-time", MKCONST(Lreset_time,0,0,0));
 	def("time", MKCONST(Ltime,0,0,0));
 	def("sleep", MKCONST(Lsleep,1,0,0));
+	def("msleep", MKCONST(Lmsleep,1,0,0));
 	def("linked?", MKCONST(Llinked,0,0,0));
 	def("read", MKCONST(Lread,0,1,0));
 	def("read-char", MKCONST(Lread_char,0,1,0));
