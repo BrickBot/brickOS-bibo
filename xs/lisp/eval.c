@@ -1433,9 +1433,10 @@ LOOP:
 			int ts;
 			if (check_int_args(base)) goto LERROR;
 			ts = INTval(e = base[0]);
+			int snooze_counter = 0;
 #ifdef RCX
 			while (ts-- > 0) {
-				for (int i = 0; i < 10; i++) {
+				for (snooze_counter = 0; snooze_counter < 10; snooze_counter++) {
 					if (interrupted()) goto LERROR;
 					msleep(100);
 				}
@@ -1443,7 +1444,7 @@ LOOP:
 #else
 #ifdef JOINT
 			while (ts-- > 0) {
-				for (int i = 0; i < 10; i++) {
+				for (snooze_counter = 0; snooze_counter < 10; snooze_counter++) {
 					if (interrupted()) goto LERROR;
 					usleep(100000);
 				}
