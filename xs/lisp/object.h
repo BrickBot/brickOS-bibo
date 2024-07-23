@@ -88,8 +88,9 @@ typedef int object;
 #define maxLAMBDAnreq 16
 
 #define SUBRindex(obj) ((obj)>>INDEXPOS)
-#define SUBRnreq(obj)  (((obj)>>(TAGBITS+4))&3)
-#define SUBRnmax(obj)  (((obj)>>(TAGBITS+1))&7)
+#define SUBRnreq(obj)  (((obj)>>(TAGBITS+3))&7)
+#define SUBRnopt(obj)  (((obj)>>(TAGBITS+1))&3)
+#define SUBRnmax(obj)  (SUBRnreq(obj) + SUBRnopt(obj))
 #define SUBRrestp(obj) ((obj)&(1<<TAGBITS))
 
 #define GENSYM(cell) ((cell)|GVARTAG1)
@@ -107,10 +108,13 @@ typedef int object;
 #define CONST2SUBR(obj) ((obj)^6)
 #endif
 #define CONSTindex(obj) ((obj)>>INDEXPOS)
+// index: subr_index enumeration value
+// nreq:  # of required parameters (max of 7)
+// nopt:  # of optional parameters (max of 3)
 #define MKCONST(index, nreq, nopt, restp) \
 	(((index) << INDEXPOS)                \
-	 | ((nreq) << (TAGBITS+4))            \
-	 | ((nreq+nopt) << (TAGBITS+1))       \
+	 | ((nreq) << (TAGBITS+3))            \
+	 | ((nopt) << (TAGBITS+1))            \
 	 | (restp ? (1<<TAGBITS) : 0)         \
 	 | CONSTTAG)
 #define MKSPECIAL(index) (((index) << INDEXPOS) | CONSTTAG)
