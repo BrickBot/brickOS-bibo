@@ -15,7 +15,7 @@
 (begin
  (putc :char-H 4)
  (putc :char-E 3)
- (putc :char-Parallel 2)
+ (putc :char-parallel 2)
  (putc :char-O 1)
  (msleep 1000)
 
