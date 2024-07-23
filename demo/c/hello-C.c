@@ -11,6 +11,12 @@ int main(int argc, char **argv) {
   sleep(1);
   
   // Use different methods and display the same message upside down
+  cputc_native_user(CHAR_F, CHAR_L, CHAR_I, CHAR_P);
+  cputc_native_5(CHAR_DASH);
+  sleep(1);
+  cls();
+  sleep(1);
+  
   cputc_hex_4(0x00);
   cputc_native_3(CHAR_PARALLEL);
   cputc_hex(0x03, 2);
