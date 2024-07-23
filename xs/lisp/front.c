@@ -872,7 +872,7 @@ typedef struct structReaderConstant {
 	struct structReaderConstant *hashlink;
 } readerConstant;
 
-#define RCTABSIZE 128
+#define RCTABSIZE 512
 
 readerConstant *rcTable[RCTABSIZE];
 
