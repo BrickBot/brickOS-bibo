@@ -1355,8 +1355,8 @@ LOOP:
 			break;
 
 		case Lputs: {
-			int i;
 #if ((defined(RCX) && defined(CONF_ASCII)) || (!defined(RCX)))
+			int i;
 			for (i = 4, e = base[0]; i >=0 && PAIRP(e); i--, e = CDR(e)) {
 				cputc(INTval(CAR(e)), i);
 			}
@@ -1416,7 +1416,7 @@ LOOP:
 			if (check_int_args(base)) goto LERROR;
 #if (defined(RCX) && defined(CONF_CONIO))
 			cputc_native_user(INTval(e = base[0]), INTval(base[1]), INTval(base[2]), INTval(base[3]));
-			cputc(INTval(e = base[0]), 4); cputc(INTval(base[1]), 3); cputc(INTval(base[2]), 2); cputc(INTval(base[3]), 1); 
+			cputc_native(INTval(e = base[0]), 4); cputc_native(INTval(base[1]), 3); cputc_native(INTval(base[2]), 2); cputc_native(INTval(base[3]), 1); 
 #elif (!defined(RCX))
 			// NOTE: If not on the RCX, these values (which are character mask values)
 			//   will not display the intended characters.
