@@ -271,6 +271,7 @@ typedef enum {
 	Lpressed,
 	Lputs,
 	Lputc,
+	Lputc_native,
 	Lcls,
 	Lbattery,
 	Lreset_time,

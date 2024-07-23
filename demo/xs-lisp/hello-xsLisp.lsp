@@ -13,16 +13,16 @@
 ;; hello world
 
 (begin
- (putc :char-H 4)
- (putc :char-E 3)
- (putc :char-parallel 2)
- (putc :char-O 1)
+ (putc-native :char-H 4)
+ (putc-native :char-E 3)
+ (putc-native :char-parallel 2)
+ (putc-native :char-O 1)
  (msleep 1000)
 
- (putc :char-L 4)
- (putc :char-E 3)
- (putc :char-G 2)
- (putc :char-O 1)
+ (putc-native :char-L 4)
+ (putc-native :char-E 3)
+ (putc-native :char-G 2)
+ (putc-native :char-O 1)
  (sleep 1)
 
  (cls)

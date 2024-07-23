@@ -1356,16 +1356,19 @@ LOOP:
 
 		case Lputs: {
 			int i;
-			for (i = 4, e = base[0]; i >=0 && PAIRP(e); i--, e = CDR(e)) {
 #if ((defined(RCX) && defined(CONF_ASCII)) || (!defined(RCX)))
+			for (i = 4, e = base[0]; i >=0 && PAIRP(e); i--, e = CDR(e)) {
 				cputc(INTval(CAR(e)), i);
-#elif (defined(RCX) && defined(CONF_CONIO))
-				// ASCII is not enabled on the RCX, so we cannot display the string
-				// Display a default text message instead: "-ASCII"
-				cputc_native_5(CHAR_DASH);
-				cputc_native_user(CHAR_A, CHAR_S, CHAR_C, CHAR_PARALLEL);  // ASCII
-#endif
 			}
+#elif (defined(RCX) && defined(CONF_CONIO))
+         // ASCII is not enabled on the RCX, so we cannot display the string
+         // Display a default text message instead: "-ASCII"
+         e = base[0];
+         cputc_native_user(CHAR_A, CHAR_S, CHAR_C, CHAR_PARALLEL);  // ASCII
+         cputc_native_5(CHAR_DASH);
+#else
+         e = base[0];
+#endif
 #ifndef RCX
 			show_lcd();
 #endif
@@ -1375,11 +1378,33 @@ LOOP:
 			if (check_int_args(base)) goto LERROR;
 			// the second arg is between 0 (right-most) and 4 (left-most), or 5 for the '-' spot
 #if ((defined(RCX) && defined(CONF_ASCII)) || (!defined(RCX)))
-			// TODO: If not on the RCX and CONF_ASCII is not defined,
-			//   this value (which is the character mask), will not display the intended character
 			cputc(INTval(e = base[0]), INTval(base[1]));
 #elif (defined(RCX) && defined(CONF_CONIO))
+			// NOTE: CONF_ASCII is not enabled on the RCX, so displaying a generic placeholder character
+			e = base[0];
+			cputc_native(CHAR_DASH, INTval(base[1]));
+#else
+			// NOTE: Neither CONF_ASCII nor CONF_CONIO are not enabled on the RCX, so character(s) will not display
+			e = base[0];
+#endif
+#ifndef RCX
+			show_lcd();
+#endif
+			break;
+
+		case Lputc_native:
+			if (check_int_args(base)) goto LERROR;
+			// the second arg is between 0 (right-most) and 4 (left-most), or 5 for the '-' spot
+#if (defined(RCX) && defined(CONF_CONIO))
 			cputc_native(INTval(e = base[0]), INTval(base[1]));
+#elif (!defined(RCX)))
+			// NOTE: If not on the RCX and CONF_ASCII is not defined,
+			//   this value (which is the character mask), will not display the intended character
+			e = base[0];
+			cputc(INTval(e = base[0]), INTval(base[1]));
+#else
+			// NOTE: CONF_CONIO is not enabled on the RCX, so character will not display
+			e = base[0];
 #endif
 #ifndef RCX
 			show_lcd();
