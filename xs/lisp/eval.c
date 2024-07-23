@@ -1397,7 +1397,7 @@ LOOP:
 			// the second arg is between 0 (right-most) and 4 (left-most), or 5 for the '-' spot
 #if (defined(RCX) && defined(CONF_CONIO))
 			cputc_native(INTval(e = base[0]), INTval(base[1]));
-#elif (!defined(RCX)))
+#elif (!defined(RCX))
 			// NOTE: If not on the RCX and CONF_ASCII is not defined,
 			//   this value (which is the character mask), will not display the intended character
 			e = base[0];
