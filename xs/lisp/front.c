@@ -614,7 +614,7 @@ void initGlobals() {
 	def("puts", MKCONST(Lputs,1,0,0));
 	def("putc", MKCONST(Lputc,2,0,0));
 	def("putc-native", MKCONST(Lputc_native,2,0,0));
-	def("putc-native-user", MKCONST(Lputc_native_user,4,0,0));
+	def("putc-native-user", MKCONST(Lputc_native_user,3,0,0));
 	def("cls", MKCONST(Lcls,0,0,0));
 	def("battery", MKCONST(Lbattery,0,0,0));
 	def("reset-time", MKCONST(Lreset_time,0,0,0));

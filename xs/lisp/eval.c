@@ -1413,7 +1413,7 @@ LOOP:
 			break;
 
 		case Lputc_native_user:
-			//if (check_int_args(base)) goto LERROR;
+			if (check_int_args(base)) goto LERROR;
 #if (defined(RCX) && defined(CONF_CONIO))
 			cputc_native_user(INTval(e = base[0]), INTval(base[1]), INTval(base[2]), INTval(base[3]));
 			//cputc_native(INTval(e = base[0]), 4); cputc_native(INTval(base[1]), 3); cputc_native(INTval(base[2]), 2); cputc_native(INTval(base[3]), 1); 
