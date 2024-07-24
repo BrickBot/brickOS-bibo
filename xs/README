@@ -248,6 +248,15 @@ predefined functions:
 
 	(PUTC int int)
 		Returns ().
+
+	(PUTC-NATIVE int int)
+		Returns ().
+		Pass a character mask as the first argument and character position as the second.
+
+	(PUTC-NATIVE-USER int int int int)
+		Returns ().
+		Parameters are a character mask for each of the four main character positions.
+
 	(CLS)
 		Returns ().
 
