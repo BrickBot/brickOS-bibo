@@ -3,7 +3,7 @@
 ###  FILE: Makefile.user - support for building programs run under brickOS
 ###  bibo - another LEGO Mindstorms OS
 ### --------------------------------------------------------------------------
-###       (this file is included by the  demo/ and demo/c++  Makefiles)
+###       (this file is included by Makefiles that build programs)
 
 all::
 

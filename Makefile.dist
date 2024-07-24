@@ -4,6 +4,8 @@
 ###  bibo - another LEGO Mindstorms OS
 ### --------------------------------------------------------------------------
 
+# NOTE: When installed via "make install", this file is renamed and included as just "Makefile"
+
 # IMPORTANT: Do not modify the commented placeholder line below without also updating the "install" target in the main Makefile.
 # installation paths
 

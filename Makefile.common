@@ -37,7 +37,7 @@ Makefile.config: configure
 -include Makefile.config
 
 # ----------------------------------------------------------------------------
-#   defines for build of cross-compiled parts: brickOS, demos
+#   defines for build of cross-compiled parts: firmware, demo programs
 # ----------------------------------------------------------------------------
 
 # options
