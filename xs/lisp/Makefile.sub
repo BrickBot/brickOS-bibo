@@ -23,20 +23,23 @@ XSHOSTTARGET = xs-host$(EXT)
 XSRCXTARGET  = xs-rcx$(EXT)
 XSIRTARGET   = xs-ir$(EXT)
 
-# XSSRC   = front.c eval.c wtobj.c test.c errmsg.c
-XSFRONT = xs/lisp/front.c
-XSEVAL  = xs/lisp/eval.c
-XSFILES = wtobj.c test.c rcxtest.c errmsg.c object.h include.h
-XSSRC  := $(XSFILES:%=xs/lisp/%)
+# XSFILES      = front.c eval.c wtobj.c test.c errmsg.c
+XSSRCDIR     = xs/lisp
+XSFRONT      = $(XSSRCDIR)/front.c
+XSEVAL       = $(XSSRCDIR)/eval.c
+XSHDRFILES   = $(XSSRCDIR)/object.h  $(XSSRCDIR)/include.h
+XSSRCFILES   = $(XSSRCDIR)/wtobj.c   $(XSSRCDIR)/errmsg.c
+XSTESTFILES  = $(XSSRCDIR)/test.c    $(XSSRCDIR)/rcxtest.c
+XSFILES     := $(XSFRONT) $(XSEVAL) $(XSHDRFILES) $(XSSRCFILES) $(XSTESTFILES)
 
-DISTFILES += xs/lisp/Makefile.sub $(XSFRONT) $(XSEVAL) $(XSSCR)
+DISTFILES += xs/lisp/Makefile.sub $(XSFILES)
 
 XSBIN = $(XSTARGET:%=xs/%) $(XSHOSTTARGET:%=xs/%) $(XSRCXTARGET:%=xs/%) $(XSIRTARGET:%=xs/%)
 XSLX = xs/eval-ir.lx
 
 #NATIVEOBJS += $(XSOBJS)
 
-#all: ircom.o xs$(EXT) xs-ir$(EXT) xs-host$(EXT) xs-rcx$(EXT) eval-ir.lx eval-host$(EXT) eval-rcx.lx
+#all:: ircom.o xs$(EXT) xs-ir$(EXT) xs-host$(EXT) xs-rcx$(EXT) eval-ir.lx eval-host$(EXT) eval-rcx.lx
 all:: $(XSBIN) $(XSLX)
 
 clean::
@@ -52,19 +55,19 @@ realclean::
 #ircom.o: ircom.c
 #	$(CC) -o ircom.o -c ircom.c -O2 -Wall -O2 -Wall -I$(UTIL) -I$(XSROOT)include/lnp
 
-xs/$(XSTARGET): $(XSFRONT) $(XSEVAL) $(XSSRC)
+xs/$(XSTARGET): $(XSFRONT) $(XSEVAL) $(XSFILES)
 	$(CC) -o $@ $(XSFRONT) $(XSEVAL) -DJOINT -DONLINE -DSTACKSIZE=$(XS_STACKSIZE) $(OPTIONS)
 
-xs/$(XSHOSTTARGET): $(XSFRONT) $(XSSRC)
+xs/$(XSHOSTTARGET): $(XSFRONT) $(XSFILES)
 	$(CC) -o $@ $< $(OPTIONS)
 
-xs/$(XSRCXTARGET): $(XSFRONT) $(XSSRC)
+xs/$(XSRCXTARGET): $(XSFRONT) $(XSFILES)
 	$(CC) -o $@ $< -DRCX $(OPTIONS)
 
-xs/$(XSIRTARGET): $(XSFRONT) $(XSSRC) $(COMMOBJS)
+xs/$(XSIRTARGET): $(XSFRONT) $(XSFILES) $(COMMOBJS)
 	$(CC) -o $@ $< -DRCX -DIRCOM -DONLINE $(OPTIONS) $(COMMOBJS) -O2 -Wall -I. -I$(UTILINCDIR) -I$(COMMDIR)
 
-xs/lisp/eval-ir.o: $(XSEVAL) $(XSSRC)
+xs/lisp/eval-ir.o: $(XSEVAL) $(XSFILES)
 	$(CROSSCC) -DRCX -DIRCOM -DONLINE -DSTACKSIZE=$(XS_STACKSIZE) $(OPTIONS) -MD $(CROSSCFLAGS) -c $< -o $@
 
 $(XSLX): xs/lisp/eval-ir.lx
