@@ -328,6 +328,7 @@ void cputc_native_1(char mask)
  */
 void cputc_native_2(char mask)
 {
+  dlcd_hide(LCD_2_DOT);
   bit_load(mask, 0x2);
   dlcd_store(LCD_2_TOP);
   bit_load(mask, 0x0);
