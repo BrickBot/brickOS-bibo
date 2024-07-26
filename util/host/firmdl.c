@@ -303,7 +303,7 @@ int main (int argc, char **argv)
             ;
 
         fprintf(stderr, "usage: %s [options] filename\n", progname);
-        fprintf(stderr, usage_string);
+        fputs(usage_string, stderr);
         exit(1);
     }
     
