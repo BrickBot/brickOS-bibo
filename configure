@@ -65,7 +65,7 @@ do
     done
     if test -n "$HMSFULL"
     then
-      break  #  have answer, exit middle
+      break  #  have answer, exit middle loop
     fi
   done
   if test -n "$HMSFULL"
