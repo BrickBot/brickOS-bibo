@@ -79,7 +79,7 @@
 #define CONF_ON_OFF_SOUND               //!< sound on switch on/off
 #define CONF_DMOTOR                     //!< direct motor
 // #define CONF_DMOTOR_HOLD               //!< experimental: use hold mode PWM instead of coast mode.
-#define CONF_DCC                        //!< Digital Command Control
+#define CONF_DCC                        //!< Digital Command Control capability on motor output
 #define CONF_DSENSOR                    //!< direct sensor
 #define CONF_DSENSOR_FAST               //!< poll all sensors in 1 ms
 #define CONF_DSENSOR_ROTATION           //!< rotation sensor
