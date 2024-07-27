@@ -169,8 +169,8 @@ static void dsound_handler(void *data) {
 		repcnt = 0;
 		dsound_next_note += 2;
 	    } else {
-		dsound_next_note -= (dsound_next_note[1].pitch << 8) 
-		    | dsound_next_note[1].length;
+		dsound_next_note -= (((unsigned short)dsound_next_note[1].pitch) << 8) 
+		    | ((unsigned short)dsound_next_note[1].length);
 	    }
 	} else { /* PITCH_END or broken sound */
 	    play_pause();

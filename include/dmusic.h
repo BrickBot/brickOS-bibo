@@ -259,7 +259,12 @@ extern "C" {
 //! maximum pitch value
 #define PITCH_MAX    98
 
-//! repeat last {note->length} notes forever
+//! repeat last {note->length} notes
+//! PITCH_REPEAT is a two-element sequence:
+//!   The length value of  the first element is the number of times to repeat
+//!   The second element is the number of array elements to repeat, expressed as
+//!     two unsigned byte values that will be read as a single, unsigned two-byte value
+//! NOTE: Repeats cannot be nested
 #define PITCH_REPEAT     252
 
 //! mark the end of a list of note_t entries
@@ -271,7 +276,7 @@ extern "C" {
 //! set duration of internote spacing
 #define PITCH_INTERNOTE  253
 
-//! calculate duration based on beats per minute (bpm)
+//! calculate duration for PITCH_TEMPO based on beats per minute (bpm)
 #define TEMPO_FROM_BPM(note_type,beats_per_minute)  (60000 / (note_type * beats_per_minute))
 
 

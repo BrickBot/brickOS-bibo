@@ -77,6 +77,13 @@ static const note_t amazing_grace[] = {
   { PITCH_A4, QUARTER },
   { PITCH_G4, HALF_DOTTED },
 
+  // Slowly repeat the last phrase
+  { PITCH_TEMPO, TEMPO_FROM_BPM(QUARTER, 80) },
+  { PITCH_REPEAT, 1 },  // Number of times to repeat
+  { 0, 8 },  // Number of array elements to repeat,
+             //   expressed as two unsigned byte values that will
+             //   be read as a single, unsigned two-byte value
+
   { PITCH_END, 0 }
 };
 
