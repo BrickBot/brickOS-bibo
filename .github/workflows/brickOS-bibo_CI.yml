@@ -43,6 +43,9 @@ jobs:
         name: brickOS-bibo_install_[runner~${{ matrix.os }}]_run${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
         path: build/install.tar
 
+    - name: Prepare the firmware and program images for archiving
+      run:  cp --preserve kernel/*.srec kernel/*.coff  demo/
+
     - name: Archive the firmware image
       uses: actions/upload-artifact@v4
       with:
@@ -54,7 +57,9 @@ jobs:
     - name: Archive the demo program files
       uses: actions/upload-artifact@v4
       with:
-        name: brickOS-bibo_programs_[runner~${{ matrix.os }}]_run${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
+        name: brickOS-bibo_firmware+programs_[runner~${{ matrix.os }}]_run${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
         path: |
+          demo/**/*.srec
+          demo/**/*.coff
           demo/**/*.lx
           demo/**/*.a
