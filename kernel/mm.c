@@ -124,6 +124,7 @@ __TEXT_INIT__ void mm_init() {
     \return 0 on error, else pointer to block.
 */
 void *malloc(size_t size) {
+    void *mem_block = NULL;
     meminfo_t *ptr;
     meminfo_t **pptr;
     
@@ -135,32 +136,32 @@ void *malloc(size_t size) {
     pptr = &mm_first_free;
     
     while((ptr = *pptr)) {
-	int blocksize = ((void*)ptr->next - (void*)ptr);
-	/* big enough? */
-	if (blocksize >= size + MM_HEADER_SIZE) {
-	    /* set flags */
-	    ptr->flags = (ctid->tflags & T_KERNEL) ? MM_KERNEL : MM_USER;
+        int blocksize = ((void*)ptr->next - (void*)ptr);
+        /* big enough? */
+        if (blocksize >= size + MM_HEADER_SIZE) {
+            /* set flags */
+            ptr->flags = (ctid->tflags & T_KERNEL) ? MM_KERNEL : MM_USER;
 
-	    /* split this block? */
-	    if(blocksize >= size + MM_SPLIT_THRESH) {
-		meminfo_t *next = (meminfo_t*) ((size_t)ptr + (size + 4));
-		next->flags = MM_FREE;
-		next->next = ptr->next;
-		ptr->next->prev = next;
-		next->nextfree = ptr->nextfree;
-		ptr->next = next;
-		*pptr = next;
-	    } else {
-		ptr->next->next = (void*) ((size_t) ptr->next->next & ~1);
-		*pptr = ptr->nextfree;
-	    }
-	    release_kernel_lock();
-	    return (void*) &(ptr->nextfree);
-	}
-	pptr = &ptr->nextfree;
-    }   
+            /* split this block? */
+            if(blocksize >= size + MM_SPLIT_THRESH) {
+                meminfo_t *next = (meminfo_t*) ((size_t)ptr + (size + 4));
+                next->flags = MM_FREE;
+                next->next = ptr->next;
+                ptr->next->prev = next;
+                next->nextfree = ptr->nextfree;
+                ptr->next = next;
+                *pptr = next;
+            } else {
+                ptr->next->next = (void*) ((size_t) ptr->next->next & ~1);
+                *pptr = ptr->nextfree;
+            }
+            mem_block = (void*) &(ptr->nextfree);
+            break; 
+        }
+        pptr = &ptr->nextfree;
+    }
     release_kernel_lock();
-    return NULL;
+    return mem_block;
 }
 
 //! free a previously allocated block of memory.
