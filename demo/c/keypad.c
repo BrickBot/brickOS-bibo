@@ -13,8 +13,8 @@
   The Initial Developer of the Original Code is Matthew Sheets.  All Rights
   Reserved. 
 
-     File : kernelpad.c
-  Created : 7/25/2024
+     File : keypad.c
+  Created : 4/7/2020
   Purpose : Cycle through kernel properties by pressing the "View" button
   
 ******************************************************************************/
