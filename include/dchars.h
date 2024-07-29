@@ -1,5 +1,5 @@
 /*! \file   include/dchars.h
-    \brief  Interface: character mask definitions
+    \brief  Interface: direct character mask definitions
     \author Markus L. Noga <markus@noga.de>
 
     \warning If CONF_LCD_REFRESH is set in config.h, the kernel will

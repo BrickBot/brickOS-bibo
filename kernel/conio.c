@@ -68,7 +68,7 @@ const char hex_display_codes[] =
    CHAR_9,			// 9
    CHAR_A,			// A 
    CHAR_b,			// b 
-   CHAR_c,			// c
+   CHAR_C,			// C
    CHAR_d,			// d 
    CHAR_E,			// E
    CHAR_F,			// F
