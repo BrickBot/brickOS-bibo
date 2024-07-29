@@ -30,9 +30,25 @@
 #include <conio.h>
 #endif
 
+static note_t chromatic_scale[] = { 
+  { PITCH_TEMPO, TEMPO_FROM_BPM(QUARTER, 120) },
+  { PITCH_INTERNOTE, DSOUND_DEFAULT_internote_ms },
+
+  { PITCH_A0, QUARTER },
+
+  { PITCH_REPEAT, PITCH_MAX },  // Number of times to repeat
+  { 0, 1 },  // Number of array elements to repeat,
+             //   expressed as two unsigned byte values that will
+             //   be read as a single, unsigned two-byte value
+
+  { PITCH_END, 0 }
+};
+
 int main(int argc,char *argv[]) {
 
   // Play each of the system sounds
+  // NOTE: these are manually defined and not the actual sounds in ROM
+  //    c.f. https://mralligator.com/rcx/  -  ROM 327c, code 1772
   unsigned char i;
   for (i = 0; i < DSOUND_SYS_MAX; i++) {
 #ifdef CONF_CONIO
@@ -53,6 +69,48 @@ int main(int argc,char *argv[]) {
 
     sleep(1);
   }
+
+
+  // Play the full, available chromatic scale
+  i = 1;
+
+#ifdef CONF_CONIO
+  // Display a music note on the LCD (quarter note)
+  dlcd_show(LCD_4_DOT);
+  dlcd_show(LCD_3_BOTL);
+
+  // Update and show the note number
+  cputc_hex_1(i);
+#endif // CONF_CONIO
+
+  int note_duration_ms = chromatic_scale[2].length * chromatic_scale[0].length;
+
+  dsound_play(chromatic_scale);
+  msleep(chromatic_scale[1].length);  // Internote duration
+
+  for (i = 2; i <= PITCH_MAX; i++) {
+    // Update the chromatic scale data structure on the fly
+    // (NOTE: Really shouldn't attempt this for normal dsound_play() use)
+    chromatic_scale[2].pitch = i;
+    msleep(note_duration_ms);
+#ifdef CONF_CONIO
+    cputc_hex_1(i % 10);
+    cputc_hex_2(i / 10);
+#endif // CONF_CONIO
+  }
+
+  // End of loop; wait for playing to stop
+#ifdef CONF_CONIO
+  cputc_native_5(CHAR_DASH);
+#endif // CONF_CONIO
+
+  dsound_wait();
+
+#ifdef CONF_CONIO
+  cls();
+#endif // CONF_CONIO
+
+  sleep(1);
 
   return 0;
 }

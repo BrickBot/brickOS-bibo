@@ -257,9 +257,9 @@ extern "C" {
 //@}
 
 //! maximum pitch value
-#define PITCH_MAX    98
+#define PITCH_MAX    97
 
-//! repeat last {note->length} notes
+//! repeat last {note->length} times {number} notes
 //! PITCH_REPEAT is a two-element sequence:
 //!   The length value of  the first element is the number of times to repeat
 //!   The second element is the number of array elements to repeat, expressed as

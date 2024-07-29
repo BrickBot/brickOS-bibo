@@ -35,50 +35,50 @@ static const note_t amazing_grace[] = {
   { PITCH_TEMPO, TEMPO_FROM_BPM(QUARTER, 90) },
   { PITCH_INTERNOTE, DSOUND_DEFAULT_internote_ms },
 
-  { PITCH_D4, QUARTER },
-  { PITCH_G4, HALF },
-  { PITCH_B4, EIGHTH },
-  { PITCH_G4, EIGHTH },
-  { PITCH_B4, HALF },
-  { PITCH_A4, QUARTER },
-  { PITCH_G4, HALF },
-  { PITCH_E4, QUARTER },
-  { PITCH_D4, HALF },
+  { PITCH_D3, QUARTER },
+  { PITCH_G3, HALF },
+  { PITCH_B3, EIGHTH },
+  { PITCH_G3, EIGHTH },
+  { PITCH_B3, HALF },
+  { PITCH_A3, QUARTER },
+  { PITCH_G3, HALF },
+  { PITCH_E3, QUARTER },
+  { PITCH_D3, HALF },
 
-  { PITCH_D4, QUARTER },
-  { PITCH_G4, HALF },
-  { PITCH_B4, EIGHTH },
-  { PITCH_G4, EIGHTH },
-  { PITCH_B4, HALF },
-  { PITCH_A4, QUARTER },
-  { PITCH_D3, HALF_DOTTED + QUARTER }, // Tied note
+  { PITCH_D3, QUARTER },
+  { PITCH_G3, HALF },
+  { PITCH_B3, EIGHTH },
+  { PITCH_G3, EIGHTH },
+  { PITCH_B3, HALF },
+  { PITCH_A3, QUARTER },
+  { PITCH_D4, HALF_DOTTED + QUARTER }, // Tied note
 
   { PITCH_REST, QUARTER },
 
-  { PITCH_B4, QUARTER },
-  { PITCH_D3, QUARTER_DOTTED },
-  { PITCH_B4, EIGHTH },
-  { PITCH_D3, EIGHTH },
-  { PITCH_B4, EIGHTH },
-  { PITCH_G4, HALF },
+  { PITCH_B3, QUARTER },
+  { PITCH_D4, QUARTER_DOTTED },
+  { PITCH_B3, EIGHTH },
+  { PITCH_D4, EIGHTH },
+  { PITCH_B3, EIGHTH },
+  { PITCH_G3, HALF },
 
-  { PITCH_D4, QUARTER },
-  { PITCH_E4, QUARTER_DOTTED },
-  { PITCH_G4, EIGHTH },
-  { PITCH_G4, EIGHTH },
-  { PITCH_E4, EIGHTH },
-  { PITCH_D4, HALF },
+  { PITCH_D3, QUARTER },
+  { PITCH_E3, QUARTER_DOTTED },
+  { PITCH_G3, EIGHTH },
+  { PITCH_G3, EIGHTH },
+  { PITCH_E3, EIGHTH },
+  { PITCH_D3, HALF },
 
-  { PITCH_D4, QUARTER },
-  { PITCH_G4, HALF },
-  { PITCH_B4, EIGHTH },
-  { PITCH_G4, EIGHTH },
-  { PITCH_B4, HALF },
-  { PITCH_A4, QUARTER },
-  { PITCH_G4, HALF_DOTTED },
+  { PITCH_D3, QUARTER },
+  { PITCH_G3, HALF },
+  { PITCH_B3, EIGHTH },
+  { PITCH_G3, EIGHTH },
+  { PITCH_B3, HALF },
+  { PITCH_A3, QUARTER },
+  { PITCH_G3, HALF_DOTTED },
 
   // Slowly repeat the last phrase
-  { PITCH_TEMPO, TEMPO_FROM_BPM(QUARTER, 80) },
+  { PITCH_TEMPO, TEMPO_FROM_BPM(QUARTER, 60) },
   { PITCH_REPEAT, 1 },  // Number of times to repeat
   { 0, 8 },  // Number of array elements to repeat,
              //   expressed as two unsigned byte values that will
@@ -94,7 +94,7 @@ int main(int argc,char *argv[]) {
   for(i = 2; i <=6; i++) {
     intro_ms += amazing_grace[i].length;
   }
-  intro_ms = (intro_ms * amazing_grace[0].length) + ((6-2) * amazing_grace[1].length);
+  intro_ms = (intro_ms * amazing_grace[0].length);
 
   // Play the melody in a loop
   for(i = 0; !shutdown_requested(); i++) {
@@ -107,6 +107,7 @@ int main(int argc,char *argv[]) {
     // Alternate whether to play the full song or just the intro
     if (i & 0x01) {
       dsound_wait();
+      sleep(1);
     } else {
 #ifdef CONF_CONIO
       cputc_native_5(CHAR_DASH);

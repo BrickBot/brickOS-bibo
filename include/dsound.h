@@ -55,7 +55,7 @@ extern "C" {
 ///
 /// The last entry in the list should have the {pitch} value set to \ref PITCH_END
 ///
-/// Rests should be specified by placing \ref PITCH_PAUSE in the {pitch} value.
+/// Rests should be specified by placing \ref PITCH_REST in the {pitch} value.
 /// The duration of the rest is placed in {length}.
 typedef struct {
   unsigned char pitch;      //!< note pitch: 0 = rest, 1 ^= A_0 (~55 Hz)
