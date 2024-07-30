@@ -119,8 +119,8 @@ int dkey_wait(unsigned char pressed, unsigned char keymask) {
 
 //! get and return a single key press, after waiting for it to arrive
 //
-int getchar(void) {
     unsigned char dkey_old;
+unsigned char getchar(void) {
     waitqueue_t entry;
     grab_kernel_lock();
     add_to_waitqueue(&dkey_waitqueue, &entry);

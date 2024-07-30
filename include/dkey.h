@@ -83,10 +83,10 @@ extern int dkey_wait(unsigned char pressed, unsigned char mask);
 //! check if the given key is released.
 #define dkey_released(key)  (!(dkey_multi & (key)))
 
-  //! wait for keypress and return key code.
+//! wait for keypress and return key code.
 /*! key combinations not admissible.
  */
-extern int getchar();
+extern unsigned char getchar();
 
 #endif // CONF_DKEY
 
