@@ -32,14 +32,27 @@
 #include <dlcd.h>
 
 int main(int argc,char *argv[]) {
+  unsigned char dkey_snapshot;
+
+  // Until the "View" button is pressed, show when the "Program" button is pressed
+  do {
+    dkey_snapshot = dkey;
+    
+    cputc_native_4(dkey_snapshot & KEY_ONOFF ? CHAR_O : CHAR_SPACE);
+    cputc_native_3(dkey_snapshot & KEY_VIEW  ? CHAR_V : CHAR_SPACE);
+    cputc_native_2(dkey_snapshot & KEY_PRGM  ? CHAR_P : CHAR_SPACE);
+    cputc_native_1(dkey_snapshot & KEY_RUN   ? CHAR_R : CHAR_SPACE);
+    
+    msleep(100);
+  } while (!shutdown_requested() && dkey_snapshot != KEY_VIEW);
 
 //  lcd_clear();
   
   cputc_native_5(CHAR_DASH);
-  cputc_native_user(CHAR_P, CHAR_U, CHAR_S, CHAR_h); // KEYS
+  cputc_native_user(CHAR_P, CHAR_U, CHAR_S, CHAR_H); // KEYS
   sleep(1);
   
-//  char input = getchar();
+//  unsigned char input = getchar();
 
   // Cycle through various kernel properties by
   //    pressing the "View" button
