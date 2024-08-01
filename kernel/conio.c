@@ -54,7 +54,7 @@
 
 //! hex display codes
 //
-const char hex_display_codes[] =
+const unsigned char hex_display_codes[] =
 {
    CHAR_0,			// 0
    CHAR_1,			// 1
@@ -79,7 +79,7 @@ const char hex_display_codes[] =
 //! ASCII display codes
 /*! This is a 7-bit ASCII table only.
  */
-const char ascii_display_codes[] =
+const unsigned char ascii_display_codes[] =
 {
    0x00, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,	// non-printables
    0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,	// -> underscore
@@ -193,7 +193,7 @@ const char ascii_display_codes[] =
 //! Table lookup: list of native patterns, one for each ASCII character
 /*! \param c ASCII char value (least significant 7 bits ONLY)
 */
-char get_ascii_display_code(unsigned c)
+char get_ascii_display_code(unsigned char c)
 {
   return ascii_display_codes[(c) & 0x7f];
 }
@@ -237,7 +237,7 @@ void cls() {
 #ifdef CONF_ASCII
   cputs("");
 #else
-  unsigned char i = 0;
+  char i = 0;
   for (i = 5; i >= 1; i--) {
     cputc_native(0, i);
   }
@@ -253,7 +253,7 @@ void cls() {
 
    this is a dispatcher for the fixed position routines.
  */
-void cputc_native(char mask, int pos)
+void cputc_native(unsigned char mask, char pos)
 {
   switch (pos) {
   case 0:
@@ -280,7 +280,7 @@ void cputc_native(char mask, int pos)
 //! display native mode segment mask at display position 0
 /*! \param mask the mask to display
  */
-void cputc_native_0(char mask)
+void cputc_native_0(unsigned char mask)
 {
   // gcc is stupid
   // doesn't re-use constant values in registers.
@@ -305,7 +305,7 @@ void cputc_native_0(char mask)
 //! display native mode segment mask at display position 1
 /*! \param mask the mask to display
  */
-void cputc_native_1(char mask)
+void cputc_native_1(unsigned char mask)
 {
   bit_load(mask, 0x2);
   dlcd_store(LCD_1_TOP);
@@ -326,7 +326,7 @@ void cputc_native_1(char mask)
 //! display native mode segment mask at display position 2
 /*! \param mask the mask to display
  */
-void cputc_native_2(char mask)
+void cputc_native_2(unsigned char mask)
 {
   dlcd_hide(LCD_2_DOT);
   bit_load(mask, 0x2);
@@ -349,7 +349,7 @@ void cputc_native_2(char mask)
 //! display native mode segment mask at display position 3
 /*! \param mask the mask to display
  */
-void cputc_native_3(char mask)
+void cputc_native_3(unsigned char mask)
 {
   dlcd_hide(LCD_3_DOT);
   bit_load(mask, 0x2);
@@ -371,7 +371,7 @@ void cputc_native_3(char mask)
 //! display native mode segment mask at display position 4
 /*! \param mask the mask to display
  */
-void cputc_native_4(char mask)
+void cputc_native_4(unsigned char mask)
 {
   dlcd_hide(LCD_4_DOT);
   bit_load(mask, 0x2);
@@ -394,7 +394,7 @@ void cputc_native_4(char mask)
 /*! \param mask the mask to display. only the middle segment ('-')
    is present on the display.
  */
-void cputc_native_5(char mask)
+void cputc_native_5(unsigned char mask)
 {
   bit_load(mask, 0x0);
   dlcd_store(LCD_5_MID);
@@ -406,7 +406,8 @@ void cputc_native_5(char mask)
  * \param mask_rcenter mask for the right-center position
  * \param mask_right mask for the right-most position
  */
-void cputc_native_user(char mask_left, char mask_lcenter, char mask_rcenter, char mask_right)
+void cputc_native_user(unsigned char mask_left, unsigned char mask_lcenter,
+                       unsigned char mask_rcenter, unsigned char mask_right)
 {
   cputc_native_4(mask_left);
   cputc_native_3(mask_lcenter);
@@ -421,7 +422,7 @@ void cputc_native_user(char mask_left, char mask_lcenter, char mask_rcenter, cha
 //! Table lookup: list of native patterns, one for each HEX character
 /*! \param nibble HEX char value (0-9, a-f)
 */
-char get_hex_display_code(unsigned nibble)
+char get_hex_display_code(unsigned char nibble)
 {
   return hex_display_codes[(nibble) & 0x0f];
 }
@@ -432,9 +433,9 @@ char get_hex_display_code(unsigned nibble)
 
    position 0 is unaffected by this call.
  */
-void cputw(unsigned word)
+void cputw(unsigned short word)
 {
-  int i;
+  char i;
 
   cputc_native(0, 5);
   for (i = 1; i <= 4; i++) {
@@ -459,7 +460,7 @@ void cputw(unsigned word)
  */
 void cputs(const char *s)
 {
-  int i;
+  char i;
 
   // Determine if the first character is a dash
   if ('-' == (*s)) {

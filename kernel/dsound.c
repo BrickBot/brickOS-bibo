@@ -47,7 +47,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 //! note pitch -> frequency generator lookup table, index 0 = rest and 1 ^= A0
-static const unsigned pitch2freq[]={ /* rest ( */ 0x0000, /* ) */         0x8d03, 0x8603, 0x7d03,  // Octave 0
+static const unsigned short pitch2freq[]={ /* rest ( */ 0x0000, /* ) */         0x8d03, 0x8603, 0x7d03,  // Octave 0
   0x7703, 0x7003, 0x6a03, 0x6303, 0x5e03, 0x5903, 0x5403, 0x4f03, 0x4a03, 0x4603, 0x4203, 0xfd83,  // Octave 1
   0xee83, 0xe083, 0xd483, 0xc783, 0xbc83, 0xb283, 0xa883, 0x9e83, 0x9583, 0x8d83, 0x8583, 0x7e83,  // Octave 2
   0x7683, 0x7083, 0x6983, 0x6383, 0x5e83, 0x5983, 0x5383, 0x4f83, 0x4a83, 0x4683, 0x4283, 0xfc02,  // Octave 3
@@ -61,7 +61,7 @@ static const unsigned pitch2freq[]={ /* rest ( */ 0x0000, /* ) */         0x8d03
 
 //! single beep
 static const note_t sys_beep[]={
-  {PITCH_TEMPO, 50}, {PITCH_A4 , 4}, {PITCH_END, 0}
+  {PITCH_TEMPO, TEMPO_FROM_BPM(QUARTER, 75)}, {PITCH_Bb4 , SIXTEENTH}, {PITCH_END, 0}
 };
 
 //! system sound data
@@ -69,8 +69,8 @@ const note_t *dsound_system_sounds[]={
     sys_beep
 };
     
-unsigned dsound_64th_ms;   	      	      	//!< length of 1/16 note in ms
-unsigned dsound_internote_ms; 		      	//!< length of internote spacing in ms
+unsigned char dsound_64th_ms;     	      	//!< length of 1/16 note in ms
+unsigned char dsound_internote_ms; 	    	//!< length of internote spacing in ms
 const note_t volatile * dsound_next_note;  	//!< pointer to current note
 
 static volatile int internote; 	      	      	//!< internote delay
@@ -90,7 +90,7 @@ static inline void play_pause() {
 }
 
 //! start playing a given frequency
-static inline void play_freq(unsigned freq) {
+static inline void play_freq(unsigned short freq) {
   if (0 == freq) {
     play_pause();
   } else {
@@ -143,10 +143,7 @@ static void dsound_handler(void *data) {
 	      dsound_64th_ms * dsound_next_note->length - dsound_internote_ms);
 
         if (pitch<=PITCH_MAX) {
-	    if(pitch!=PITCH_REST)
 		play_freq(pitch2freq[pitch]);
-	    else
-		play_pause();
 	    
 	    add_timer(dsound_64th_ms * dsound_next_note->length
 		      - dsound_internote_ms, &dsound_note_timer);
@@ -220,7 +217,7 @@ void dsound_stop(void) {
 }
 
 //! wait until sound has finished
-int dsound_wait(void) {
+char dsound_wait(void) {
     waitqueue_t entry;
     grab_kernel_lock();
     add_to_waitqueue(&dsound_finished, &entry);

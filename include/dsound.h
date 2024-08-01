@@ -84,9 +84,7 @@ typedef struct {
 
 #ifndef DOXYGEN_SHOULD_SKIP_INTERNALS
 
-extern unsigned dsound_64th_ms;                 //!< length of 1/16 note in ms
-extern unsigned dsound_internote_ms;            //!< length of internote spacing in ms
-const note_t volatile * dsound_next_note;       //!< pointer to current note
+const  volatile note_t * dsound_next_note;       //!< pointer to current note
 extern volatile unsigned dsound_next_time;      //!< when to play next note
 
 extern const note_t *dsound_system_sounds[];    //!< system sound data
@@ -104,39 +102,19 @@ extern const note_t *dsound_system_sounds[];    //!< system sound data
 extern void dsound_play(const note_t *notes);
 
 //! play a system sound
-static inline void dsound_system(unsigned nr) {
+static inline void dsound_system(unsigned char nr) {
     if(nr < DSOUND_SYS_MAX) {
         dsound_play(dsound_system_sounds[nr]);
     }
 }
 
-//! set duration of a 64th note in ms; return the previous duration.
-/*! only for compatibility with brickOS */
-#define dsound_set_duration(duration) dsound_set_tick((duration)>>2)
-
-//! set duration of a 64th note in ms; return the previous duration.
-/*! @deprecated use PITCH_TEMPO instead */
-static inline unsigned dsound_set_tick(unsigned duration) {
-    unsigned orig_duration = dsound_64th_ms;
-    dsound_64th_ms=duration;
-    return orig_duration;
-}
-
-//! set duration of inter-note spacing (subtracted from note duration)
-/*! set to 0 for perfect legato.
- * @deprecated use PITCH_INTERNOTE instead
- */
-static inline void dsound_set_internote(unsigned duration) {
-    dsound_internote_ms=duration;
-}
-
 //! returns nonzero value if a sound is playing
-static inline int dsound_playing(void) {
+static inline char dsound_playing(void) {
     return dsound_next_note!=0;
 }
 
 //! Wait until sound stops playing.
-extern int dsound_wait(void);
+extern char dsound_wait(void);
 
 //! stop playing sound
 extern void dsound_stop(void);

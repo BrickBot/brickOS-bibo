@@ -48,9 +48,9 @@ extern void dcc_service_packet(unsigned char* data, unsigned char length, unsign
 extern void dcc_reset();
 extern void dcc_idle();
 
-extern void dcc_speed14(int addr, signed char speed, unsigned char fl);
-extern void dcc_speed28(int addr, signed char speed);
-extern void dcc_speed126(int addr, signed char speed);
+extern void dcc_speed14(unsigned char addr, signed char speed, unsigned char fl);
+extern void dcc_speed28(unsigned char addr, signed char speed);
+extern void dcc_speed126(unsigned char addr, signed char speed);
 
 #define DCC_FL 0x10
 #define DCC_F0 0x10
@@ -58,19 +58,19 @@ extern void dcc_speed126(int addr, signed char speed);
 #define DCC_F2 0x02
 #define DCC_F3 0x04
 #define DCC_F4 0x08
-extern void dcc_FL_F4(int addr, unsigned char bits);
+extern void dcc_FL_F4(unsigned char addr, unsigned char bits);
 
 #define DCC_F5 0x01
 #define DCC_F6 0x02
 #define DCC_F7 0x04
 #define DCC_F8 0x08
-extern void dcc_F5_F8(int addr, unsigned char bits);
+extern void dcc_F5_F8(unsigned char addr, unsigned char bits);
 
 #define DCC_F9 0x01
 #define DCC_F10 0x02
 #define DCC_F11 0x04
 #define DCC_F12 0x08
-extern void dcc_F9_F12(int addr, unsigned char bits);
+extern void dcc_F9_F12(unsigned char addr, unsigned char bits);
 
 extern inline void disable_irqs() {
   __asm__ __volatile__("\torc  #0x80,ccr\n":::"cc");

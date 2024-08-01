@@ -67,14 +67,14 @@ extern "C" {
 //! Table lookup: list of native patterns, one for each HEX character
 /*! \param nibble HEX char value (0-9, a-f)
 */
-extern inline char get_hex_display_code(unsigned nibble);
+extern inline char get_hex_display_code(unsigned char nibble);
 
 #ifdef CONF_ASCII
 
 //! Table lookup: list of native patterns, one for each ASCII character
 /*! \param c ASCII char value (least significant 7 bits ONLY)
 */
-extern inline char get_ascii_display_code(unsigned c);
+extern inline char get_ascii_display_code(unsigned char c);
 
 #endif // CONF_ASCII
 
@@ -105,17 +105,17 @@ extern void cls();
 // dot not included because not reliably present.
 //
 //! write bit-pattern for segments at position 0 of LCD
-extern void cputc_native_0(char mask);
+extern void cputc_native_0(unsigned char mask);
 //! write bit-pattern for segments at position 1 of LCD
-extern void cputc_native_1(char mask);
+extern void cputc_native_1(unsigned char mask);
 //! write bit-pattern for segments at position 2 of LCD
-extern void cputc_native_2(char mask);
+extern void cputc_native_2(unsigned char mask);
 //! write bit-pattern for segments at position 3 of LCD
-extern void cputc_native_3(char mask);
+extern void cputc_native_3(unsigned char mask);
 //! write bit-pattern for segments at position 4 of LCD
-extern void cputc_native_4(char mask);
+extern void cputc_native_4(unsigned char mask);
 //! write bit-pattern for segments at position 5 of LCD
-extern void cputc_native_5(char mask);
+extern void cputc_native_5(unsigned char mask);
 
 //! Set/Clear individual segments at specified position of LCD
 /*! (this is essentially a dispatcher for cputc_native_[0-5] functions)
@@ -123,39 +123,40 @@ extern void cputc_native_5(char mask);
  *  \param pos the location at which to display the segment pattern
  *  \return Nothing
  */
-extern void cputc_native(char mask, int pos);
+extern void cputc_native(unsigned char mask, char pos);
 
 //! write bit-pattern for segments in positions 4 through 1 of the LCD (the main user portion)
-extern void cputc_native_user(char mask_left, char mask_lcenter, char mask_rcenter, char mask_right);
+extern void cputc_native_user(unsigned char mask_left, unsigned char mask_lcenter,
+                              unsigned char mask_rcenter, unsigned char mask_right);
 
 
 //! write HEX digit to position 0 of LCD
-extern inline void cputc_hex_0(unsigned nibble)
+extern inline void cputc_hex_0(unsigned char nibble)
 {
   cputc_native_0(get_hex_display_code(nibble));
 }
 //! write HEX digit to position 1 of LCD
-extern inline void cputc_hex_1(unsigned nibble)
+extern inline void cputc_hex_1(unsigned char nibble)
 {
   cputc_native_1(get_hex_display_code(nibble));
 }
 //! write HEX digit to position 2 of LCD
-extern inline void cputc_hex_2(unsigned nibble)
+extern inline void cputc_hex_2(unsigned char nibble)
 {
   cputc_native_2(get_hex_display_code(nibble));
 }
 //! write HEX digit to position 3 of LCD
-extern inline void cputc_hex_3(unsigned nibble)
+extern inline void cputc_hex_3(unsigned char nibble)
 {
   cputc_native_3(get_hex_display_code(nibble));
 }
 //! write HEX digit to position 4 of LCD
-extern inline void cputc_hex_4(unsigned nibble)
+extern inline void cputc_hex_4(unsigned char nibble)
 {
   cputc_native_4(get_hex_display_code(nibble));
 }
 //! write HEX digit to position 5 of LCD
-extern inline void cputc_hex_5(unsigned nibble)
+extern inline void cputc_hex_5(unsigned char nibble)
 {
   cputc_native_5(get_hex_display_code(nibble));
 }
@@ -166,43 +167,43 @@ extern inline void cputc_hex_5(unsigned nibble)
  *  \param pos the location at which to display the HEX digit
  *  \return Nothing
  */
-extern inline void cputc_hex(unsigned nibble, int pos)
+extern inline void cputc_hex(unsigned char nibble, char pos)
 {
   cputc_native(get_hex_display_code(nibble), pos);
 }
 
 //! Write a HEX word to LCD
-extern void cputw(unsigned word);
+extern void cputw(unsigned short word);
 
 
 #ifdef CONF_ASCII
 //! write ASCII char to position 0 of LCD
-extern inline void cputc_0(unsigned c)
+extern inline void cputc_0(unsigned char c)
 {
   cputc_native_0(get_ascii_display_code(c));
 }
 //! write ASCII char to position 1 of LCD
-extern inline void cputc_1(unsigned c)
+extern inline void cputc_1(unsigned char c)
 {
   cputc_native_1(get_ascii_display_code(c));
 }
 //! write ASCII char to position 2 of LCD
-extern inline void cputc_2(unsigned c)
+extern inline void cputc_2(unsigned char c)
 {
   cputc_native_2(get_ascii_display_code(c));
 }
 //! write ASCII char to position 3 of LCD
-extern inline void cputc_3(unsigned c)
+extern inline void cputc_3(unsigned char c)
 {
   cputc_native_3(get_ascii_display_code(c));
 }
 //! write ASCII char to position 4 of LCD
-extern inline void cputc_4(unsigned c)
+extern inline void cputc_4(unsigned char c)
 {
   cputc_native_4(get_ascii_display_code(c));
 }
 //! write ASCII char to position 5 of LCD
-extern inline void cputc_5(unsigned c)
+extern inline void cputc_5(unsigned char c)
 {
   cputc_native_5(get_ascii_display_code(c));
 }
@@ -213,7 +214,7 @@ extern inline void cputc_5(unsigned c)
  *  \param pos the location at which to display the ASCII char
  *  \return Nothing
  */
-extern inline void cputc(char c, int pos)
+extern inline void cputc(unsigned char c, char pos)
 {
   cputc_native(get_ascii_display_code(c), pos);
 }

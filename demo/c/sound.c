@@ -30,6 +30,15 @@
 #include <conio.h>
 #endif
 
+static note_t tuning[] = {
+  { PITCH_TEMPO, TEMPO_FROM_BPM(QUARTER, 60) },
+  { PITCH_INTERNOTE, 0 },
+
+  { PITCH_Bb4, BREVE },
+
+  { PITCH_END, 0 }
+};
+
 static note_t chromatic_scale[] = { 
   { PITCH_TEMPO, TEMPO_FROM_BPM(QUARTER, 120) },
   { PITCH_INTERNOTE, DSOUND_DEFAULT_internote_ms },
@@ -70,6 +79,19 @@ int main(int argc,char *argv[]) {
     sleep(1);
   }
 
+  //Play a tuning note
+  dsound_play(tuning);
+#ifdef CONF_CONIO
+  cputc_native_user(CHAR_T, CHAR_U, CHAR_N, CHAR_E);
+  for (i = 0; i <= 8 && dsound_playing(); i++) {
+    cputc_hex_0(i);
+    sleep(1);
+  }
+  cputc_native_0(CHAR_DASH);
+#endif // CONF_CONIO
+  dsound_wait();
+  cls();
+  sleep(1);
 
   // Play the full, available chromatic scale
   i = 1;

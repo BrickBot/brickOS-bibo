@@ -89,10 +89,10 @@ typedef struct _tdata_t *tid_t;
 /*! Check task shutdown flag.  If set, the task should shutdown
  *  as soon as possible.  If clear, continue running.
  */
-#define shutdown_requested() ((ctid->tflags & T_SHUTDOWN) != 0)
+#define shutdown_requested() ((char)((ctid->tflags & T_SHUTDOWN) != 0))
 extern tid_t ctid;
 #else // CONF_TM
-#define shutdown_requested() (0)
+#define shutdown_requested() ((char)0)
 #endif // CONF_TM
 
 /*!  start task executing (with passed paramters)

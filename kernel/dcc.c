@@ -105,7 +105,7 @@ void dcc_idle()
 
 /*****************************************************************************/
 
-void dcc_FL_F4(int addr, unsigned char bits)
+void dcc_FL_F4(unsigned char addr, unsigned char bits)
   {
   p_buffer[0] = addr;
   p_buffer[1] = 0x80 | bits;
@@ -114,7 +114,7 @@ void dcc_FL_F4(int addr, unsigned char bits)
 
 /*****************************************************************************/
 
-void dcc_F5_F8(int addr, unsigned char bits)
+void dcc_F5_F8(unsigned char addr, unsigned char bits)
   {
   p_buffer[0] = addr;
   p_buffer[1] = 0xB0 | bits;
@@ -123,7 +123,7 @@ void dcc_F5_F8(int addr, unsigned char bits)
 
 /*****************************************************************************/
 
-void dcc_F9_F12(int addr, unsigned char bits)
+void dcc_F9_F12(unsigned char addr, unsigned char bits)
   {
   p_buffer[0] = addr;
   p_buffer[1] = 0xA0 | bits;
@@ -132,7 +132,7 @@ void dcc_F9_F12(int addr, unsigned char bits)
 
 /*****************************************************************************/
 
-void dcc_speed14(int addr, signed char speed, unsigned char fl)
+void dcc_speed14(unsigned char addr, signed char speed, unsigned char fl)
   {
   p_buffer[0] = addr;
   p_buffer[1] = 0x60;
@@ -149,7 +149,7 @@ void dcc_speed14(int addr, signed char speed, unsigned char fl)
 
 /*****************************************************************************/
 
-void dcc_speed28(int addr, signed char speed)
+void dcc_speed28(unsigned char addr, signed char speed)
   {
   p_buffer[0] = addr;
   p_buffer[1] = 0x60;
@@ -166,7 +166,7 @@ void dcc_speed28(int addr, signed char speed)
 
 /*****************************************************************************/
 
-void dcc_speed126(int addr, signed char speed)
+void dcc_speed126(unsigned char addr, signed char speed)
   {
   p_buffer[0] = addr;
   p_buffer[1] = 0x3F;
