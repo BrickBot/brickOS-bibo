@@ -23,6 +23,7 @@
 ******************************************************************************/
 
 #include <config.h>
+#include <unistd.h>
 #include <conio.h>
 #include <dlcd.h>
 #include <dkey.h>
@@ -48,7 +49,6 @@ void show_size(unsigned char type_char_1, unsigned char type_char_2,
 }
 
 int main(int argc, char **argv) {
-  unsigned char sleep_duration = 3;
   
   // Pointer
   show_size(0, CHAR_P, 0, sizeof(void*));

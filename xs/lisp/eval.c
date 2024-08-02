@@ -211,11 +211,13 @@ static void transmit() {
 	transmit1(10);
 }
 
+#ifndef ONLINE
 static void transmitCMD(object cmd) {
 	wtbuf[0] = cmd;
 	wtbufp = wtbuf + 1;
 	transmit();
 }
+#endif
 
 wakeup_t rdbuf_ready_p(wakeup_t data) {
 	return rdbuf_ready || interrupt_flag;
