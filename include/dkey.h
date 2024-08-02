@@ -47,6 +47,9 @@ extern "C" {
 #define KEY_PRGM  0x08		//!< the program key is pressed
 
 #define KEY_ANY   0x0f		//!< any of the keys
+#define KEY_NONE  0x00      //!< none of the keys
+
+#define KEYS_SYSTEM (KEY_ONOFF | KEY_RUN)
 
 #define KEY_RELEASED 0
 #define KEY_PRESSED  1
@@ -76,7 +79,7 @@ extern volatile unsigned char dkey;
 
 //! wait until any of the given keys is pressed or released.
 //
-extern int dkey_wait(unsigned char pressed, unsigned char mask);
+extern char dkey_wait(unsigned char pressed, unsigned char mask);
 
 //! check if the given key is pressed.
 #define dkey_pressed(key)  (dkey_multi & (key))

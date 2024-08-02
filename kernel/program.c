@@ -93,11 +93,13 @@ const unsigned char min_length[]={
    2  // CMDsethost
 };
 
-static program_t programs[PROG_MAX];      //!< the programs
+static program_t programs[PROG_MAX];       //!< the programs
 
-static unsigned char* buffer_ptr;         //!< packet receive buffer
-volatile unsigned char packet_len;        //!< packet length
-volatile unsigned char packet_src;        //!< packet sender
+static unsigned char* buffer_ptr;          //!< packet receive buffer
+volatile unsigned char packet_len;         //!< packet length
+volatile unsigned char packet_src;         //!< packet sender
+
+static unsigned char system_reserved_keys = KEYS_SYSTEM; //!< allow user programs to use the On-Off button
 
 #if 0
 #define debugs(a) { cputs(a); msleep(500); }
@@ -181,9 +183,19 @@ int find_next_program() {
     return next_prog;
 }
 
+//! reutrns true if a program is running; false otherwise
+char is_program_running() {
+  return nb_tasks > nb_system_tasks;
+}
+
+void allow_system_keys_access(char keys) {
+  system_reserved_keys = (KEYS_SYSTEM ^ keys);
+}
+
+
 //! stop program
 static void program_stop(void) {
-    int count_down = 40;
+    unsigned char count_down = 40;
     
     // Kindly request that all user tasks shutdown
     shutdown_tasks(T_USER);
@@ -210,33 +222,36 @@ static void program_run(unsigned nr) {
     memcpy(prog->data,prog->data_orig,prog->data_size);
     memset(prog->bss,0,prog->bss_size);
 
+    // ensure state is properly initialized for program execution
+    //
     lnp_addressing_set_handler(0, LNP_DUMMY_ADDRESSING);
 
+    // execute the program
     execi((void*) (((char*)prog->text) + prog->start  ),
 	  0,0,prog->prio,prog->stack_size);
 
-    /* Wait for program to terminate */
+    // Wait for program to terminate
     grab_kernel_lock();
     dkey_old = dkey;
-    add_to_waitqueue(&dkey_waitqueue, &dkey_entry);
+    add_to_waitqueue(&dkey_program_waitqueue, &dkey_entry);
     add_to_waitqueue(&synthetic_waitqueue, &synth_entry);
     while (!shutdown_requested() && nb_tasks > nb_system_tasks) {
-	if (synthetic_key) {
-	    if (synthetic_key == SYNTHKEY_STOP)
-		break;
-	    synthetic_key = 0;
-	}
-	if ((dkey & ~dkey_old & (KEY_RUN | KEY_ONOFF)) != 0)
-	    break;
-	dkey_old = dkey;
-	/* poll every 200 ms if program terminated. */
-	wait_timeout(200);
+      dkey_old = dkey;
+      // poll every 200 ms if program terminated
+      wait_timeout(200);
+      if (synthetic_key) {
+        if (synthetic_key == SYNTHKEY_STOP)
+          break;
+        synthetic_key = 0;
+      }
+      if ((dkey & ~dkey_old & (system_reserved_keys)) != 0)
+          break;
     }
     remove_from_waitqueue(&dkey_entry);
     remove_from_waitqueue(&synth_entry);
     if ((dkey & KEY_ONOFF) != 0) {
-	/* if ONOFF pressed, enqueue synthetic OFF key. */
-	synthetic_key = KEY_ONOFF;
+      // if ONOFF pressed, enqueue synthetic OFF key
+      synthetic_key = KEY_ONOFF;
     }
     release_kernel_lock();
     program_stop();
@@ -268,6 +283,7 @@ static void program_run(unsigned nr) {
     lr_set_handler(lrkey_handler);
 #endif
     lnp_addressing_set_handler(0, &packet_producer);
+    allow_system_keys_access(KEY_NONE);
 }
 
 //! packet command parser task
@@ -419,13 +435,14 @@ static int program_event(void) {
       return result;
     }
 
-    add_to_waitqueue(&dkey_waitqueue, &dkey_entry);
+    add_to_waitqueue(&dkey_system_waitqueue, &dkey_entry);
     add_to_waitqueue(&synthetic_waitqueue, &synth_entry);
     do {
 	dkey_old = dkey;
 	wait_timeout(1024);
-
+    
 	result = dkey & ~dkey_old;
+
 	if (synthetic_key) {
 	  result = synthetic_key;
 	  synthetic_key = 0;

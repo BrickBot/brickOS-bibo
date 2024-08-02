@@ -130,6 +130,7 @@ int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
     }
     remove_from_waitqueue(&entry);
     pthread_mutex_lock(mutex);
+    release_kernel_lock();
     return 0;
 }
 

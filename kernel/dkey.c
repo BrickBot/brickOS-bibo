@@ -31,6 +31,7 @@
 #include <sys/tm.h>
 #include <sys/handlers.h>
 #include <sys/waitqueue.h>
+#include <sys/program.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -43,7 +44,9 @@ volatile unsigned char dkey;          	//! single key state
 
 static void dkey_callback(void);
 handler_t dkey_handler_info = {0, dkey_callback};
-waitqueue_t *dkey_waitqueue;
+waitqueue_t *dkey_system_waitqueue  = NULL;
+waitqueue_t *dkey_program_waitqueue = NULL;
+waitqueue_t *dkey_user_waitqueue    = NULL;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -106,36 +109,58 @@ dkey_same:\n\
 ");
 #endif // DOXYGEN_SHOULD_SKIP_THIS
 
-int dkey_wait(unsigned char pressed, unsigned char keymask) {
+char dkey_wait(unsigned char pressed, unsigned char keymask) {
     waitqueue_t entry;
     grab_kernel_lock();
-    add_to_waitqueue(&dkey_waitqueue, &entry);
+    if (is_program_running()) {
+      add_to_waitqueue(&dkey_user_waitqueue, &entry);
+    } else {
+      add_to_waitqueue(&dkey_system_waitqueue, &entry);
+    }
     while ((dkey_multi & keymask) ? !pressed : pressed
-	   && !shutdown_requested())
-	wait();
-    remove_from_waitqueue(&entry);
+        && !shutdown_requested()) {
+      wait();
+    }
+    if (is_program_running()) {
+      remove_from_waitqueue(&entry);
+    } else {
+      remove_from_waitqueue(&entry);
+    }
+    release_kernel_lock();
     return !shutdown_requested();
 }
 
 //! get and return a single key press, after waiting for it to arrive
-//
-    unsigned char dkey_old;
 unsigned char getchar(void) {
+    unsigned char dkey_old, dkey_new;
     waitqueue_t entry;
     grab_kernel_lock();
-    add_to_waitqueue(&dkey_waitqueue, &entry);
+    if (is_program_running()) {
+      add_to_waitqueue(&dkey_user_waitqueue, &entry);
+    } else {
+      add_to_waitqueue(&dkey_system_waitqueue, &entry);
+    }
     do {
-	dkey_old = dkey;
-	wait();
-    } while (!(dkey & ~dkey_old)
-	     && !shutdown_requested());
-    remove_from_waitqueue(&entry);
+      dkey_old = dkey;
+      wait();
+    } while (!(dkey & ~dkey_old) && !shutdown_requested());
+    dkey_new = dkey;
+    if (is_program_running()) {
+      remove_from_waitqueue(&entry);
+    } else {
+      remove_from_waitqueue(&entry);
+    }
     release_kernel_lock();
-    return dkey & ~dkey_old;
+    return dkey_new & ~dkey_old;
 }
 
 void dkey_callback(void) {
-    wakeup(dkey_waitqueue);
+    if (is_program_running()) {
+      wakeup(dkey_user_waitqueue);
+      wakeup(dkey_program_waitqueue);
+    } else {
+      wakeup(dkey_system_waitqueue);
+    }
 }
 
 #endif // CONF_DKEY

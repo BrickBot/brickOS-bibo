@@ -35,7 +35,9 @@ extern "C" {
 //
 ///////////////////////////////////////////////////////////////////////
 
-extern waitqueue_t *dkey_waitqueue;
+extern waitqueue_t *dkey_system_waitqueue;
+extern waitqueue_t *dkey_program_waitqueue;
+extern waitqueue_t *dkey_user_waitqueue;
 
 #endif	// CONF_DKEY
 

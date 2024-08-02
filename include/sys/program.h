@@ -100,6 +100,12 @@ extern int program_valid(unsigned nr);
 //! display the current program number, or '-' if not a valid program
 extern void show_program_num();
 
+//! returns true if a program is currently running; false otherwise
+extern inline char is_program_running();
+
+//! sets whether any system keys (e.g. On-Off, Run) may be used by a user program
+extern inline void allow_system_keys_access(char keys);
+
 //! initialize program support
 extern void program_init();
 
