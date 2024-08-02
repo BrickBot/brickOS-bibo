@@ -5,8 +5,8 @@
 ### --------------------------------------------------------------------------
 
 DEMO_C_SOURCES1=hello-C.c helloworld_lnp.c cpu.c dccthrottle.c edgecounting.c \
-          keypad.c linetrack.c memtest.c music.c powerfunctions.c robots.c \
-          rover.c screen.c sound.c trailerbot.c
+          keypad.c linetrack.c memtest.c music.c powerfunctions.c primitives.c \
+          robots.c rover.c screen.c sound.c trailerbot.c
 DEMO_C_SOURCES=$(DEMO_C_SOURCES1:%=demo/c/%)
 DEMO_C_PROGRAMS=$(patsubst %.c,%.lx,$(DEMO_C_SOURCES))
 
