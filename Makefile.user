@@ -19,6 +19,8 @@ DLDFLAGS    = -T $(DYNAMIC_LDS) -relax -L$(LIBDIR)
 BASE1_DEFAULT = 0xb000
 BASE2_DEFAULT = 0xb210
 
+#  Base addresses manually copied from $(DYNAMIC_LDS)
+#  (Values should be check as kernel changes but kept as backup if GET_BASE fails)
 BASE1 = 0xad30
 BASE2 = 0xaf40
 

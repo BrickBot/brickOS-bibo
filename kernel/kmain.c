@@ -139,6 +139,8 @@ void kmain(void)
 	program_init();
 #endif
 	
+    lcd_clear();
+    
 	dkey_multi = KEY_ONOFF;
 #if defined(CONF_DSOUND) && defined(CONF_ON_OFF_SOUND)
 	show_on_off(on_text, on_sound);
