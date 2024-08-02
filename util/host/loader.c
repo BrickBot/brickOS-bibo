@@ -342,7 +342,7 @@ int main(int argc, char **argv) {
 	;
 
 	fprintf(stderr, "usage: %s [options] [command | file.lx]\n", argv[0]);
-	fprintf(stderr, usage_string);
+	fputs(usage_string, stderr);
 
     return -1;
   }
@@ -359,12 +359,12 @@ int main(int argc, char **argv) {
   rcx_init(&tty, tty_name, baud, timeout, FALSE);
 
   if (verbose_flag)
-    fputs("\nLNP Initialized...\n",stderr);
+    fputs("\nLNP Initialized...\n", stderr);
 
-  lnp_addressing_set_handler(0,ahandler);
+  lnp_addressing_set_handler(0, ahandler);
 
   if(verbose_flag)  
-    fprintf(stderr,"loader hostaddr=0x%02x hostmask=0x%02x portmask=0x%02x\n",
+    fprintf(stderr, "loader hostaddr=0x%02x hostmask=0x%02x portmask=0x%02x\n",
             rcxaddr & 0x00ff, LNP_HOSTMASK & 0x00ff, srcport & 0x00ff);
 
   // Set IR mode
@@ -372,7 +372,7 @@ int main(int argc, char **argv) {
     buffer[0]=CMDirmode;
     buffer[1]=irmode;
     if(lnp_assured_write(&tty,buffer,2,timeout,rcxaddr,srcport)) {
-      fputs("error setting IR mode to far\n",stderr);
+      fputs("error setting IR mode to far\n", stderr);
       return -1;
     }
   }
@@ -384,7 +384,7 @@ int main(int argc, char **argv) {
 	buffer[0] = CMDsethost;
 	buffer[1] = hostaddr;
 	if(lnp_assured_write(&tty,buffer,2,timeout,rcxaddr,srcport)) {
-      fputs("error setting host address\n",stderr);
+      fputs("error setting host address\n", stderr);
       return -1;
 	}
 	fprintf(stderr, "LNP host address set to %d\n", hostaddr);
@@ -396,7 +396,7 @@ int main(int argc, char **argv) {
   buffer[0]=CMDdelete;
   buffer[1]=prog-1; //       prog 0
   if(lnp_assured_write(&tty,buffer,2,timeout,rcxaddr,srcport)) {
-    fputs("error deleting program\n",stderr);
+    fputs("error deleting program\n", stderr);
     return -1;
   }
 
@@ -407,7 +407,7 @@ int main(int argc, char **argv) {
   }
 
   if(verbose_flag)
-    fputs("\ncreate ",stderr);
+    fputs("\ncreate ", stderr);
   buffer[ 0]=CMDcreate;
   buffer[ 1]=prog-1; //       prog 0
   buffer[ 2]=lx.text_size>>8;
@@ -422,7 +422,7 @@ int main(int argc, char **argv) {
   buffer[11]=lx.offset & 0xff; 
   buffer[12]=DEFAULT_PRIORITY;
   if(lnp_assured_write(&tty,buffer,13,timeout,rcxaddr,srcport)) {
-    fputs("error creating program\n",stderr);
+    fputs("error creating program\n", stderr);
     return -1;
   }
 
@@ -440,7 +440,7 @@ int main(int argc, char **argv) {
     buffer[0]=CMDrun;
     buffer[1]=prog-1; //       prog 0
     if(lnp_assured_write(&tty,buffer,2,timeout,rcxaddr,srcport)) {
-      fputs("error running program\n",stderr);
+      fputs("error running program\n", stderr);
       return -1;
     }
   }

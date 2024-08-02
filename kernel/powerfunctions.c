@@ -23,11 +23,12 @@
 #include <powerfunctions.h>
 #include <semaphore.h>
 #include <sys/irq.h>
+#include <string.h>
 
 #ifdef CONF_POWERFUNCTIONS
 
 unsigned char pf_toggle[8] = {0,0,0,0,0,0,0,0};
-int pf_repeat = 0;
+char pf_repeat = 0;
 
 #ifdef CONF_LNP
 extern sem_t tx_sem;                //!< transmitter access semaphore
@@ -98,7 +99,7 @@ static void pf_send_once(unsigned code)
   ir_mark();
   IR_PAUSE(39); // start bit pause for 39 38kHz cycles (1026 us)
 
-  int b;
+  char b;
   for(b = 16; b > 0; --b)
   {
     ir_mark();

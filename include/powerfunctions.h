@@ -151,7 +151,7 @@ extern unsigned char pf_toggle[8];
 //! Whether to repeat PF messages 5 times. Doing so will make pf_send take
 //! approximately 400-600 ms instead of the 10-13 ms required for a single
 //! message.
-extern int pf_repeat;
+extern char pf_repeat;
 
 // For all these functions, if extra_address is true then the command is sent
 // with the extra address space bit set, as described in PF RC protocol v1.20.
