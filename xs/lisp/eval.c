@@ -1214,14 +1214,15 @@ LOOP:
 		case Lmotor:
 			if (check_int_args(base) || !get_port(base[0])) goto LERROR;
 #ifdef RCX
-			switch (base[0]) {
-			case valINT(1):
-				motor_a_dir(INTval(base[1])); break;
-			case valINT(2):
-				motor_b_dir(INTval(base[1])); break;
-			default:
-				motor_c_dir(INTval(base[1])); break;
-			}
+			motor_dir_set((Motor)INTval(base[0]), INTval(base[1]));
+//			switch (base[0]) {
+//			case valINT(1):
+//				motor_a_dir(INTval(base[1])); break;
+//			case valINT(2):
+//				motor_b_dir(INTval(base[1])); break;
+//			default:
+//				motor_c_dir(INTval(base[1])); break;
+//			}
 #endif
 			e = base[1];
 			break;
@@ -1229,14 +1230,15 @@ LOOP:
 		case Lspeed:
 			if (check_int_args(base) || !get_port(base[0])) goto LERROR;
 #ifdef RCX
-			switch (base[0]) {
-			case valINT(1):
-				motor_a_speed(INTval(*vs_top)); break;
-			case valINT(2):
-				motor_b_speed(INTval(*vs_top)); break;
-			default:
-				motor_c_speed(INTval(*vs_top)); break;
-			}
+			motor_speed_set((Motor)INTval(base[0]), INTval(base[1]));
+//			switch (base[0]) {
+//			case valINT(1):
+//				motor_a_speed(INTval(*vs_top)); break;
+//			case valINT(2):
+//				motor_b_speed(INTval(*vs_top)); break;
+//			default:
+//				motor_c_speed(INTval(*vs_top)); break;
+//			}
 #endif
 			e = base[1];
 			break;

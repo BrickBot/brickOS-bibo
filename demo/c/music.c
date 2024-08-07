@@ -19,8 +19,8 @@
   
 ******************************************************************************/
 
-
 #include <config.h>
+
 #if defined(CONF_DSOUND)
 #include <dsound.h>
 #include <tm.h>
@@ -87,7 +87,7 @@ static const note_t amazing_grace[] = {
   { PITCH_END, 0 }
 };
 
-int main(int argc,char *argv[]) {
+int main(int argc, char *argv[]) {
   int i;
   int intro_ms = 0;
   

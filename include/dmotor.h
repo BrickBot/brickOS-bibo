@@ -34,6 +34,10 @@ extern "C" {
 
 #ifdef CONF_DMOTOR
 
+#ifdef CONF_VIS
+#include <rom/lcd.h>
+#endif
+
 ///////////////////////////////////////////////////////////////////////
 //
 // Definitions
@@ -55,6 +59,13 @@ typedef struct {
   } access;			//!< provides access from C and assembler
 
   unsigned char dir;		//!< output pattern when sum overflows
+  unsigned char shift;		//!< number of bits to shift for the motor
+
+#ifdef CONF_VIS
+  lcd_segment motor_lcd_segment_select;
+  lcd_segment motor_lcd_segment_left;
+  lcd_segment motor_lcd_segment_right;
+#endif // CONF_VIS
 
 } MotorState;
 #endif  // DOXYGEN_SHOULD_SKIP_INTERNALS
@@ -62,13 +73,15 @@ typedef struct {
 #define  MIN_SPEED	0     	//!< minimum motor speed
 #define  MAX_SPEED	255   	//!< maximum motor speed
 
+#define MOTOR_MASK 0x03
+
 #define MOTOR_A_SHIFT 6
 #define MOTOR_B_SHIFT 2
 #define MOTOR_C_SHIFT 0
 
-#define MOTOR_A_MASK  (0x03 << MOTOR_A_SHIFT)
-#define MOTOR_B_MASK  (0x03 << MOTOR_B_SHIFT)
-#define MOTOR_C_MASK  (0x03 << MOTOR_C_SHIFT)
+#define MOTOR_A_MASK  (MOTOR_MASK << MOTOR_A_SHIFT)
+#define MOTOR_B_MASK  (MOTOR_MASK << MOTOR_B_SHIFT)
+#define MOTOR_C_MASK  (MOTOR_MASK << MOTOR_C_SHIFT)
 
 #define MOTOR_FLOAT   0x00
 #define MOTOR_REV     0x01
@@ -90,6 +103,15 @@ typedef struct {
 #define MOTOR_C_REV   (MOTOR_REV   << MOTOR_C_SHIFT)
 #define MOTOR_C_FLOAT (MOTOR_FLOAT << MOTOR_C_SHIFT)
 
+//! the motors
+typedef enum {
+  motor_min,
+  motor_a = motor_min,
+  motor_b,
+  motor_c,
+  motor_max = motor_c
+} Motor;
+
 //! the motor directions
 typedef enum {
   off = MOTOR_FLOAT,	//!< freewheel
@@ -104,9 +126,9 @@ typedef enum {
 //
 ///////////////////////////////////////////////////////////////////////
 
-extern MotorState	dm_a,	//!< motor A state
-			dm_b,	//!< motor B state
-			dm_c;	//!< motor C state
+extern MotorState  dm_a,	//!< motor A state
+                   dm_b,	//!< motor B state
+                   dm_c;	//!< motor C state
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -116,69 +138,41 @@ extern MotorState	dm_a,	//!< motor A state
 
 #ifdef CONF_VIS
 
-/*
-** motor_*_dir() functions will display direction arrows, so
-** define them in kernel/dmotor.c
-*/
-extern void motor_a_dir(MotorDirection dir);	//!< set motor A direction to dir
-extern void motor_b_dir(MotorDirection dir);	//!< set motor B direction to dir
-extern void motor_c_dir(MotorDirection dir);	//!< set motor C direction to dir
+extern void motor_select_show(Motor motor);
 
-#else
-
-/*
-** No display, so make these functions inline
-*/
-//! set motor A direction
-/*! \param dir the direction
- */
-extern inline void motor_a_dir(MotorDirection dir)
-{
-  dm_a.dir = dir << MOTOR_A_SHIFT;
-}
-
-//! set motor B direction
-/*! \param dir the direction
- */
-extern inline void motor_b_dir(MotorDirection dir)
-{
-  dm_b.dir = dir << MOTOR_B_SHIFT;
-}
-
-//! set motor C direction
-/*! \param dir the direction
- */
-extern inline void motor_c_dir(MotorDirection dir)
-{
-  dm_c.dir = dir << MOTOR_C_SHIFT;
-}
+extern void motor_select_hide(Motor motor);
 
 #endif // ifdef CONF_VIS
 
-
-//! set motor A speed
-/*! \param speed the speed
+//!< set the directional state of the given motor to dir
+/*! \param motor the motor
+ *  \param dir the direction
  */
-extern inline void motor_a_speed(unsigned char speed)
-{
-  dm_a.access.c.delta = speed;
-}
+extern void motor_dir_set(Motor motor, MotorDirection dir);
 
-//! set motor B speed
-/*! \param speed the speed
+//!< get the directional state of the given motor
+/*! \param motor the motor
+ *  \return the motor direction
  */
-extern inline void motor_b_speed(unsigned char speed)
-{
-  dm_b.access.c.delta = speed;
-}
+extern MotorDirection motor_dir_get(Motor motor);
 
-//! set motor C speed
-/*! \param speed the speed
+//!< reverses the directional state of the given motor (e.g. brake -> off or fwd -> rev)
+/*! \param motor the motor
+ *  \return the new motor direction
  */
-extern inline void motor_c_speed(unsigned char speed)
-{
-  dm_c.access.c.delta = speed;
-}
+extern MotorDirection motor_dir_reverse(Motor motor);
+
+//!< set the speed of the specified motor
+/*! \param motor the motor
+ *  \param speed the speed
+ */
+extern void motor_speed_set(Motor motor, unsigned char speed);
+
+//!< get the speed of the specified motor
+/*! \param motor the motor
+ *  \return the motor speed
+ */
+extern unsigned char motor_speed_get(Motor motor);
 
 #endif // CONF_DMOTOR
 

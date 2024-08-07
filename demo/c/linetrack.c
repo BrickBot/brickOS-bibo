@@ -59,10 +59,10 @@ static wakeup_t bright_found(wakeup_t data) {
 }
 
 static void locate_line() {
-  motor_a_speed(NORMAL_SPEED);
-  motor_c_speed(NORMAL_SPEED);
-  motor_a_dir(fwd);
-  motor_c_dir(fwd);
+  motor_speed_set(motor_a, NORMAL_SPEED);
+  motor_speed_set(motor_c, NORMAL_SPEED);
+  motor_dir_set(motor_a, fwd);
+  motor_dir_set(motor_c, fwd);
   
   wait_event(dark_found,DARK_THRESH);
 }
@@ -72,25 +72,25 @@ static void follow_line() {
   
   
   while (!shutdown_requested()) {
-    motor_a_speed(NORMAL_SPEED);
-    motor_c_speed(NORMAL_SPEED);
-    motor_a_dir(fwd);
-    motor_c_dir(fwd);
+    motor_speed_set(motor_a, NORMAL_SPEED);
+    motor_speed_set(motor_c, NORMAL_SPEED);
+    motor_dir_set(motor_a, fwd);
+    motor_dir_set(motor_c, fwd);
     
     if (wait_event(bright_found,BRIGHT_THRESH) != 0)
     {    
-	    if(dir==0)
-  	    motor_a_dir(rev);
-	    else
-  	    motor_c_dir(rev);
+      if(dir==0)
+  	    motor_dir_set(motor_a, rev);
+      else
+  	    motor_dir_set(motor_c, rev);
 #ifdef STRAIGHT_LINE
-    		dir=!dir;
+      dir=!dir;
 #endif
         
-	    motor_a_speed(TURN_SPEED);
-  	  motor_c_speed(TURN_SPEED);
+      motor_speed_set(motor_a, TURN_SPEED);
+  	  motor_speed_set(motor_c, TURN_SPEED);
     
-    	wait_event(dark_found,DARK_THRESH);
+  	  wait_event(dark_found,DARK_THRESH);
     }
   }
 }

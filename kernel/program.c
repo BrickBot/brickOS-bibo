@@ -259,14 +259,17 @@ static void program_run(unsigned nr) {
     // Free blocks allocated by user processes.
     mm_reaper();
     
-    // Reset motors, sensors, sound & LNP as
-    // programs may have motors running,
+    // Reset LDC, motors, sensors, sound, & LNP as
+    // as programs may have motors running,
     // sensors active or handlers set.
     //
     // Programs that exit on their own
     // are assumed to take the necessary
     // actions themselves.
     //
+#ifdef CONF_VIS
+    lcd_clear();
+#endif
 #ifdef CONF_DSOUND
     dsound_stop();
 #endif
@@ -638,27 +641,27 @@ __TEXT_HI__ int lrkey_handler(unsigned int etype, unsigned int key) {
         // Motor on commands
         case LRKEY_A1:
           // A Motor fwd
-          motor_a_dir(fwd);
+          motor_dir_set(motor_a, fwd);
           break;
         case LRKEY_A2:
           // A Motor rev
-          motor_a_dir(rev);
+          motor_dir_set(motor_a, rev);
           break;
         case LRKEY_B1:
           // B Motor fwd
-          motor_b_dir(fwd);
+          motor_dir_set(motor_b, fwd);
           break;
         case LRKEY_B2:
           // B Motor rev
-          motor_b_dir(rev);
+          motor_dir_set(motor_b, rev);
           break;
         case LRKEY_C1:
           // C Motor fwd
-          motor_c_dir(fwd);
+          motor_dir_set(motor_c, fwd);
           break;
         case LRKEY_C2:
           // C Motor rev
-          motor_c_dir(rev);
+          motor_dir_set(motor_c, rev);
           break;
 #endif // CONF_DMOTOR
         default:
@@ -682,17 +685,17 @@ __TEXT_HI__ int lrkey_handler(unsigned int etype, unsigned int key) {
         case LRKEY_A1:
         case LRKEY_A2:
           // Shut off A motor
-          motor_a_dir(brake);
+          motor_dir_set(motor_a, brake);
           break;
         case LRKEY_B1:
         case LRKEY_B2:
           // Shut off B motor
-          motor_b_dir(brake);
+          motor_dir_set(motor_b, brake);
           break;
         case LRKEY_C1:
         case LRKEY_C2:
           // Shut off C motor
-          motor_c_dir(brake);
+          motor_dir_set(motor_c, brake);
           break;
 #endif // CONF_DMOTOR
         default:

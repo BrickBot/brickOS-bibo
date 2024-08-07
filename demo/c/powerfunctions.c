@@ -1,18 +1,24 @@
-// LEGO Power Function sample code
-// This program shows how to use some of the library fuctions.
-// It contains examples of using PWM and other operation modes, and it shows
-// how the extra address space can be used if you have two receivers set to
-// the same channel.
-// Usage: Use 2 IR receivers set to channel 1. Start with one switched on and
-// one sswitched off. Start the program and press Prgm to set the IR receiver
-// to use the extra address space. Then turn on the other IR receiver. (If you
-// run the program again, press View instead of Prgm to skip the address space
-// switch.) Watch as the program plays around with PWM speeds on blue and red
-// output on both receivers.
-//
-//Bob Kojima 01-28-2008
-//bob@fial.com
-//v1.0.1
+/******************************************************************************
+
+ LEGO Power Function sample code
+ This program shows how to use some of the library fuctions.
+ It contains examples of using PWM and other operation modes, and it shows
+ how the extra address space can be used if you have two receivers set to
+ the same channel.
+ Usage: Use 2 IR receivers set to channel 1. Start with one switched on and
+ one sswitched off. Start the program and press Prgm to set the IR receiver
+ to use the extra address space. Then turn on the other IR receiver. (If you
+ run the program again, press View instead of Prgm to skip the address space
+ switch.) Watch as the program plays around with PWM speeds on blue and red
+ output on both receivers.
+
+Bob Kojima 01-28-2008
+bob@fial.com
+v1.0.1
+
+******************************************************************************/
+
+#include <config.h>
 
 #ifdef CONF_POWERFUNCTIONS
 
@@ -23,8 +29,7 @@
 #include <unistd.h>
 #include <conio.h>
 
-int main(int argc, char **argv)
-{
+int main(int argc, char *argv[]) {
 	pf_init();
 	pf_repeat = 0; // Default: don't resend IR messages
 
@@ -45,6 +50,7 @@ int main(int argc, char **argv)
 	msleep(400);
 
 // For unknown reasons bibo hangs if I use dkey_wait or getchar.
+// NOTE: This hang is now fixed
 //	dkey_wait(KEY_PRESSED, KEY_VIEW);
 
 	cputc_native_user(CHAR_p, CHAR_f, CHAR_SPACE, CHAR_SPACE);
@@ -93,5 +99,10 @@ int main(int argc, char **argv)
 	cls();
 	return 0;
 }
-
+#else // CONF_POWERFUNCTIONS
+#warning powerfuncs.c requires CONF_POWERFUNCTIONS which is not set
+#warning power functions demo will do nothing
+int main(int argc, char *argv[]) {
+  return 0;
+}
 #endif // CONF_POWERFUNCTIONS

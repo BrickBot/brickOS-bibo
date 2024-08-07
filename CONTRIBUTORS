@@ -1,11 +1,15 @@
-bibo contributers
------------------
+bibo contributors
+=================
+
+V0.10.0
+---------
 
 Jochen Hoenicke (hoenicke@users.sourceforge.net)
   bibo core designer
 
 
 Matthew Sheets (mesheets@users.sourceforge.net)
+  Bug Fix: dkey_wait() and getchar() calls in user programs would lock the brick
   Updated utils to better facilitate using TCP as a tty.
   Made NCD tty types a runtime option instead of a compile-time #define.
   Merged patches for BrickOS with Bibo,
@@ -21,6 +25,7 @@ Matthew Sheets (mesheets@users.sourceforge.net)
     the code reworked from above to add support for tty downlinking
     (e.g. serial, USB, TCP) or TCP uplinking.
   Merged XS (based on BrickOS 0.2.6.10) with Bibo.
+    - Added support for additional conio functions to XS
   Changed baud rate, carrier state, and timeout settings from compile-time
     defines to run-time options
   Standardized parity for all baud rates to "odd"
@@ -32,6 +37,13 @@ Matthew Sheets (mesheets@users.sourceforge.net)
   Expand musical scale note defines
   Added tempo calculation support for sound/music
   Refactor "makelx" to "writelx"
+  Update "make install" to better support DESTDIR
+  Added support for using the system buttons (On-Off, Run) in user programs
+  Refactors to reduce firmware size
+  Refactored direct motor code
+    - Added support motor variables (instead of motor-specific functions)
+    - Added support for retrieving current speed and direction values
+    - Added support for reversing motor direction without needing to know current direction.
   Various code cleanups...
 
 Carl Troein (troein@users.sourceforge.net)
@@ -64,10 +76,10 @@ contribution is still present in bibo.
 
 
 brickOS contributors
---------------------
+====================
 
 V0.9.0
-_________
+---------
 
 
 Bernardo Dal Seno (dibbe@users.sourceforge.net)
@@ -112,7 +124,7 @@ not limited to):
     
 
 V0.2.6
-_________
+---------
 
 Hary D. Mahesan  (hdmahesa@engmail.uwaterloo.ca)
   Patches enabling USB-IR tower support on Windows
@@ -131,7 +143,7 @@ not limited to):
 
 
 V0.2.5
-_________
+---------
 
 Jochen Hoenicke (Jochen.Hoenicke@Informatik.Uni-Oldenburg.DE)
   Added VELOCITY_X to do velocity sensing with rotation sensors.
@@ -180,7 +192,7 @@ Frank Cremer <frank@holly.demon.nl>
 
 
 V0.2.1
---------
+---------
 Sergey Ivanyuk <modemch@eventsdigital.com>
         Found ON/OFF button bug in program module.
 
@@ -192,7 +204,7 @@ Kekoa Proudfoot <kekoa@pixel.stanford.edu>
 
 
 V0.2.0
---------
+---------
 Mark Falco <falcom@dialogic.com>
 Mario Ferrari <mario.ferrari@edis.it>
         Rotation sensor fixes
@@ -205,7 +217,7 @@ Kekoa Proudfoot <kekoa@pixel.stanford.edu>
 
 
 Snapshot
---------
+---------
 Tom Emerson <temerson@spyglass.com>
         PDF documentation
 
@@ -218,7 +230,7 @@ Luis Villa <liv@duke.edu>
 
 
 V0.1.7
-------
+---------
 Lou Sortman <lou (at) sunsite (dot) unc (dot) edu>
         Optimized rotation sensor code with compile-time shifts
 
@@ -231,7 +243,7 @@ Kekoa Proudfoot <kekoa@graphics.stanford.edu>
         Integer math routines.
 
 V0.1.6
-------
+---------
 Michael Nielsen <mic@daimi.aau.dk>
         Fixed sound driver IRQ bug
 
@@ -243,7 +255,7 @@ Eric Habnerfeller <ehaberfe@atitech.ca>
 
 
 V0.1.0
-------
+---------
 Ben Laurie <ben@algroup.co.uk>
   Added Priority-based scheduler
 

@@ -37,6 +37,7 @@
 
 #include <sys/h8.h>
 #include <sys/irq.h>
+#include <rom/lcd.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -44,9 +45,30 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-MotorState dm_a,                  //!< motor A state
-           dm_b,                  //!< motor B state
-           dm_c;                  //!< motor C state
+MotorState dm_a = {               //!< motor A state
+  { 0 },  0, MOTOR_A_SHIFT,
+#ifdef CONF_VIS
+  a_select, a_left, a_right,
+#endif // CONF_VIS
+};
+MotorState dm_b = {               //!< motor B state
+  { 0 },  0, MOTOR_B_SHIFT,
+#ifdef CONF_VIS
+  b_select, b_left, b_right,
+#endif // CONF_VIS
+};
+MotorState dm_c = {               //!< motor C state
+  { 0 },  0, MOTOR_C_SHIFT,
+#ifdef CONF_VIS
+  c_select, c_left, c_right,
+#endif // CONF_VIS
+};
+
+MotorState* dmotor[] = {          //!< motor states
+  &dm_a,
+  &dm_b,
+  &dm_c,
+};
 
 unsigned char dm_mask = (MOTOR_A_MASK | MOTOR_B_MASK | MOTOR_C_MASK);
 
@@ -126,7 +148,7 @@ _dm_interrupt:\n\
 	");
 #endif // DOXYGEN_SHOULD_SKIP_THIS
 	
-		
+
 //! initialize motors
 //
 void dm_init(void) {
@@ -138,55 +160,72 @@ void dm_init(void) {
 //! shutdown motors
 //
 void dm_shutdown(void) {
-  motor_a_dir(off);			// initialize driver data
-  motor_b_dir(off);
-  motor_c_dir(off);
-
-  motor_a_speed(MAX_SPEED);
-  motor_b_speed(MAX_SPEED);
-  motor_c_speed(MAX_SPEED);
+  // initialize driver data
+  unsigned char i;
+  for (i = (unsigned char)motor_min; i <= (unsigned char)motor_max; i++) {
+    motor_dir_set((Motor)i, off);
+    motor_speed_set((Motor)i, MAX_SPEED);
+  }
 
   motor_controller=0x00;		// shutdown hardware
 }
 
 #ifdef CONF_VIS
-/*
-** Define non-inline versions to display arrows
-*/
 
-void motor_a_dir(MotorDirection dir)
+void motor_select_show(Motor motor)
 {
-  dm_a.dir = dir << MOTOR_A_SHIFT;
-  dlcd_hide(LCD_A_LEFT);
-  dlcd_hide(LCD_A_RIGHT);
-  if (dir == fwd || dir == brake)
-    dlcd_show(LCD_A_RIGHT);
-  if (dir == rev || dir == brake)
-    dlcd_show(LCD_A_LEFT);
+  lcd_show(dmotor[motor]->motor_lcd_segment_select);
 }
 
-void motor_b_dir(MotorDirection dir)
+void motor_select_hide(Motor motor)
 {
-  dm_b.dir = dir << MOTOR_B_SHIFT;
-  dlcd_hide(LCD_B_LEFT);
-  dlcd_hide(LCD_B_RIGHT);
-  if (dir == fwd || dir == brake)
-    dlcd_show(LCD_B_RIGHT);
-  if (dir == rev || dir == brake)
-    dlcd_show(LCD_B_LEFT);
+  lcd_hide(dmotor[motor]->motor_lcd_segment_select);
 }
 
-void motor_c_dir(MotorDirection dir)
+static void motor_dir_show(MotorDirection dir,
+               lcd_segment motor_segment_left, lcd_segment motor_segment_right)
 {
-  dm_c.dir = dir << MOTOR_C_SHIFT;
-  dlcd_hide(LCD_C_LEFT);
-  dlcd_hide(LCD_C_RIGHT);
-  if (dir == fwd || dir == brake)
-    dlcd_show(LCD_C_RIGHT);
-  if (dir == rev || dir == brake)
-    dlcd_show(LCD_C_LEFT);
+  if (dir == fwd || dir == brake) {
+    lcd_show(motor_segment_right);
+  } else {
+    lcd_hide(motor_segment_right);
+  }
+  if (dir == rev || dir == brake) {
+    lcd_show(motor_segment_left);
+  } else {
+    lcd_hide(motor_segment_left);
+  }
 }
 
 #endif // ifdef CONF_VIS
+
+void motor_dir_set(Motor motor, MotorDirection dir) {
+  dmotor[motor]->dir = dir << dmotor[motor]->shift;
+
+#ifdef CONF_VIS
+  motor_dir_show(dir, dmotor[motor]->motor_lcd_segment_left, dmotor[motor]->motor_lcd_segment_right);
+#endif
+}
+
+MotorDirection motor_dir_get(Motor motor) {
+  // Mask off the motor-specific value and then shift to standard position
+  return (MotorDirection)((dmotor[motor]->dir & (MOTOR_MASK << dmotor[motor]->shift)) >> dmotor[motor]->shift);
+}
+
+MotorDirection motor_dir_reverse(Motor motor) {
+  MotorDirection dir = motor_dir_get(motor);
+  dir = (MotorDirection)(MOTOR_MASK & (~dir));
+  motor_dir_set(motor, dir);
+  
+  return dir;
+}
+
+void motor_speed_set(Motor motor, unsigned char speed) {
+  dmotor[motor]->access.c.delta = speed;
+}
+
+unsigned char motor_speed_get(Motor motor) {
+  return dmotor[motor]->access.c.delta;
+}
 
 #endif // CONF_DMOTOR

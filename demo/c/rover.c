@@ -50,11 +50,11 @@ int main(int argc, char *argv[]) {
     int dir=0;
     
     while (!shutdown_requested()) {
-	motor_a_speed(2*MAX_SPEED/3);		// go!
-	motor_c_speed(2*MAX_SPEED/3);
+	motor_speed_set(motor_a, 2*MAX_SPEED/3);		// go!
+	motor_speed_set(motor_c, 2*MAX_SPEED/3);
 	
-	motor_a_dir(fwd);
-	motor_c_dir(fwd);
+	motor_dir_set(motor_a, fwd);
+	motor_dir_set(motor_c, fwd);
 	
     cputc_native_user(CHAR_f, CHAR_w, CHAR_w, CHAR_d);  // fwd
 	
@@ -69,21 +69,21 @@ int main(int argc, char *argv[]) {
 	
 	// back up
 	//
-	motor_a_dir(rev);
-	motor_c_dir(rev);
+	motor_dir_set(motor_a, rev);
+	motor_dir_set(motor_c, rev);
 	
     cputc_native_user(CHAR_r, CHAR_e, CHAR_v, 0);  // rev
 	
 	msleep(500);
 	
-	motor_a_speed(MAX_SPEED);		// go!
-	motor_c_speed(MAX_SPEED);
+	motor_speed_set(motor_a, MAX_SPEED);		// go!
+	motor_speed_set(motor_c, MAX_SPEED);
 	
 	if(dir==1) {
-	    motor_c_dir(fwd);
+	    motor_dir_set(motor_c, fwd);
         cputc_native_user(CHAR_l, CHAR_e, CHAR_f, CHAR_t);  // left
 	} else {
-	    motor_a_dir(fwd);
+	    motor_dir_set(motor_a, fwd);
         cputc_native_user(CHAR_r, CHAR_g, CHAR_h, CHAR_t);  // rght (right)
 	}
 	

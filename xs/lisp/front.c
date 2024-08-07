@@ -1073,9 +1073,9 @@ void initReader() {
 	defReaderConstant("most-negative-integer", -(1<<(31-TAGBITS)));
 #endif
 
-	defReaderConstant("a", 1);
-	defReaderConstant("b", 2);
-	defReaderConstant("c", 3);
+	defReaderConstant("a", 0);
+	defReaderConstant("b", 1);
+	defReaderConstant("c", 2);
 	defReaderConstant("off", 0);
 	defReaderConstant("forward", 1);
 	defReaderConstant("back", 2);

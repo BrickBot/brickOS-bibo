@@ -220,73 +220,73 @@ void array_initialization()
 
 void run_motors()
 {
-  motor_a_speed(MAX_SPEED);
-  motor_c_speed(MAX_SPEED);
+  motor_speed_set(motor_a, MAX_SPEED);
+  motor_speed_set(motor_c, MAX_SPEED);
 }
 
 void go_forward()
 {
-  motor_a_dir(fwd);
-  motor_c_dir(fwd);
+  motor_dir_set(motor_a, fwd);
+  motor_dir_set(motor_c, fwd);
   run_motors();
   msleep(100*TURN_MULTIPLIER);
 }
 
 void go_back()
 {
-  motor_a_dir(rev);
-  motor_c_dir(rev);
+  motor_dir_set(motor_a, rev);
+  motor_dir_set(motor_c, rev);
   run_motors();
   msleep(150*TURN_MULTIPLIER);
 }
 
 void soft_left()
 {
-  motor_a_dir(fwd);
-  motor_c_dir(fwd);
-  motor_a_speed(MAX_SPEED);
-  motor_c_speed(MAX_SPEED/2);
+  motor_dir_set(motor_a, fwd);
+  motor_dir_set(motor_c, fwd);
+  motor_speed_set(motor_a, MAX_SPEED);
+  motor_speed_set(motor_c, MAX_SPEED/2);
   msleep(75*TURN_MULTIPLIER);
 }
 
 void soft_right()
 {
-  motor_a_dir(fwd);
-  motor_c_dir(fwd);
-  motor_a_speed(MAX_SPEED/2);
-  motor_c_speed(MAX_SPEED);
+  motor_dir_set(motor_a, fwd);
+  motor_dir_set(motor_c, fwd);
+  motor_speed_set(motor_a, MAX_SPEED/2);
+  motor_speed_set(motor_c, MAX_SPEED);
   msleep(75*TURN_MULTIPLIER);
 }
 
 void hard_right()
 {
-  motor_a_dir(rev);
-  motor_c_dir(fwd);
-  motor_a_speed(MAX_SPEED);
-  motor_c_speed(MAX_SPEED);
+  motor_dir_set(motor_a, rev);
+  motor_dir_set(motor_c, fwd);
+  motor_speed_set(motor_a, MAX_SPEED);
+  motor_speed_set(motor_c, MAX_SPEED);
   msleep(100*TURN_MULTIPLIER);
 }
 
 void hard_left()
 {
-  motor_a_dir(fwd);
-  motor_c_dir(rev);
-  motor_a_speed(MAX_SPEED);
-  motor_c_speed(MAX_SPEED);
+  motor_dir_set(motor_a, fwd);
+  motor_dir_set(motor_c, rev);
+  motor_speed_set(motor_a, MAX_SPEED);
+  motor_speed_set(motor_c, MAX_SPEED);
   msleep(100*TURN_MULTIPLIER);
 }
 
 void stop_motors()
 {
-  motor_a_speed(0);
-  motor_c_speed(0);
-  motor_a_dir(brake);
-  motor_c_dir(brake);
+  motor_speed_set(motor_a, MIN_SPEED);
+  motor_speed_set(motor_c, MIN_SPEED);
+  motor_dir_set(motor_a, brake);
+  motor_dir_set(motor_c, brake);
 
   /*to conserve batteries*/
   msleep(500);
-  motor_a_dir(off);
-  motor_c_dir(off);
+  motor_dir_set(motor_a, off);
+  motor_dir_set(motor_c, off);
 }
 
 /*
