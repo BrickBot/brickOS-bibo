@@ -29,7 +29,8 @@ echo ""
 #    so can avoid expensive search
 #
 #   known PATHs in which h8*gcc may be found
-TOOL_PATH="/usr/local/bin
+TOOL_PATH="/usr/local/brickbot/bin
+           /usr/local/bin
            /usr/bin
            /usr/local/brickos/bin
            /usr/local/lego/bin

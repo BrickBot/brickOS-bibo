@@ -5,7 +5,8 @@
 ### --------------------------------------------------------------------------
 ###   (This is the top-level Makefile.  All actions are performed from here)
 
-#  distribution name (all lower-case by convention)
+#  org and distribution names (all lowercase by convention)
+ORG = brickbot
 PACKAGE = bibo
 
 #  version of this release

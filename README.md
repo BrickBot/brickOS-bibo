@@ -130,7 +130,7 @@ If things don't quite work, work at it.  :-)
 For your own projects,
 
 1. Make a directory in the brickOS root directory.
-2. Copy /usr/local/brickos/lib/bibo/Makefile.
+2. Copy /usr/local/brickbot/lib/bibo/Makefile.
 3. Put your main routine into myproject.c. (.C if using C++)
 4. If you need more source files, add them in the Makefile.
 5. "make myproject.lx && dll myproject.lx".
@@ -187,7 +187,7 @@ And then I use firmdl3 and dll just as before.
 	   running original firmware not brickOS.
 	2. run the OS downloader
 		```
-		$ firmdl3 /usr/local/lib/brickos/brickOS.srec
+		$ firmdl3 /usr/local/brickbot/lib/bibo/bibo.srec
 		```
 2. to load a program into slot 2
 	1. assuming you build the demos in the current directory, run
