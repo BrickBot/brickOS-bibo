@@ -14,19 +14,26 @@ DEMO_XS_SOURCES1=fact.lsp hello-xsLisp.lsp lib.lsp range.lsp remote.lsp rover.ls
 # sample.lsp is too large to build under a typical kernel configuration
 DEMO_XS_SOURCES=$(DEMO_XS_SOURCES1:%=demo/xs-lisp/%)
 DEMO_XS_PROGRAMS=$(patsubst %.lsp, %.lx, $(DEMO_XS_SOURCES))
+DEMO_XS_OBJS=
 
 DISTFILES += demo/xs-lisp/Makefile.sub $(DEMO_XS_SOURCES) demo/xs-lisp/sample.lsp
 
 all:: $(DEMO_XS_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_XS_PROGRAMS))
 
+# Tell Make not to auto-delete:
+# *.o files are needed by the emulator when loading a program as a *.a file
+#.SECONDARY:: $(DEMO_XS_OBJS)
+
 clean::
-	rm -f demo/xs-lisp/*.d   demo/xs-lisp/*.o
-	rm -f demo/xs-lisp/*.dis demo/xs-lisp/*.dis2
-	rm -f demo/xs-lisp/*.dc1 demo/xs-lisp/*.dc2
-	rm -f demo/xs-lisp/*.ds1 demo/xs-lisp/*.ds2
+	rm -f demo/xs-lisp/*.d
+	rm -f demo/xs-lisp/*.dis   demo/xs-lisp/*.dis2
+	rm -f demo/xs-lisp/*.dc1   demo/xs-lisp/*.dc2
+	rm -f demo/xs-lisp/*.ds1   demo/xs-lisp/*.ds2
+	rm -f demo/xs-lisp/*.srec  demo/xs-lisp/*.coff  demo/xs-lisp/*.map
+	rm -f demo/xs-lisp/*~      demo/xs-lisp/*.bak
 
 realclean::
-	rm -f demo/xs-lisp/*.lx  demo/xs-lisp/*.a
+	rm -f demo/xs-lisp/*.lx  demo/xs-lisp/*.a  demo/xs-lisp/*.o
 
 #eval-host$(EXT): $(XSEVAL) $(XSSRC)
 #	cd xs/lisp && ../xs-host < ../../$<

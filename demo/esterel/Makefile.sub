@@ -10,6 +10,7 @@ DEMO_ESTEREL_SOURCES=$(DEMO_ESTEREL_SOURCES1:%=demo/esterel/%)
 # Only build the Esterel programs if the Esterel compiler can be found
 ifneq ($(shell which esterel),)
   DEMO_ESTEREL_PROGRAMS=$(patsubst %.strl,%.lx,$(DEMO_ESTEREL_SOURCES))
+  DEMO_ESTEREL_OBJS=
 else
   $(warning Esterel compiler not found; skipping Esterel demo programs)
 endif
@@ -18,14 +19,18 @@ DISTFILES += demo/esterel/Makefile.sub demo/esterel/README $(DEMO_ESTEREL_SOURCE
 
 all:: $(DEMO_ESTEREL_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_ESTEREL_PROGRAMS))
 
+# Tell Make not to auto-delete:
+# *.o files are needed by the emulator when loading a program as a *.a file
+#.SECONDARY:: $(DEMO_ESTEREL_OBJS)
+
 clean::
-	rm -f demo/esterel/*.o    demo/esterel/*.dis  demo/esterel/*.dis2 demo/esterel/*.s demo/esterel/*.ds1 demo/esterel/*.ds2
+	rm -f demo/esterel/*.dis  demo/esterel/*.dis2 demo/esterel/*.s demo/esterel/*.ds1 demo/esterel/*.ds2
 	rm -f demo/esterel/*.dc1  demo/esterel/*.dc2  demo/esterel/*.d
 	rm -f demo/esterel/*.dmap demo/esterel/*.dcoff 
 	rm -f demo/esterel/*~     demo/esterel/*.bak  demo/esterel/*.srec demo/esterel/*.map demo/esterel/*.coff
 
 realclean:: clean
-	rm -f demo/esterel/*.lx demo/esterel/*.a
+	rm -f demo/esterel/*.lx   demo/esterel/*.a  demo/esterel/*.o
 
 # depencencies
 #
