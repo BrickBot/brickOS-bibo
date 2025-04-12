@@ -28,6 +28,7 @@
 
 #ifndef RCX
 #include <stdio.h>
+#include <unistd.h>
 #endif
 
 #include <stdlib.h>
