@@ -48,11 +48,11 @@ TAGS:
 	-etags *.c $(DATADIR)/include/*.h ../include/*/*.h 
 
 clean::
-	rm -f *.o *.dis *.dis2 *.s *.ds1 *.ds2 *.dmap *.dcoff 
+	rm -f *.dis *.dis2 *.s *.ds1 *.ds2 *.dmap *.dcoff 
 	rm -f *.srec *.coff
 
 realclean:: clean
-	rm -f *~ *.bak *.lx *.a TAGS
+	rm -f *~ *.bak *.lx *.a *.o TAGS
 
 .PHONY: all clean realclean
 
