@@ -54,30 +54,43 @@ LIBDIR?=lib
 	$(MERGEMAP) $*.dmap $*.dis > $@
 
 
-# how to assemble
+#  How to assemble
 %.o: %.s
 	$(CROSSAS) $< -o $@
 
-# how to compile hitachi assembler source
+#  How to compile assembler source for the Hitachi H8/300
 %.o: %.S
 	$(CROSSCC) -MD $(CROSSCFLAGS) -c $< -o $@
 
-# how to compile hitachi C source
+#  How to compile C source for the Hitachi H8/300
 %.o: %.c
 	$(CROSSCC) -MD $(CROSSCFLAGS) -c $< -o $@
 
+#  How to generate an assembly listing of C source
 %.s: %.c
 	$(CROSSCC) $(CROSSCFLAGS) -S $< -o $@
 
-# how to compile hitachi C++ source
+#  How to compile C++ source for the Hitachi H8/300
 %.o: %.cpp
 	$(CROSSCXX) $(CROSSCXXFLAGS) -c $< -o $@
 
-# how to compile hitachi C++ source
+#  How to compile C++ source  for the Hitachi H8/300
 %.o: %.C
 	$(CROSSCXX) $(CROSSCXXFLAGS) -c $< -o $@
 
-# how to compile hitachi Esterel source (use Automaton mode by default [smallest generated code footprint])
+#  How to compile pas source
+%.o: %.pas
+	$(CROSSGPC) $(PFLAGS) -c $< -o $@
+
+#  How to generate an assembly listing of Pascal source
+%.s: %.pas
+	$(CROSSGPC) $(PFLAGS) -c $< -S
+
+#  How to compile XS:Lisp source for the Hitachi H8/300
+# *.o: %.lsp
+#  TODO:  c.f. demo/xs-lisp/Makefile.sub
+
+#  How to compile Esterel source for the Hitachi H8/300 (use Automaton mode by default [smallest generated code footprint])
 %.c: %.strl
 	esterel -D $(@D) -ALego $<
 

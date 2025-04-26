@@ -17,7 +17,7 @@ sbindir ?= ${exec_prefix}/sbin
 libexecdir ?= ${exec_prefix}/lib
 datadir ?= ${prefix}/share
 docdir ?= ${prefix}/share/doc
-targetdir ?= ${prefix}/h8300-hitachi-hms
+targetdir ?= ${prefix}/h8300-hitachi-coff
 sysconfdir ?= ${prefix}/etc
 sharedstatedir ?= ${prefix}/com
 localstatedir ?= ${prefix}/var
@@ -47,6 +47,7 @@ CROSSCINC  =-Iinclude
 
 CROSSCFLAGS=$(CROSSCOPT) $(CROSSCWARN) $(CROSSCINC) $(CROSSCDEFINES)
 CROSSCXXFLAGS=-DCXX -fno-rtti -fno-exceptions $(CROSSCFLAGS)
+CROSSPFLAGS=$(CROSSCFLAGS) --extended-syntax --unit-path=$(BRICKOS_ROOT)/lib/p --automake
 
 
 ##
@@ -61,6 +62,7 @@ CROSSOBJCOPY=$(CROSSTOOLPREFIX)objcopy
 CROSSOBJDUMP=$(CROSSTOOLPREFIX)objdump
 CROSSCC=$(CROSSTOOLPREFIX)gcc
 CROSSCXX=$(CROSSTOOLPREFIX)g++
+CROSSGPC=$(CROSSTOOLPREFIX)gpc
 
 MERGEMAP=util/merge-map$(EXT)
 FIXDEPS	=util/fixdeps$(EXT)

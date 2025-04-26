@@ -29,9 +29,9 @@ echo ""
 #    so can avoid expensive search
 #
 #   known PATHs in which h8*gcc may be found
-TOOL_PATH="/usr/local/brickbot/bin
-           /usr/local/bin
+TOOL_PATH="/usr/local/bin
            /usr/bin
+           /usr/local/brickbot/bin
            /usr/local/brickos/bin
            /usr/local/lego/bin
            /usr/local/rcx/bin
@@ -40,10 +40,10 @@ TOOL_PATH="/usr/local/brickbot/bin
            /usr/local/crossgcc/h8300-hitachi-hms/bin"
 
 #   known PREFIXs of h8*gcc
-TOOL_PREFIX="h8300-hms-
-             h8300hms-
+TOOL_PREFIX="h8300-hitachi-coff-
              h8300-hitachi-hms-
-             h8300-hitachi-coff-"
+             h8300-hms-
+             h8300hms-"
 
 HMSFULL=""
 #  for each path, do...

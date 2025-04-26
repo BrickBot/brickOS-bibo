@@ -40,6 +40,7 @@ realclean::
 #	$(CC) -o $@ -DSTACKSIZE=$(DEMO_XS_STACKSIZE) $(OPTIONS) $(XSEVAL)
 
 
+#  How to compile XS:Lisp source for the Hitachi H8/300
 %.o: %.lsp $(XSEVAL) $(XSSRC)
 	cd xs/lisp && ../xs-rcx < ../../$<
 	$(CROSSCC) -DRCX -DSTACKSIZE=$(DEMO_XS_STACKSIZE) $(OPTIONS) -MD $(CROSSCFLAGS) -c $(XSEVAL) -o $@
