@@ -1,0 +1,34 @@
+### ==========================================================================
+###  $Id: Makefile.sub  |  Matthew Sheets
+###  FILE: demo/onScreen/Makefile.sub - make the OnScreenProgramming demo
+###  bibo - another LEGO Mindstorms OS
+### --------------------------------------------------------------------------
+
+DEMO_ONSCREEN_SOURCES1=onscreen.c
+DEMO_ONSCREEN_SOURCES=$(DEMO_ONSCREEN_SOURCES1:%=demo/onScreen/%)
+DEMO_ONSCREEN_PROGRAMS=$(patsubst %.c,%.lx,$(DEMO_ONSCREEN_SOURCES))
+
+# extra dynamic sources  - program name (e.g. helloworld.c/.cpp) is always assumed
+# NOTE: must specify path (is relative to the directory of the main Makefile)
+onscreen_SRC =
+
+
+DEMO_ONSCREEN_SOURCES_ALL = $(DEMO_ONSCREEN_SOURCES) \
+        $(foreach prog,$(DEMO_ONSCREEN_PROGRAMS:%.lx=%),$($(notdir $(prog))_SRC))
+DEMO_ONSCREEN_OBJS = $(patsubst %.c,%.o,$(DEMO_ONSCREEN_SOURCES_ALL))
+DISTFILES += demo/onScreen/Makefile.sub $(DEMO_ONSCREEN_SOURCES_ALL)
+
+all:: $(DEMO_ONSCREEN_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_ONSCREEN_PROGRAMS))
+
+clean::
+	rm -f demo/onScreen/*.o    demo/onScreen/*.dis  demo/onScreen/*.dis2 demo/onScreen/*.s demo/onScreen/*.ds1 demo/onScreen/*.ds2
+	rm -f demo/onScreen/*.dc1  demo/onScreen/*.dc2  demo/onScreen/*.d
+	rm -f demo/onScreen/*.dmap demo/onScreen/*.dcoff 
+	rm -f demo/onScreen/*~     demo/onScreen/*.bak  demo/onScreen/*.srec demo/onScreen/*.map demo/onScreen/*.coff
+
+realclean:: clean
+	rm -f demo/onScreen/*.lx demo/onScreen/*.a
+
+# depencencies
+#
+-include $(DEMO_ONSCREEN_OBJS:%.o=%.d)

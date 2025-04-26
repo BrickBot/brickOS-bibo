@@ -1,0 +1,160 @@
+OnScreen Programming version 1.0 for Lego Mindstorms
+
+Original Website: http://alumni.cse.ucsc.edu/~davevw/onscreen/
+
+Once installing this system, the Lego Mindstorms RCX can be programmed on its
+LCD screen via its View/Prgm buttons without use of a computer. This is
+useful for more interactive prototyping, when the computer is busy with other
+tasks, and similar situations when the program/download/test cycle takes too
+long.
+
+Version 1.0 contains only enough functionality to be useful. Gotos, Outputs,
+and Delays are implemented with a maximum of 16 instructions. Later releases
+should have more functionality.
+
+Download the files, follow the instructions, and enjoy. 
+
+-Dave VW 
+
+Contents
+Copyrights
+Instructions
+Files
+Source
+Buttons
+Display
+Program 1 -- backwards and forwards
+Program 2 -- go in a circle
+Program notes
+
+Copyrights 
+Copyright (c) 1999 by David R. Van Wagner ALL RIGHTS RESERVED
+
+This program is freeware. You are licensed to use it in accordance with the
+licenses of its dependent parts (see below) and/or MPL.
+
+alumni.cse.ucsc.edu/~davevw/
+davevw@alumni.cse.ucsc.edu
+
+This program was developed using LegOS 0.1.6. See www.noga.de/legOS/
+
+Copyright (c) 1998 by Markus L. Noga <noga@mauve.inrialpes.fr>
+All Rights Reserved.
+License to use, copy, modify and distribute this software in whole and in part
+is granted to all private and educational users, provided that they retain
+this copyright notice and offer the same licensing conditions for derived
+works.
+This software may or may not compile, execute or damage your software and/or
+hardware. You received this software free of charge, so there are absolutely
+no warranties.
+Lego, Lego Mindstorms are trademarks of Lego Systems, Inc.
+cygnus1.dll is distributed under GNU GPL. Please see www.cygwin.com
+firmdl.c
+
+/*
+* Copyright (C) 1998, 1999, Kekoa Proudfoot. All Rights Reserved.
+*
+* License to copy, use, and modify this software is granted provided that
+* this notice is retained in any copies of any part of this software.
+*
+* The author makes no guarantee that this software will compile or
+* function correctly. Also, if you use this software, you do so at your
+* own risk.
+*
+* Kekoa Proudfoot
+* kekoa@graphics.stanford.edu
+* 10/3/98
+*/
+
+Instructions
+0. Install firmdl.exe, cygnus1.dll, and onscreen.srec into a directory
+1. Plug in the Lego Mindstorms IR Tower to COM1
+2. Erase firmware on RCX (ex. remove battery while on)
+3. Point RCX towards IR Tower
+4. Download RCX Onscreen Programming Firmware (counts to about 880)
+firmdl.exe onscreen.srec
+5. Press Run -- now running RCX w/ Onscreen Programming 
+
+Later if you want to restore the Lego Mindstorms firmware, rerun the 
+Lego Mindstorms Robotics Invention System and Configure, or
+firmdl.exe "c:/Program Files/LEGO Mindstorms/Firm/Firm0309.lgo" 
+
+Source
+The source code is not quite ready for prime time, but here it is anyways.
+
+Buttons
+The buttons are now redefined
+
+* On-Off:  Stops RCX Onscreen Programming. Due to a known defect, you must press
+On-Off again to turn off, then again to turn back on before using RCX
+Onscreen Programming again. Any customized programs are lost.
+* Run:  Starts and stops your custom programs.
+* View:  Moves the cursor (unless a program is running).
+* Prgm:  Changes the item under the cursor, or while running goes back
+to onscreen programming. Note that the running program is not stopped. Modify
+running programs at your own risk!
+
+Display
+The format of the display is 
+SS.12 c A B C 
+{ SS = step }
+{ 12 = arg(s) }
+{ c = command }
+{ A = direction motor A }
+{ B = direction motor B }
+{ C = direction motor C } 
+
+The cursor flashes as an underbar or selection.
+The View button moves the cursor.
+The Prgm button changes the selection under the cursor 
+
+SS: Prgm advances to the next step
+View advances to the command (c) 
+
+c: Prgm changes the command (d=delay, o=output, G=goto)
+View advances to the argument (2) 
+
+2: Pgrm changes/increments the argument
+View advances to the next argument (1)
+
+1: Pgrm changes/increments the argument (+10 hex for delay & goto)
+View returns to SS (delay & goto), or advances to A, B, or C 
+
+A: Pgrm changes the direction of motor A
+View returns to SS, or advances to B or C 
+
+B: Pgrm changes the direction of motor B
+View returns to SS, or advances to C 
+
+C: Pgrm changes the direction of motor C
+View returns to SS 
+
+Program 1 -- backwards and forwards 
+00.14 d		{ wait 2 sec. }
+01. 8 o > > >	{ backwards all motors full power }
+02.14 d		{ wait 2 sec. }
+03. - o > > >	{ brake all motors }
+04.14 d		{ wait 2 sec. }
+05. 8 o < < <	{ forwards all motors full power }
+06.14 d		{ wait 2 sec. }
+07. - o > > >	{ brake all motors }
+08.14 d		{ wait 2 sec. }
+09.00 g		{ goto step 00 } 
+
+Program 2 -- go in a circle 
+00. 8 o < < <	{ forward all motors full power }
+01.03 d		{ wait 0.3 sec }
+02.A8 o >	{ reverse motor A }
+03. - o   > >	{ brake motors B & C }
+04.03 d		{ wait 0.3 sec }
+05. 8 o > > >	{ reverse motors full power }
+06.02 d		{ wait 0.2 sec }
+07. - o > > >	{ brake all motors }
+08.03 d		{ wait 0.3 sec }
+09.00 g		{ goto step 00 }
+
+Program notes
+My "robot" is configured with three motors (all wheel drive). A is mounted
+front left, B is mounted front right, and C drives an axle in the back. All
+the wiring is reversed so forwards/backwards in the comments above are
+reversed.

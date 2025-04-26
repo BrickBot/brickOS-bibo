@@ -9,4 +9,7 @@ DISTFILES += demo/Makefile.sub
 include demo/c/Makefile.sub
 include demo/c++/Makefile.sub
 include demo/esterel/Makefile.sub
+#include demo/onScreen/Makefile.sub
+#include demo/pascal/Makefile.sub
+#include demo/pascal.oop/Makefile.sub
 include demo/xs-lisp/Makefile.sub
