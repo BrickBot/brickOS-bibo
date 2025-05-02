@@ -49,6 +49,9 @@ FIXDEPS	 =$(UTILDIR)/fixdeps$(EXT)
 GENLDS   =$(UTILDIR)/genlds$(EXT)
 WRITELX	 =$(UTILDIR)/writelx$(EXT)
 
+ARCH := $(shell $(CROSSCC) -dumpmachine)
+
+
 #  Linker command files dynamic executables.
 #
 DYNAMIC_LDS = $(KERNEL).lds

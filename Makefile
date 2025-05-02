@@ -34,19 +34,19 @@ sbindir ?= ${exec_prefix}/sbin
 libexecdir ?= ${exec_prefix}/lib
 datarootdir ?= ${prefix}/share
 docdir ?= ${prefix}/share/doc
-targetdir ?= ${prefix}/h8300-hitachi-coff
+targetdir ?= ${prefix}/${ARCH}
 sysconfdir ?= ${prefix}/etc
 sharedstatedir ?= ${prefix}/com
 localstatedir ?= ${prefix}/var
 mandir ?= ${datarootdir}/man
 includedir ?= ${prefix}/include
 
-pkgdatadir ?= $(datarootdir)/${PACKAGE}
-pkgdocdir ?= $(docdir)/packages/${PACKAGE}
-pkghtmldir ?= $(pkgdocdir)/html
-pkgexampledir ?= $(pkgdocdir)/examples
-pkgincludedir ?= $(targetdir)/include
-pkglibdir ?= $(targetdir)/lib
+pkgdatadir ?= ${datarootdir}/${PACKAGE}
+pkgdocdir ?= ${docdir}/packages/${PACKAGE}
+pkghtmldir ?= ${pkgdocdir}/html
+pkgexampledir ?= ${pkgdocdir}/examples
+pkgincludedir ?= ${targetdir}/include
+pkglibdir ?= ${targetdir}/lib
 
 
 # ------------------------------------------------------------
