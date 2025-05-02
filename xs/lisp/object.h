@@ -18,7 +18,11 @@
  *  Contributor(s): Taiichi Yuasa <yuasa@kuis.kyoto-u.ac.jp>
  */
 
-typedef int object;
+/*  Use the proper data type that matches pointer size
+ *  - https://www.gnu.org/software/libc/manual/html_node/Important-Data-Types.html
+ */
+#include <stddef.h>
+typedef ptrdiff_t object;
 
 #ifdef RCX
 #define TAGMASK   0x8003  // 1.............11

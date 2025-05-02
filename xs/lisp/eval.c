@@ -528,7 +528,7 @@ int eval_push(object x) {
 
 #define STACKWORDS (STACKSIZE/2) // size of the C stack
 #define FRAMESIZE 20 // size of stack frame of eval, measured by experiment
-int *stack_limit;
+ptrdiff_t *stack_limit;
 
 object compare(object *base, int gt, int eq, int lt) {
 	object last;
