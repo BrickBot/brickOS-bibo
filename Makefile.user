@@ -9,6 +9,7 @@ all::
 
 #  User application libraries. Comment out if linking
 #  them statically to kernel in Makefile.kernel.
+#CROSSLIBS = -lc -lmint -lfloat -lc++ -lgpc -loogpc
 CROSSLIBS = -lc -lmint -lfloat -lc++
 
 #  Linker command files dynamic executables.

@@ -27,31 +27,15 @@ OO_OBJECTS= ObjBattery.o ObjSound.o Motor.o MotorPair.o Sensor.o TemperatureSens
 all:: lib$(LIBTARGET).a $(OBJECTS) lib$(OLIBTARGET).a $(OO_OBJECTS)
 	cp -f lib$(LIBTARGET).a lib$(OLIBTARGET).a ../
 
-# how to compile pas source
-%.o: %.pas
-	$(GPC) $(PFLAGS) -c $< -o $@
-
-# how to generate an assembly listing of pascal source
-%.s: %.pas
-	$(GPC) $(PFLAGS) -c $< -S
-
 include ../../Makefile.common
 	
 lib$(LIBTARGET).a: $(OBJECTS)
 	rm -f lib$(LIBTARGET).a
-	$(AR) -sq lib$(LIBTARGET).a $(OBJECTS)
+	$(CROSSAR) -sq lib$(LIBTARGET).a $(OBJECTS)
 
 lib$(OLIBTARGET).a: $(OO_OBJECTS)
 	rm -f lib$(OLIBTARGET).a
-	$(AR) -sq lib$(OLIBTARGET).a $(OO_OBJECTS)
+	$(CROSSAR) -sq lib$(OLIBTARGET).a $(OO_OBJECTS)
 
 clean:
 	rm -rf *.o *.map *.coff *.srec *.dis* *~ *.bak *.tgz *.s tags *.a
-
-LIBS=-loogpc -lgpc -lc -lmint -lfloat -lc++
-PFLAGS=$(CFLAGS) --extended-syntax --unit-path=$(BRICKOS_ROOT)/lib/p --automake
-
-GPC=$(TOOLPREFIX)gpc
-
-
-
