@@ -16,6 +16,8 @@ replace_extensions=$(filter %$(2), $($(1):%.c=%$(2)) $($(1):%.cpp=%$(2)) \
         $($(1):%.s=%$(2)) $($(1):%.S=%$(2)) \
         $($(1):%.strl=%$(2)) $($(1):%.lsp=%$(2)) )
 
+# Process "SOURCES" arg
+#
 ifdef SOURCES
 # Handle a simple user declaration of source files names:
 # The first item is the source file with the entrypoint (e.g. main() method;
@@ -42,40 +44,12 @@ PROGRAM_ADDITIONAL_SOURCES = $(foreach prog,$(basename $(PROGRAMS)),$($(prog)_SR
 PROGRAM_OBJECTS = $(call replace_extensions,PROGRAM_ADDITIONAL_SOURCES,.o)
 -include $(PROGRAMS:%.lx=%.d) $(PROGRAM_OBJECTS:%.o=%.d)
 
-#$(info SOURCES is $(SOURCES))
-#$(info PROGRAM_MAIN_SOURCES is $(PROGRAM_MAIN_SOURCES))
-#$(info PROGRAM_MAIN_NAME is $(PROGRAM_MAIN_NAME))
-#$(info $(PROGRAM_MAIN_NAME)_SRC is $($(PROGRAM_MAIN_NAME)_SRC))
-#$(info PROGRAMS is $(PROGRAMS))
-#$(info PROGRAM_ADDITIONAL_SOURCES is $(PROGRAM_ADDITIONAL_SOURCES))
-#$(info PROGRAM_OBJECTS is $(PROGRAM_OBJECTS))
-#$(error PROGRAMS is $(PROGRAMS))
-
-# Variables
-#
-COPT   = -g -Os -fno-builtin -fomit-frame-pointer
-CWARN  = -Wall
-CINC   = -I$(INCLUDEDIR)
-CFLAGS = $(COPT) $(CWARN) $(CINC)
-CROSSCFLAGS   = $(COPT) -mquickcall $(CWARN) $(CINC) $(CDEFINES)
-CROSSCXXFLAGS = -DCXX -fno-rtti -fno-exceptions $(CROSSCFLAGS)
-
-CROSSAS  = $(CROSSTOOLPREFIX)as
-CROSSAR  = $(CROSSTOOLPREFIX)ar
-CROSSLD  = $(CROSSTOOLPREFIX)ld
-CROSSNM  = $(CROSSTOOLPREFIX)nm
-CROSSOBJCOPY = $(CROSSTOOLPREFIX)objcopy
-CROSSOBJDUMP = $(CROSSTOOLPREFIX)objdump
-CROSSCC  = $(CROSSTOOLPREFIX)gcc
-CROSSCXX = $(CROSSTOOLPREFIX)g++
-WRITELX  = $(BINDIR)/writelx
-
-
-include $(DATADIR)/Makefile.user
 
 # targets
 #
 all:: $(PROGRAMS) 
+
+include $(DATADIR)/Makefile.user
 
 TAGS:
 	-etags *.c $(DATADIR)/include/*.h ../include/*/*.h 

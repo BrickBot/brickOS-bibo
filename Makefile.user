@@ -5,23 +5,64 @@
 ### --------------------------------------------------------------------------
 ###       (this file is included by Makefiles that build programs)
 
-all::
+# ----------------------------------------------------------------------------
+#   Variable declarations
+# ----------------------------------------------------------------------------
 
 #  User application libraries. Comment out if linking
 #  them statically to kernel in Makefile.kernel.
 #CROSSLIBS = -lc -lmint -lfloat -lc++ -lgpc -loogpc
 CROSSLIBS = -lc -lmint -lfloat -lc++
 
+#  Defines for build of native parts: utils and other host-run programs
+#
+COPT   =-g -Os -fno-builtin -fomit-frame-pointer
+CWARN  =-Wall
+CINC   =
+CFLAGS =$(COPT) $(CWARN) $(CINC)
+
+#  Defines for build of cross-compiled parts: firmware, demo programs
+#
+CROSSCOPT  =$(COPT) -mquickcall
+CROSSCWARN =$(CWARN)
+CROSSCINC  =-I$(INCLUDEDIR)
+CROSSCFLAGS   =$(CROSSCOPT) $(CROSSCWARN) $(CROSSCINC) $(CROSSCDEFINES)
+CROSSCXXFLAGS =-DCXX -fno-rtti -fno-exceptions $(CROSSCFLAGS)
+CROSSPFLAGS   =$(CROSSCFLAGS) --extended-syntax --unit-path=$(BRICKOS_ROOT)/lib/p --automake
+
+
+#  Defines for programs and scripts
+#
+CROSSAS =$(CROSSTOOLPREFIX)as
+CROSSAR =$(CROSSTOOLPREFIX)ar
+CROSSLD =$(CROSSTOOLPREFIX)ld
+CROSSNM =$(CROSSTOOLPREFIX)nm
+CROSSOBJCOPY =$(CROSSTOOLPREFIX)objcopy
+CROSSOBJDUMP =$(CROSSTOOLPREFIX)objdump
+CROSSRANLIB  =$(CROSSTOOLPREFIX)ranlib
+CROSSCC  =$(CROSSTOOLPREFIX)gcc
+CROSSCXX =$(CROSSTOOLPREFIX)g++
+CROSSGPC =$(CROSSTOOLPREFIX)gpc
+
+MERGEMAP =$(UTILDIR)/merge-map$(EXT)
+FIXDEPS	 =$(UTILDIR)/fixdeps$(EXT)
+GENLDS   =$(UTILDIR)/genlds$(EXT)
+WRITELX	 =$(UTILDIR)/writelx$(EXT)
+
 #  Linker command files dynamic executables.
+#
 DYNAMIC_LDS = $(KERNEL).lds
 DLDFLAGS    = -T $(DYNAMIC_LDS) -relax -L$(LIBDIR)
 
-#  Base addresses to determine relocation info.
+
+# ----------------------------------------------------------------------------
+#   Base address determination for relocation info
+# ----------------------------------------------------------------------------
 BASE1_DEFAULT = 0xb000
 BASE2_DEFAULT = 0xb210
 
-#  Base addresses manually copied from $(DYNAMIC_LDS)
-#  (Values should be check as kernel changes but kept as backup if GET_BASE fails)
+#  Base addresses updated from $(DYNAMIC_LDS) in kernel/Makefile.sub, target BaseAddresses
+#  (Values should be checked as kernel changes but kept as backup if GET_BASE fails)
 BASE1 = 0xad30
 BASE2 = 0xaf40
 
@@ -33,7 +74,10 @@ GET_BASE = $(or $(call GET_BASE_FROM_FILE,$(1),$(DYNAMIC_LDS)),$($(1)),$($(1)_DE
 # Empty if the base has not changed, new base value if it has changed
 BASE_CHANGED = $(if $(findstring $(call GET_BASE_FROM_FILE,$(1),Makefile.user),$(call GET_BASE,$(1))),,$(call GET_BASE,$(1)))
 
-LIBDIR?=lib
+
+# ----------------------------------------------------------------------------
+#   Targets for building of cross-compiled parts: firmware, demo programs
+# ----------------------------------------------------------------------------
 
 ############ new dynamic executables stuff
 #  How to build executables dynamically linked to the kernel 

@@ -5,12 +5,19 @@
 ### --------------------------------------------------------------------------
 ###   (This is the top-level Makefile.  All actions are performed from here)
 
+include Makefile.config
+
 #  org and package/distribution names (all lowercase by convention)
 ORG = brickbot
 PACKAGE = bibo
 
 #  version of this release
 VERSION = 0.05
+
+# Default values to use when building prior to installation
+LIBDIR?=lib
+UTILDIR?=util
+INCLUDEDIR?=include
 
 # kernel used (w/o extension)
 KERNEL=kernel/$(PACKAGE)
@@ -64,7 +71,10 @@ SUBDIRS += doc
 
 all::
 
-include Makefile.common
+Makefile.config:
+	./configure
+
+include Makefile.user
 include $(SUBDIRS:%=%/Makefile.sub)
 
 install::
@@ -73,6 +83,7 @@ install::
 	sed -e '/installation paths/a \
 	PACKAGE = $(PACKAGE)\
 	BINDIR = $(bindir)\
+	UTILDIR = $(bindir)\
 	DATADIR = $(pkgdatadir)\
 	LIBDIR = $(pkglibdir)\
 	INCLUDEDIR = $(pkgincludedir)\
@@ -82,7 +93,7 @@ install::
 	chmod 644 $(DESTDIR)$(pkgdatadir)/Makefile
 
 realclean:: clean
-	rm -f tags TAGS *.bak Makefile.config *~ *.bak
+	rm -f Makefile.config tags TAGS *.bak *~ *.bak
 
 docs-build docs-install::
 	$(MAKE) $(MFLAGS) -C doc $@
@@ -288,5 +299,3 @@ clean::
 # how to compile native C source
 $(NATIVEOBJS): %.o: %.c
 	$(CC) -MMD $(CFLAGS) -c $< -o $@
-
-include Makefile.user

@@ -5,44 +5,6 @@
 ### --------------------------------------------------------------------------
 ###         (this file is included by other brickOS Makefiles)
 
-Makefile.config: configure
-	./configure
-
--include Makefile.config
-
-# ----------------------------------------------------------------------------
-#   defines for build of cross-compiled parts: firmware, demo programs
-# ----------------------------------------------------------------------------
-
-# options
-CROSSCOPT  =-g -Os -mquickcall -fno-builtin -fomit-frame-pointer
-CROSSCWARN =-Wall
-CROSSCINC  =-Iinclude
-
-CROSSCFLAGS   =$(CROSSCOPT) $(CROSSCWARN) $(CROSSCINC) $(CROSSCDEFINES)
-CROSSCXXFLAGS =-DCXX -fno-rtti -fno-exceptions $(CROSSCFLAGS)
-CROSSPFLAGS   =$(CROSSCFLAGS) --extended-syntax --unit-path=$(BRICKOS_ROOT)/lib/p --automake
-
-
-##
-## no user servicable parts below
-##
-
-CROSSAS=$(CROSSTOOLPREFIX)as
-CROSSAR=$(CROSSTOOLPREFIX)ar
-CROSSLD=$(CROSSTOOLPREFIX)ld
-CROSSNM=$(CROSSTOOLPREFIX)nm
-CROSSOBJCOPY=$(CROSSTOOLPREFIX)objcopy
-CROSSOBJDUMP=$(CROSSTOOLPREFIX)objdump
-CROSSRANLIB=$(CROSSTOOLPREFIX)ranlib
-CROSSCC=$(CROSSTOOLPREFIX)gcc
-CROSSCXX=$(CROSSTOOLPREFIX)g++
-CROSSGPC=$(CROSSTOOLPREFIX)gpc
-
-MERGEMAP=util/merge-map$(EXT)
-FIXDEPS	=util/fixdeps$(EXT)
-GENLDS 	=util/genlds$(EXT)
-WRITELX	=util/writelx$(EXT)
 
 ### --------------------------------------------------------------------------
 ###                         End of FILE: Makefile.common
