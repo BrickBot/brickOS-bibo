@@ -6,26 +6,58 @@
 
 # NOTE: When installed via "make install", this file is renamed and included as just "Makefile"
 
-# IMPORTANT: Do not modify the commented placeholder line below without also updating the "install" target in the main Makefile.
+# IMPORTANT: Do not modify the commented "installation paths" placeholder line below without also updating the "install" target in the main Makefile.
 # installation paths
 
-# name for the kernel
-KERNEL = $(DATADIR)/$(PACKAGE)
 
-SOURCES?=helloworld.c
+# Functions
+#
+replace_extensions=$(filter %$(2), $($(1):%.c=%$(2)) $($(1):%.cpp=%$(2)) \
+        $($(1):%.s=%$(2)) $($(1):%.S=%$(2)) \
+        $($(1):%.strl=%$(2)) $($(1):%.lsp=%$(2)) )
 
-PROGRAMS?=$(filter %.lx, $(SOURCES:%.c=%.lx) $(SOURCES:%.cpp=%.lx) \
-        $(SOURCES:%.s=%.lx) $(SOURCES:%.S=%.) \
-        $(SOURCES:%.strl=%.lx) )
+ifdef SOURCES
+# Handle a simple user declaration of source files names:
+# The first item is the source file with the entrypoint (e.g. main() method;
+#   the remaining items (if any) are any additionally-needed sources
+PROGRAM_MAIN_SOURCE := $(word 1,$(SOURCES))
+PROGRAM_MAIN_NAME := $(basename $(PROGRAM_MAIN_SOURCE))
+
+# Now that the source file names are parsed, assign as if they had been
+#   explicitly declared in a Makefile
+PROGRAM_MAIN_SOURCES := $(PROGRAM_MAIN_SOURCE)
+$(PROGRAM_MAIN_NAME)_SRC := $(filter-out $(PROGRAM_MAIN_SOURCE),$(SOURCES))
+else
+# Hard-coded example:
+PROGRAM_MAIN_SOURCES?=helloworld.c
 
 # extra dynamic sources  - program name (e.g. helloworld.c/.cpp) is always assumed
 helloworld_SRC?= 
+endif
 
+# Program list and dependencies
+#
+PROGRAMS?=$(call replace_extensions,PROGRAM_MAIN_SOURCES,.lx)
+PROGRAM_ADDITIONAL_SOURCES = $(foreach prog,$(basename $(PROGRAMS)),$($(prog)_SRC))
+PROGRAM_OBJECTS = $(call replace_extensions,PROGRAM_ADDITIONAL_SOURCES,.o)
+-include $(PROGRAMS:%.lx=%.d) $(PROGRAM_OBJECTS:%.o=%.d)
+
+#$(info SOURCES is $(SOURCES))
+#$(info PROGRAM_MAIN_SOURCES is $(PROGRAM_MAIN_SOURCES))
+#$(info PROGRAM_MAIN_NAME is $(PROGRAM_MAIN_NAME))
+#$(info $(PROGRAM_MAIN_NAME)_SRC is $($(PROGRAM_MAIN_NAME)_SRC))
+#$(info PROGRAMS is $(PROGRAMS))
+#$(info PROGRAM_ADDITIONAL_SOURCES is $(PROGRAM_ADDITIONAL_SOURCES))
+#$(info PROGRAM_OBJECTS is $(PROGRAM_OBJECTS))
+#$(error PROGRAMS is $(PROGRAMS))
+
+# Variables
+#
 COPT   = -g -Os -fno-builtin -fomit-frame-pointer
 CWARN  = -Wall
 CINC   = -I$(INCLUDEDIR)
 CFLAGS = $(COPT) $(CWARN) $(CINC)
-CROSSCFLAGS = $(COPT) -mquickcall $(CWARN) $(CINC) $(CDEFINES)
+CROSSCFLAGS   = $(COPT) -mquickcall $(CWARN) $(CINC) $(CDEFINES)
 CROSSCXXFLAGS = -DCXX -fno-rtti -fno-exceptions $(CROSSCFLAGS)
 
 CROSSAS  = $(CROSSTOOLPREFIX)as
@@ -41,7 +73,8 @@ WRITELX  = $(BINDIR)/writelx
 
 include $(DATADIR)/Makefile.user
 
-
+# targets
+#
 all:: $(PROGRAMS) 
 
 TAGS:
@@ -55,12 +88,6 @@ realclean:: clean
 	rm -f *~ *.bak *.lx *.a *.o TAGS
 
 .PHONY: all clean realclean
-
-# depencencies
-#
-SRC = $(foreach $prog,$(PROGRAMS:%.lx=%),$($(prog)_SRC))
-OBJS = $(filter %.o,$(SRC:%.c=%.o) $(SRC:%.cpp=%.o) $(SRC:%.s=%.o) $(SRC:%.S=%.o) $(SRC:%.strl=%.o) )
--include $(PROGRAMS:%.lx=%.d) $(OBJS:%.o=%.d)
 
 ### --------------------------------------------------------------------------
 ###                          End of FILE: demo/Makefile

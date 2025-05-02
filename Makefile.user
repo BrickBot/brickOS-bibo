@@ -80,11 +80,11 @@ LIBDIR?=lib
 
 #  How to compile pas source
 %.o: %.pas
-	$(CROSSGPC) $(PFLAGS) -c $< -o $@
+	$(CROSSGPC) $(CROSSPFLAGS) -c $< -o $@
 
 #  How to generate an assembly listing of Pascal source
 %.s: %.pas
-	$(CROSSGPC) $(PFLAGS) -c $< -S
+	$(CROSSGPC) $(CROSSPFLAGS) -c $< -S
 
 #  How to compile XS:Lisp source for the Hitachi H8/300
 # *.o: %.lsp
@@ -106,10 +106,10 @@ LIBDIR?=lib
 	$(CROSSAR) -sq $@ $^ $(_SRC_OBJS)
 
 #  How to make coff files of dynamic executables (twice, for writelx)
-%.dc1: %.o %.a $(CROSSLIBS:-l%=$(LIBDIR)/lib%.a) $(KERNEL).lds
+%.dc1: %.o %.a $(CROSSLIBS:-l%=$(LIBDIR)/lib%.a) $(DYNAMIC_LDS)
 	$(CROSSLD) $(DLDFLAGS) $*.o $*.a $(CROSSLIBS) -o $@ --oformat coff-h8300 -Ttext $(call GET_BASE,BASE1)
 
-%.dc2: %.o %.a $(CROSSLIBS:-l%=$(LIBDIR)/lib%.a) $(KERNEL).lds
+%.dc2: %.o %.a $(CROSSLIBS:-l%=$(LIBDIR)/lib%.a) $(DYNAMIC_LDS)
 	$(CROSSLD) $(DLDFLAGS) $*.o $*.a $(CROSSLIBS) -o $@ --oformat coff-h8300 -Ttext $(call GET_BASE,BASE2)
 
 #  How to make srec files from coff files (twice, for writelx)
@@ -121,6 +121,11 @@ LIBDIR?=lib
 
 %.lx: %.ds1 %.ds2 $(WRITELX)
 	$(WRITELX) $*.ds1 $*.ds2 $@
+
+
+#  How to make srec from coff (for download)
+%.srec: %.coff
+	$(CROSSOBJCOPY) -I coff-h8300 -O srec $*.coff $*.srec
 
 ### --------------------------------------------------------------------------
 ###                          End of FILE: Makefile.user

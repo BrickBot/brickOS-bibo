@@ -5,7 +5,7 @@
 ### --------------------------------------------------------------------------
 ###   (This is the top-level Makefile.  All actions are performed from here)
 
-#  org and distribution names (all lowercase by convention)
+#  org and package/distribution names (all lowercase by convention)
 ORG = brickbot
 PACKAGE = bibo
 
@@ -14,6 +14,33 @@ VERSION = 0.05
 
 # kernel used (w/o extension)
 KERNEL=kernel/$(PACKAGE)
+
+#
+#  Define our default install locations (overridden by packaging systems)
+#
+DESTDIR ?= 
+prefix ?= /opt/stow/${PACKAGE}
+exec_prefix ?= ${prefix}
+
+bindir ?= ${exec_prefix}/bin
+sbindir ?= ${exec_prefix}/sbin
+libexecdir ?= ${exec_prefix}/lib
+datarootdir ?= ${prefix}/share
+docdir ?= ${prefix}/share/doc
+targetdir ?= ${prefix}/h8300-hitachi-coff
+sysconfdir ?= ${prefix}/etc
+sharedstatedir ?= ${prefix}/com
+localstatedir ?= ${prefix}/var
+mandir ?= ${datarootdir}/man
+includedir ?= ${prefix}/include
+
+pkgdatadir ?= $(datarootdir)/${PACKAGE}
+pkgdocdir ?= $(docdir)/packages/${PACKAGE}
+pkghtmldir ?= $(pkgdocdir)/html
+pkgexampledir ?= $(pkgdocdir)/examples
+pkgincludedir ?= $(targetdir)/include
+pkglibdir ?= $(targetdir)/lib
+
 
 # ------------------------------------------------------------
 #  No user customization below here...
@@ -49,6 +76,7 @@ install::
 	DATADIR = $(pkgdatadir)\
 	LIBDIR = $(pkglibdir)\
 	INCLUDEDIR = $(pkgincludedir)\
+	KERNEL = $(pkgdatadir)\$(PACKAGE) \
 	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)'\
 		< Makefile.dist  > $(DESTDIR)$(pkgdatadir)/Makefile
 	chmod 644 $(DESTDIR)$(pkgdatadir)/Makefile
@@ -260,9 +288,5 @@ clean::
 # how to compile native C source
 $(NATIVEOBJS): %.o: %.c
 	$(CC) -MMD $(CFLAGS) -c $< -o $@
-
-# how to build srec from coff (for download)
-%.srec: %.coff
-	$(CROSSOBJCOPY) -I coff-h8300 -O srec $*.coff $*.srec
 
 include Makefile.user
