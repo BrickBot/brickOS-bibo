@@ -9,11 +9,11 @@ include Makefile.config
 
 #  org and package/distribution names (all lowercase by convention)
 ORG = brickbot
-PACKAGE ?= bibo
+PACKAGE ?= brickos
 KERNEL ?= bibo
 
 #  version of this release
-VERSION = 0.05
+VERSION = 0.10.0
 
 # Default values to use when building prior to installation
 LIBDIR?=lib
