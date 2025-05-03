@@ -85,7 +85,7 @@ GET_BASE = $(or $(call GET_BASE_FROM_LDS,$(1)),$($(1)),$($(1)_DEFAULT))
 kernel:: BaseAddresses
 else
 # Alway lookup BASE1 and BASE2 from the dynamic LDS file
-GET_BASE = $(or $(call GET_BASE_FROM_LDS,$(1)),$(error Unable to get $(1) from the "$(DYNAMIC_LDS)" dynamic LDS file))
+GET_BASE = $(or $(call GET_BASE_FROM_LDS,$(1)),$(error ERROR: Unable to get $(1) from the "$(DYNAMIC_LDS)" dynamic LDS file))
 endif
 
 # Empty if the base has not changed, new base value if it has changed
