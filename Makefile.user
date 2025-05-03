@@ -65,6 +65,14 @@ DLDFLAGS    = -T $(DYNAMIC_LDS) -relax -L$(LIBDIR)
 BASE1_DEFAULT = 0xb000
 BASE2_DEFAULT = 0xb210
 
+GET_BASE_FROM_FILE = $(shell [ -e $(2) ] && cat $(2) | grep -E ^$(1)[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$ | sed s/$(1)[[:space:]]*=[[:space:]]*// )
+GET_BASE_FROM_LDS  = $(call GET_BASE_FROM_FILE,$(1),$(DYNAMIC_LDS))
+
+# Tracking BASE1 and BASE2 in the Makefile provides fallback support if unable
+#   to read the dynamic LDS file, but such static tracking breaks support for
+#   dynamically installing and working with different kernels. Leaving support
+#   for static BASE tracking for if needed but disabling by default.
+ifdef TRACK_BASE_IN_MAKEFILE
 #  Base addresses updated from $(DYNAMIC_LDS) in kernel/Makefile.sub, target BaseAddresses
 #  (Values should be checked as kernel changes but kept as backup if GET_BASE fails)
 BASE1 = 0xad30
@@ -72,11 +80,21 @@ BASE2 = 0xaf40
 
 # Use precedence ordering for obtaining BASE1 and BASE2 values:
 # $(BASEx) value from $(DYNAMIC_LDS) file, $(BASEx), and then $(BASEx)_DEFAULT
-GET_BASE_FROM_FILE = $(shell [ -e $(2) ] && cat $(2) | grep -E ^$(1)[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$ | sed s/$(1)[[:space:]]*=[[:space:]]*// )
-GET_BASE = $(or $(call GET_BASE_FROM_FILE,$(1),$(DYNAMIC_LDS)),$($(1)),$($(1)_DEFAULT))
+GET_BASE = $(or $(call GET_BASE_FROM_LDS,$(1)),$($(1)),$($(1)_DEFAULT))
+
+kernel:: BaseAddresses
+else
+# Alway lookup BASE1 and BASE2 from the dynamic LDS file
+GET_BASE = $(or $(call GET_BASE_FROM_LDS,$(1)),$(error Unable to get $(1) from the "$(DYNAMIC_LDS)" dynamic LDS file))
+endif
 
 # Empty if the base has not changed, new base value if it has changed
 BASE_CHANGED = $(if $(findstring $(call GET_BASE_FROM_FILE,$(1),Makefile.user),$(call GET_BASE,$(1))),,$(call GET_BASE,$(1)))
+
+# Update the BASE1 and BASE2 addresses in Makefile.user only if there has been a change
+BaseAddresses: $(KERNEL_FILES_BASE).lds
+	[ -z '$(call BASE_CHANGED,BASE1)' ] || sed -i -r 's/^BASE1[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE1 = $(call GET_BASE,BASE1)/' Makefile.user
+	[ -z '$(call BASE_CHANGED,BASE2)' ] || sed -i -r 's/^BASE2[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE2 = $(call GET_BASE,BASE2)/' Makefile.user
 
 
 # ----------------------------------------------------------------------------

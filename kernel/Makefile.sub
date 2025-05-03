@@ -15,7 +15,7 @@ KASMSOURCES1=dccasm.S
 KASMSOURCES=$(KASMSOURCES1:%=kernel/%)
 
 KERNEL_FILES:=$(KERNEL_FILES_BASE).coff $(KERNEL_FILES_BASE).srec $(KERNEL_FILES_BASE).lds
-KERNEL_TARGETS:=$(KERNEL_FILES) BaseAddresses
+KERNEL_TARGETS:=$(KERNEL_FILES)
 
 # Files of the source distribution
 DISTFILES += kernel/Makefile.sub $(KSOURCES) $(KASMSOURCES)
@@ -72,11 +72,6 @@ $(KERNEL_FILES_BASE).coff: $(KOBJECTS) $(KLIBRARIES)
 # how to make kernel lds files
 %.lds: %.coff $(GENLDS)
 	$(CROSSNM) $*.coff | sort -u | $(GENLDS) $* > $*.lds
-
-# Update the BASE1 and BASE2 addresses in Makefile.user only if there has been a change
-BaseAddresses: $(KERNEL_FILES_BASE).lds
-	[ -z '$(call BASE_CHANGED,BASE1)' ] || sed -i -r 's/^BASE1[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE1 = $(call GET_BASE,BASE1)/' Makefile.user
-	[ -z '$(call BASE_CHANGED,BASE2)' ] || sed -i -r 's/^BASE2[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE2 = $(call GET_BASE,BASE2)/' Makefile.user
 
 #  dependencies 
 -include $(KSOURCES:%.c=%.d)
