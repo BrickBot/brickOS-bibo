@@ -1,7 +1,7 @@
 /*
  * 
  *  legOS - the independent LEGO Mindstorms OS
- *  h8300.rcx - linker command file
+ *  h8300-rcx.ld - linker command file
  *  (c) 1999 by Markus L. Noga <markus@noga.de>    
  * 
  */

@@ -10,6 +10,7 @@ include Makefile.config
 #  org and package/distribution names (all lowercase by convention)
 ORG = brickbot
 PACKAGE ?= bibo
+KERNEL ?= bibo
 
 #  version of this release
 VERSION = 0.05
@@ -18,9 +19,7 @@ VERSION = 0.05
 LIBDIR?=lib
 UTILDIR?=util
 INCLUDEDIR?=include
-
-# kernel used (w/o extension)
-KERNEL=kernel/$(PACKAGE)
+KERNELDIR=kernel
 
 #
 #  Define our default install locations (overridden by packaging systems)
@@ -85,9 +84,9 @@ install::
 	BINDIR = $(bindir)\
 	UTILDIR = $(bindir)\
 	DATADIR = $(pkgdatadir)\
+	KERNELDIR = $(pkgdatadir)\
 	LIBDIR = $(pkglibdir)\
 	INCLUDEDIR = $(pkgincludedir)\
-	KERNEL = $(pkgdatadir)/$(PACKAGE)\
 	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)'\
 		< Makefile.dist  > $(DESTDIR)$(pkgdatadir)/Makefile
 	chmod 644 $(DESTDIR)$(pkgdatadir)/Makefile
@@ -249,7 +248,7 @@ tag::
 # ------------------------------------------------------------
 #
 
-DISTFILES += Doxyfile Doxyfile-c Doxyfile-c++ $(PACKAGE).ld configure \
+DISTFILES += Doxyfile Doxyfile-c Doxyfile-c++ h8300-rcx.ld configure \
         README CONTRIBUTORS LICENSE \
 	Makefile Makefile.common Makefile.dist Makefile.user
 

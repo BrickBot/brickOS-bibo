@@ -14,7 +14,7 @@ KSOURCES=$(KSOURCES1:%=kernel/%)
 KASMSOURCES1=dccasm.S
 KASMSOURCES=$(KASMSOURCES1:%=kernel/%)
 
-KERNEL_FILES:=$(KERNEL).coff $(KERNEL).srec $(KERNEL).lds
+KERNEL_FILES:=$(KERNEL_FILES_BASE).coff $(KERNEL_FILES_BASE).srec $(KERNEL_FILES_BASE).lds
 KERNEL_TARGETS:=$(KERNEL_FILES) BaseAddresses
 
 # Files of the source distribution
@@ -25,7 +25,7 @@ DISTFILES += kernel/Makefile.sub $(KSOURCES) $(KASMSOURCES)
 # NOTE: uncomment out the first line if you need a kernel disassembly file.
 # This will not work on Windows unless you have perl installed.
 #
-#all:: $(KERNEL).srec $(KERNEL).dis2 $(KERNEL).lds
+#all:: $(KERNEL_FILES_BASE).srec $(KERNEL_FILES_BASE).dis2 $(KERNEL_FILES_BASE).lds
 all:: $(KERNEL_TARGETS)
 
 install:: $(KERNEL_TARGETS)
@@ -56,7 +56,7 @@ KLIBRARIES=lib/libc.a lib/libmint.a
 #KLIBRARIES=lib/libc.a lib/libmint.a lib/libfloat.a
 
 # linker command files for kernel
-KLDFLAGS=-T$(PACKAGE).ld -relax
+KLDFLAGS=-Th8300-rcx.ld -relax
 
 GET_BASE_FROM_FILE2 = $(shell [ -e $(2) ] && cat $(2) | grep -E ^$(1)[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$ | sed s/$(1)[[:space:]]*=[[:space:]]*// )
 
@@ -64,7 +64,7 @@ GET_BASE_FROM_FILE2 = $(shell [ -e $(2) ] && cat $(2) | grep -E ^$(1)[[:space:]]
 ############ kernel stuff
 
 # how to build coff kernel (for symbols, disassembly etc)
-$(KERNEL).coff: $(KOBJECTS) $(KLIBRARIES)
+$(KERNEL_FILES_BASE).coff: $(KOBJECTS) $(KLIBRARIES)
 	$(CROSSLD) $(KLDFLAGS) $(KOBJECTS) $(KLIBS) -o $@
 
 # how to make kernel lds files
@@ -72,7 +72,7 @@ $(KERNEL).coff: $(KOBJECTS) $(KLIBRARIES)
 	$(CROSSNM) $*.coff | sort -u | $(GENLDS) $* > $*.lds
 
 # Update the BASE1 and BASE2 addresses in Makefile.user only if there has been a change
-BaseAddresses: $(KERNEL).lds
+BaseAddresses: $(KERNEL_FILES_BASE).lds
 	[ -z '$(call BASE_CHANGED,BASE1)' ] || sed -i -r 's/^BASE1[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE1 = $(call GET_BASE,BASE1)/' Makefile.user
 	[ -z '$(call BASE_CHANGED,BASE2)' ] || sed -i -r 's/^BASE2[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE2 = $(call GET_BASE,BASE2)/' Makefile.user
 
