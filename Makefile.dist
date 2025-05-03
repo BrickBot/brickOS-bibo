@@ -6,6 +6,30 @@
 
 # NOTE: When installed via "make install", this file is renamed and included as just "Makefile"
 
+# PACKAGE MAINTAINERS: Adjust here the default paths of where files were installed
+#   if these paths differ from your packaging system defaults.
+MAKEFILE_PATH  := $(realpath $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_DIR   := $(realpath $(dir $(MAKEFILE_PATH)))
+MAKEFILE_NAME  := $(notdir $(MAKEFILE_PATH))
+
+# Determine whether running from source tree or if installed
+#   (This file is only named "Makefile" if installed)
+ifeq ("$(MAKEFILE_NAME)","Makefile")
+  # Running as installed
+  INSTALLED_ROOT ?= $(realpath $(MAKEFILE_DIR)/../..)
+  UTILDIR        ?= $(INSTALLED_ROOT)/bin
+  KERNELDIR      ?= $(MAKEFILE_DIR)
+  LIBDIR         ?= $(INSTALLED_ROOT)/$(ARCH)/lib
+  INCLUDEDIR     ?= $(INSTALLED_ROOT)/$(ARCH)/include
+else
+  # Running from the source tree
+  UTILDIR    ?= $(MAKEFILE_DIR)/util
+  KERNELDIR  ?= $(MAKEFILE_DIR)/kernel
+  LIBDIR     ?= $(MAKEFILE_DIR)/lib
+  INCLUDEDIR ?= $(MAKEFILE_DIR)/include
+endif
+
+
 # IMPORTANT: Do not modify the commented "paths" placeholder line below
 #   without also updating the "install" target in the main Makefile in the source project.
 # installation paths
@@ -46,7 +70,7 @@ PROGRAM_OBJECTS = $(call replace_extensions,PROGRAM_ADDITIONAL_SOURCES,.o)
 -include $(PROGRAMS:%.lx=%.d) $(PROGRAM_OBJECTS:%.o=%.d)
 
 
-# targets
+# Default target
 #
 all:: $(PROGRAMS) $(patsubst %.lx,%.a,$(PROGRAMS)) $(patsubst %.o,%.a,$(PROGRAM_OBJECTS))
 
@@ -54,10 +78,10 @@ all:: $(PROGRAMS) $(patsubst %.lx,%.a,$(PROGRAMS)) $(patsubst %.o,%.a,$(PROGRAM_
 #   *.o files are needed by the emulator when loading a program as a *.a file
 .SECONDARY:: $(PROGRAM_OBJECTS)
 
-include $(DATADIR)/Makefile.user
 
+include $(MAKEFILE_DIR)/Makefile.user
 TAGS:
-	-etags *.c $(DATADIR)/include/*.h ../include/*/*.h 
+	-etags *.c $(INCLUDEDIR)/*.h $(INCLUDEDIR)/*/*.h 
 
 clean::
 	rm -f *.dis *.dis2 *.s *.ds1 *.ds2 *.dmap *.dcoff 
