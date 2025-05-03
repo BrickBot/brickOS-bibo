@@ -9,7 +9,7 @@ include Makefile.config
 
 #  org and package/distribution names (all lowercase by convention)
 ORG = brickbot
-PACKAGE = bibo
+PACKAGE ?= bibo
 
 #  version of this release
 VERSION = 0.05
@@ -87,7 +87,7 @@ install::
 	DATADIR = $(pkgdatadir)\
 	LIBDIR = $(pkglibdir)\
 	INCLUDEDIR = $(pkgincludedir)\
-	KERNEL = $(pkgdatadir)\$(PACKAGE) \
+	KERNEL = $(pkgdatadir)/$(PACKAGE)\
 	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)'\
 		< Makefile.dist  > $(DESTDIR)$(pkgdatadir)/Makefile
 	chmod 644 $(DESTDIR)$(pkgdatadir)/Makefile
