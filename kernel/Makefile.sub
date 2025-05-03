@@ -36,6 +36,9 @@ install-kernel:: $(KERNEL_TARGETS)
 
 install:: install-kernel
 
+uninstall-kernel::
+	cd $(DESTDIR)$(pkgdatadir) && rm -f $(notdir $(KERNEL_FILES))
+
 clean::
 	rm -f kernel/*.srec kernel/*.o kernel/*.lds kernel/*.dis kernel/*.coff kernel/*.map kernel/*.d
 
