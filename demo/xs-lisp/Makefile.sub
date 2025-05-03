@@ -18,7 +18,7 @@ DEMO_XS_OBJS=
 
 DISTFILES += demo/xs-lisp/Makefile.sub $(DEMO_XS_SOURCES) demo/xs-lisp/sample.lsp
 
-all:: $(DEMO_XS_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_XS_PROGRAMS)) $(patsubst %.o,%.a,$(DEMO_XS_OBJS))
+all:: $(DEMO_XS_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_XS_PROGRAMS))
 
 # Tell Make not to auto-delete:
 # *.o files are needed by the emulator when loading a program as a *.a file

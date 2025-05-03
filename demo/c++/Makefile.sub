@@ -17,7 +17,7 @@ DEMO_CPP_SOURCES_ALL = $(DEMO_CPP_SOURCES) \
 DEMO_CPP_OBJS = $(patsubst %.cpp,%.o,$(DEMO_CPP_SOURCES_ALL))
 DISTFILES += demo/c++/Makefile.sub $(DEMO_CPP_SOURCES_ALL)
 
-all:: $(DEMO_CPP_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_CPP_PROGRAMS)) $(patsubst %.o,%.a,$(DEMO_CPP_OBJS))
+all:: $(DEMO_CPP_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_CPP_PROGRAMS))
 
 # Tell Make not to auto-delete:
 # *.o files are needed by the emulator when loading a program as a *.a file
