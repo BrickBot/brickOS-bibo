@@ -4,7 +4,7 @@
 ###  $Id: makelx.sh  |  Matthew Sheets
 ###  FILE: util/user/makelx.sh - script for building user programs
 ###  MAKE: will both build and install as "makelx" with 755 permissions
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 # Constants

@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.user 606 2007-11-14 22:02:48Z hoenicke $
 ###  FILE: Makefile.user - support for building programs run under brickOS
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 ###       (this file is included by Makefiles that build programs)
 

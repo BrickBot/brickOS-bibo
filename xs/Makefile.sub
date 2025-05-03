@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.sub  |  Matthew Sheets
 ###  FILE: xs/Makefile.sub - make xs
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 DISTFILES += $(patsubst %,xs/%, README Makefile.sub)

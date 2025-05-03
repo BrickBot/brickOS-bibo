@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.sub  |  Matthew Sheets
 ###  FILE: demo/c/Makefile.sub - make the C langauge demo programs
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 DEMO_C_SOURCES1=hello-C.c helloworld_lnp.c cpu.c dccthrottle.c edgecounting.c \

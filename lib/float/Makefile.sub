@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.sub 893 2009-04-21 17:24:04Z hoenicke $
 ###  FILE: lib/float/Makefile.sub - make the float library
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 LIBFLOATSRC:= expandsf.s joinsf.s addsf3.s negsf2.s mulsf3.s divsf3.s \

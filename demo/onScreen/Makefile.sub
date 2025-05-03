@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.sub  |  Matthew Sheets
 ###  FILE: demo/onScreen/Makefile.sub - make the OnScreenProgramming demo
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 DEMO_ONSCREEN_SOURCES1=onscreen.c

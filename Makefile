@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile 886 2009-04-21 13:00:15Z hoenicke $
 ###  FILE: Makefile - make all parts of the bibo distribution
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 ###   (This is the top-level Makefile.  All actions are performed from here)
 

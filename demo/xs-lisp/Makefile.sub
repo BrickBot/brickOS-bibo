@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.sub  |  Matthew Sheets
 ###  FILE: demo/c++/Makefile.sub - make the XS:Lisp language demo programs
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 DEMO_XS_STACKSIZE?=$(XS_STACKSIZE)

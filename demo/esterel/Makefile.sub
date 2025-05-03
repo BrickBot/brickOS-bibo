@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.sub  |  Matthew Sheets
 ###  FILE: demo/c++/Makefile.sub - make the Esterel language demo programs
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 DEMO_ESTEREL_SOURCES1=bumper.strl line1.strl border1.strl line2.strl border2.strl

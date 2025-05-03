@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.sub 893 2009-04-21 17:24:04Z hoenicke $
 ###  FILE: lib/c/Makefile.sub - make the c library
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 LIBCSRC:= memcpy.c memset.c strcmp.c strcpy.c strlen.c random.c \

@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id$
 ###  FILE: Makefile.dist - make the Lego Programs
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 # NOTE: When installed via "make install", this file is renamed and included as just "Makefile"

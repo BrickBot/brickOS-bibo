@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.sub 606 2007-11-14 22:02:48Z hoenicke $
 ###  FILE: xs/lisp/Makefile.sub - make xs
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 #UTIL=$(XSROOT)util/dll-src/

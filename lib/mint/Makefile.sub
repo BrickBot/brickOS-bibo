@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.sub 893 2009-04-21 17:24:04Z hoenicke $
 ###  FILE: lib/mint/Makefile.sub - make the integer library
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 LIBMINTSRC:= cmpsi2.c divhi3.c modhi3.c mulhi3.c  udivhi3.c umodhi3.c \

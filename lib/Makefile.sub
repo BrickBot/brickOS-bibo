@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.sub 904 2009-05-13 11:00:45Z hoenicke $
 ###  FILE: lib/Makefile.sub - make the libraries
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 include lib/c/Makefile.sub

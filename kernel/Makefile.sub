@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.sub 904 2009-05-13 11:00:45Z hoenicke $
 ###  FILE: kernel/Makefile.sub - make the bibo kernel
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
 # kernel source files

@@ -1,7 +1,7 @@
 ### ==========================================================================
 ###  $Id: Makefile.common 887 2009-04-21 16:32:52Z hoenicke $
 ###  FILE: Makefile.common - definitions common to most brickOS Makefiles
-###  bibo - another LEGO Mindstorms OS
+###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 ###         (this file is included by other brickOS Makefiles)
 
