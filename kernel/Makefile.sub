@@ -26,11 +26,15 @@ DISTFILES += kernel/Makefile.sub $(KSOURCES) $(KASMSOURCES)
 # This will not work on Windows unless you have perl installed.
 #
 #all:: $(KERNEL_FILES_BASE).srec $(KERNEL_FILES_BASE).dis2 $(KERNEL_FILES_BASE).lds
-all:: $(KERNEL_TARGETS)
+all:: kernel
 
-install:: $(KERNEL_TARGETS)
+kernel:: $(KERNEL_TARGETS)
+
+install-kernel:: $(KERNEL_TARGETS)
 	test -d $(DESTDIR)$(pkgdatadir) || mkdir -p $(DESTDIR)$(pkgdatadir)
 	install -m 644 $(KERNEL_FILES) $(DESTDIR)$(pkgdatadir)
+
+install:: install-kernel
 
 clean::
 	rm -f kernel/*.srec kernel/*.o kernel/*.lds kernel/*.dis kernel/*.coff kernel/*.map kernel/*.d
@@ -39,7 +43,7 @@ realclean::
 	rm -rf kernel/*~ kernel/*.bak kernel/*.tgz kernel/*.s kernel/tags kernel/*.dcoff kernel/*.dmap kernel/*.dsrec
 	rm -f  kernel/*.srec kernel/install-stamp
 
-.PHONY: all tag clean realclean depend
+.PHONY: all kernel install-kernel tag clean realclean depend
 
 ##
 ## no user servicable parts below
@@ -57,8 +61,6 @@ KLIBRARIES=lib/libc.a lib/libmint.a
 
 # linker command files for kernel
 KLDFLAGS=-Th8300-rcx.ld -relax
-
-GET_BASE_FROM_FILE2 = $(shell [ -e $(2) ] && cat $(2) | grep -E ^$(1)[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$ | sed s/$(1)[[:space:]]*=[[:space:]]*// )
 
 
 ############ kernel stuff
