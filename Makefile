@@ -85,6 +85,13 @@ install::
 	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)'\
 		< Makefile.dist  > $(DESTDIR)$(pkgdatadir)/Makefile
 	chmod 644 $(DESTDIR)$(pkgdatadir)/Makefile
+	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
+	sed -e '/Installation Variables/a \
+	ORG=$(ORG)\
+	PACKAGE=$(PACKAGE)\
+	CROSSTOOLPREFIX=$(CROSSTOOLPREFIX)'\
+		< makelx.sh  > $(DESTDIR)$(bindir)/makelx
+	chmod 755 $(DESTDIR)$(bindir)/makelx
 
 realclean:: clean
 	rm -f Makefile.config tags TAGS *.bak *~ *.bak
@@ -244,8 +251,8 @@ tag::
 #
 
 DISTFILES += Doxyfile Doxyfile-c Doxyfile-c++ h8300-rcx.ld configure \
-        README CONTRIBUTORS LICENSE \
-	Makefile Makefile.common Makefile.dist Makefile.user
+        makelx.sh README CONTRIBUTORS LICENSE \
+    Makefile Makefile.common Makefile.dist Makefile.user
 
 #  locations for this package build effort
 DISTDIR = $(PACKAGE)-$(VERSION)

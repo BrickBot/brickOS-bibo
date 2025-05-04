@@ -2,7 +2,7 @@
 
 ### ==========================================================================
 ###  $Id: makelx.sh  |  Matthew Sheets
-###  FILE: util/user/makelx.sh - script for building user programs
+###  FILE: makelx.sh - script for building user programs
 ###  MAKE: will both build and install as "makelx" with 755 permissions
 ###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
@@ -35,9 +35,9 @@ output_usage()
 }
 
 # Locate the Makefile
-if [ -f $SCRIPT_DIR/../../Makefile.dist ] ; then
+if [ -f $SCRIPT_DIR/Makefile.dist ] ; then
   # We are in the source tree
-  MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/../../Makefile.dist)
+  MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/Makefile.dist)
 elif [ -f $SCRIPT_DIR/../share/$PACKAGE/Makefile ] ; then
   MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/../share/$PACKAGE/Makefile)
 else
