@@ -1,4 +1,4 @@
-bibo contributors
+brickOS-bibo contributors
 =================
 
 V0.10.0
@@ -32,18 +32,26 @@ Matthew Sheets (mesheets@users.sourceforge.net)
   Added support for RCX-based communication that does not echo (e.g. bluetooth hacks)
   Enabled more flexible communication options for downloading firmware
   Modified conio to remove the CONF_ASCII dependency from CONF_PROGRAM
-  Updated Makefiles to support building programs written in Esterel
-  Enable configurable package/kernel naming
   Expand musical scale note defines
   Added tempo calculation support for sound/music
-  Refactor "makelx" to "writelx"
-  Update "make install" to better support DESTDIR
   Added support for using the system buttons (On-Off, Run) in user programs
-  Refactors to reduce firmware size
   Refactored direct motor code
     - Added support motor variables (instead of motor-specific functions)
     - Added support for retrieving current speed and direction values
     - Added support for reversing motor direction without needing to know current direction.
+  Configure
+    - Refactor to suppor for a common CFLAGS
+    - Update search paths
+  Refactor "makelx" to "writelx" so that the makelx name can be repurposed
+  Make and Makefiles
+    - Remove duplications and reduce number of Makefiles to simplify
+    - Update "make install" to better support DESTDIR
+    - Enable configurable kernel naming
+    - Enable building/installing/uninstalling just the kernel (useful if only changing kernel config)
+    - Minimize the hardcoding of absolute paths in the Makefile that gets installed
+    - Support building programs written in Esterel and XS:Lisp
+    - For the Makefile for *.lx programs, verify that the needed kernel files exist
+  Various updates and refactors to reduce firmware size
   Various code cleanups...
 
 Carl Troein (troein@users.sourceforge.net)
