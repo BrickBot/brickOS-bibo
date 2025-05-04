@@ -32,7 +32,7 @@ endif
 
 # IMPORTANT: Do not modify the commented "paths" placeholder line below
 #   without also updating the "install" target in the main Makefile in the source project.
-# installation paths
+# Installation Variables
 
 
 # Functions
