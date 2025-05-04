@@ -83,7 +83,7 @@ install::
 	ORG = $(ORG)\
 	PACKAGE = $(PACKAGE)\
 	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)'\
-		< Makefile.dist  > $(DESTDIR)$(pkgdatadir)/Makefile
+		< Makefile.lxprog  > $(DESTDIR)$(pkgdatadir)/Makefile
 	chmod 644 $(DESTDIR)$(pkgdatadir)/Makefile
 	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
 	sed -e '/Installation Variables/a \
@@ -252,7 +252,7 @@ tag::
 
 DISTFILES += Doxyfile Doxyfile-c Doxyfile-c++ h8300-rcx.ld configure \
         makelx.sh README CONTRIBUTORS LICENSE \
-    Makefile Makefile.common Makefile.dist
+    Makefile Makefile.common Makefile.lxprog
 
 #  locations for this package build effort
 DISTDIR = $(PACKAGE)-$(VERSION)
@@ -287,7 +287,7 @@ uninstall::
 	rm -rf ${pkglibdir} ${pkgincludedir} ${pkgdocdir}
 
 clean::
-	rm -f Makefile.common.dist demo/Makefile.dist demo/c++/Makefile.dist config.h.dist
+	rm -f Makefile.common.dist demo/c/Makefile.dist demo/c++/Makefile.dist config.h.dist
 
 
 ###

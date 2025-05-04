@@ -1,6 +1,6 @@
 ### ==========================================================================
 ###  $Id$
-###  FILE: Makefile.dist - make the Lego Programs
+###  FILE: Makefile.lxprog - make Lego eXecutable programs (*.lx)
 ###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 

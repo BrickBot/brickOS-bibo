@@ -35,9 +35,9 @@ output_usage()
 }
 
 # Locate the Makefile
-if [ -f $SCRIPT_DIR/Makefile.dist ] ; then
+if [ -f $SCRIPT_DIR/Makefile.lxprog ] ; then
   # We are in the source tree
-  MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/Makefile.dist)
+  MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/Makefile.lxprog)
 elif [ -f $SCRIPT_DIR/../share/$PACKAGE/Makefile ] ; then
   MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/../share/$PACKAGE/Makefile)
 else
