@@ -109,7 +109,7 @@ static void print_header(FILE *f,
  * \n\
  * \n\
  * The BASE1 and BASE2 lines below are kernel-size based values\n\
- * that may be used in Makefile.user\n\
+ * that may be used in Makefile.common\n\
  * By default, BASE1 = 0xb000 and BASE2 = 0xb210\n\
  * Calculated, BASE1 = kernel offset + kernel length and BASE2 = BASE1 + 0x%04x\n\
  * \n\

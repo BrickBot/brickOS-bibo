@@ -79,7 +79,7 @@ all:: $(PROGRAMS) $(patsubst %.lx,%.a,$(PROGRAMS)) $(patsubst %.o,%.a,$(PROGRAM_
 .SECONDARY:: $(PROGRAM_OBJECTS)
 
 
-include $(MAKEFILE_DIR)/Makefile.user
+include $(MAKEFILE_DIR)/Makefile.common
 
 
 # Verify that a valid kernel has been specified and a corresponding *.lds file exists

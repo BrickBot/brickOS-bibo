@@ -1,6 +1,6 @@
 ### ==========================================================================
-###  $Id: Makefile.user 606 2007-11-14 22:02:48Z hoenicke $
-###  FILE: Makefile.user - support for building programs run under brickOS
+###  $Id: Makefile.common 606 2007-11-14 22:02:48Z hoenicke $
+###  FILE: Makefile.common - definitions common to most brickOS Makefiles
 ###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 ###       (this file is included by Makefiles that build programs)
@@ -89,12 +89,12 @@ GET_BASE = $(or $(call GET_BASE_FROM_LDS,$(1)),$(error ERROR: Unable to get $(1)
 endif
 
 # Empty if the base has not changed, new base value if it has changed
-BASE_CHANGED = $(if $(findstring $(call GET_BASE_FROM_FILE,$(1),Makefile.user),$(call GET_BASE,$(1))),,$(call GET_BASE,$(1)))
+BASE_CHANGED = $(if $(findstring $(call GET_BASE_FROM_FILE,$(1),Makefile.common),$(call GET_BASE,$(1))),,$(call GET_BASE,$(1)))
 
-# Update the BASE1 and BASE2 addresses in Makefile.user only if there has been a change
+# Update the BASE1 and BASE2 addresses in Makefile.common only if there has been a change
 BaseAddresses: $(KERNEL_FILES_BASE).lds
-	[ -z '$(call BASE_CHANGED,BASE1)' ] || sed -i -r 's/^BASE1[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE1 = $(call GET_BASE,BASE1)/' Makefile.user
-	[ -z '$(call BASE_CHANGED,BASE2)' ] || sed -i -r 's/^BASE2[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE2 = $(call GET_BASE,BASE2)/' Makefile.user
+	[ -z '$(call BASE_CHANGED,BASE1)' ] || sed -i -r 's/^BASE1[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE1 = $(call GET_BASE,BASE1)/' Makefile.common
+	[ -z '$(call BASE_CHANGED,BASE2)' ] || sed -i -r 's/^BASE2[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE2 = $(call GET_BASE,BASE2)/' Makefile.common
 
 
 # ----------------------------------------------------------------------------
@@ -208,5 +208,5 @@ submake-list:
 	$(MAKE) list-variables
 
 ### --------------------------------------------------------------------------
-###                          End of FILE: Makefile.user
+###                          End of FILE: Makefile.common
 ### ==========================================================================

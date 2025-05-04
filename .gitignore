@@ -67,7 +67,6 @@ util/host/mkimg
 util/ir-server
 util/lnpmsg
 util/writelx
-util/makelx
 xs/lisp/xsout-rcx
 xs/xs
 xs/xs-host

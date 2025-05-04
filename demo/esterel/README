@@ -15,7 +15,7 @@ Equation C code
 
 Of these three, Automaton code seems to have the smallest footprint,
 so given the space constraints of the RCX, that code generator
-is used as the default generator by Makefile.user.
+is used as the default generator by Makefile.common.
 
 
 % STANDARD ESTEREL / LEGO INTERFACE

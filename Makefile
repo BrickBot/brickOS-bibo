@@ -73,12 +73,12 @@ all::
 Makefile.config:
 	./configure
 
-include Makefile.user
+include Makefile.common
 include $(SUBDIRS:%=%/Makefile.sub)
 
 install::
 	test -d $(DESTDIR)$(pkgdatadir) || mkdir -p $(DESTDIR)$(pkgdatadir)
-	install -m 644 Makefile.user $(DESTDIR)$(pkgdatadir)
+	install -m 644 Makefile.common $(DESTDIR)$(pkgdatadir)
 	sed -e '/Installation Variables/a \
 	ORG = $(ORG)\
 	PACKAGE = $(PACKAGE)\
@@ -252,7 +252,7 @@ tag::
 
 DISTFILES += Doxyfile Doxyfile-c Doxyfile-c++ h8300-rcx.ld configure \
         makelx.sh README CONTRIBUTORS LICENSE \
-    Makefile Makefile.common Makefile.dist Makefile.user
+    Makefile Makefile.common Makefile.dist
 
 #  locations for this package build effort
 DISTDIR = $(PACKAGE)-$(VERSION)
@@ -287,7 +287,7 @@ uninstall::
 	rm -rf ${pkglibdir} ${pkgincludedir} ${pkgdocdir}
 
 clean::
-	rm -f Makefile.user.dist Makefile.common.dist demo/Makefile.dist demo/c++/Makefile.dist config.h.dist
+	rm -f Makefile.common.dist demo/Makefile.dist demo/c++/Makefile.dist config.h.dist
 
 
 ###

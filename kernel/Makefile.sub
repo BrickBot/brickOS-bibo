@@ -56,7 +56,7 @@ realclean::
 KOBJECTS=$(KSOURCES:.c=.o) $(KASMSOURCES:.S=.o)
 
 # Kernel libraries. Use second version to link all
-# libraries statically to kernel. Change Makefile.user, too.
+# libraries statically to kernel. Change Makefile.common, too.
 KLIBS=-Llib -lc -lmint
 KLIBRARIES=lib/libc.a lib/libmint.a
 #KLIBS=--whole-archive -lc -lmint -lfloat
