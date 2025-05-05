@@ -1,3 +1,6 @@
+# Output Folder
+build/
+
 # Prerequisites
 *.d
 
@@ -58,6 +61,12 @@ Makefile.config
 *.lx
 *.srec
 
+# BrickOS / Bibo Intermediate Files
+*.coff
+*.lds
+util/host/fastdl_*.h
+util/include/
+
 # BrickOS / Bibo Host Outputs
 util/dll
 util/firmdl
@@ -67,16 +76,8 @@ util/host/mkimg
 util/ir-server
 util/lnpmsg
 util/writelx
+
+# XS:Lisp Outputs
 xs/lisp/xsout-rcx
-xs/xs
-xs/xs-host
-xs/xs-ir
-xs/xs-rcx
-
-# BrickOS / Bibo Intermediate Files
-*.coff
-*.lds
-util/host/fastdl_*.h
-util/include/
-
-
+xs/lisp/xsout-host
+xs/xs-*
