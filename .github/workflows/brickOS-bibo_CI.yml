@@ -25,9 +25,6 @@ jobs:
     - name: Install build dependencies
       run:  sudo apt-get --assume-yes install binutils-h8300-hms gcc-h8300-hms
 
-    - name: Configure the build
-      run:  ./configure
-
     - name: Execute the build
       run:  make
 
