@@ -38,7 +38,7 @@ kernel-uninstall::
 kernel-clean::
 	rm -f kernel/*.srec kernel/*.o kernel/*.lds kernel/*.dis kernel/*.coff kernel/*.map kernel/*.d
 
-kernel-realclean::
+kernel-realclean:: kernel-clean
 	rm -rf kernel/*~ kernel/*.bak kernel/*.tgz kernel/*.s kernel/tags kernel/*.dcoff kernel/*.dmap kernel/*.dsrec
 	rm -f  kernel/*.srec kernel/install-stamp
 
