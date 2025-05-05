@@ -67,16 +67,51 @@ endif
 # Add docs to the subdirs list last
 SUBDIRS += doc
 
+# The "all" targets
+MAKE_ALL_TARGETS=host kernel demo
+# Excluded targets: docs (currently broken?)
 
-all::
+all:: $(MAKE_ALL_TARGETS)
+
 
 Makefile.config:
 	./configure
 
 include Makefile.common
 include $(SUBDIRS:%=%/Makefile.sub)
+include Makefile.doxygen
 
-install::
+
+clean:: $(MAKE_ALL_TARGETS:%=%-clean)
+	rm -f Makefile.common.dist demo/c/Makefile.dist demo/c++/Makefile.dist config.h.dist
+
+realclean:: clean $(MAKE_ALL_TARGETS:%=%-realclean)
+	rm -f Makefile.config tags TAGS *.bak *~ *.bak
+
+install:: $(MAKE_ALL_TARGETS:%=%-install)
+
+uninstall:: $(MAKE_ALL_TARGETS:%=%-uninstall)
+
+
+#
+# Setup the relationships between "host" targets and "makefiles" targets
+#
+host:: makefiles
+
+host-install:: makefiles-install
+
+host-uninstall:: makefiles-uninstall
+
+host-clean:: makefiles-clean
+
+host-realclean:: makefiles-realclean
+
+#
+# install/unnistall makefiles
+#
+makefiles::
+
+makefiles-install::
 	test -d $(DESTDIR)$(pkgdatadir) || mkdir -p $(DESTDIR)$(pkgdatadir)
 	install -m 644 Makefile.common $(DESTDIR)$(pkgdatadir)
 	sed -e '/Installation Variables/a \
@@ -93,147 +128,14 @@ install::
 		< makelx.sh  > $(DESTDIR)$(bindir)/makelx
 	chmod 755 $(DESTDIR)$(bindir)/makelx
 
-realclean:: clean
-	rm -f Makefile.config tags TAGS *.bak *~ *.bak
+makefiles-uninstall::
+	rm -f $(DESTDIR)$(pkgdatadir)/Makefile
+	rm -f $(DESTDIR)$(pkgdatadir)/Makefile.common
+	rm -f $(DESTDIR)$(bindir)/makelx
 
-docs-build docs-install::
-	$(MAKE) $(MFLAGS) -C doc $@
+makefiles-clean::
 
-
-#  API generation support using Doxygen
-#
-#  when we get a new version of doxygen, run this target once
-#
-upgrade-doxygen:
-	doxygen -u Doxyfile-c 
-	doxygen -u Doxyfile-c++
-	doxygen -u Doxyfile
-
-#
-#  doc/html-c subdirectory: make C docs
-#
-
-html-c: Doxyfile-c-report
-
-realclean::
-	rm -rf doc/html-c doc/rtf-c
-	rm -f -- Doxyfile-c.log Doxyfile-c.rpt .Doxyfile-c-doneflag *.out
-
-brickos-html-c-dist.tar.gz: html-c 
-	cd doc;tar --gzip -cf $@ html-c;mv $@ ..;cd -
-
-html-c-dist: brickos-html-c-dist.tar.gz
-
-html-c-install: html-c
-	cp -r doc/html-c ${pkghtmldir}
-
-Doxyfile-c.log: Doxyfile-c
-	doxygen $? >$@ 2>&1
-
-Doxyfile-c.rpt: Doxyfile-c.log
-	@grep Warn $? | sed -e 's/^.*brickos\///' | cut -f1 -d: | sort | \
-	 uniq -c | sort -rn | tee $@
-
-.Doxyfile-c-doneflag:  Doxyfile-c.rpt
-	@for FIL in `cat $? | cut -c9-99`; do \
-	  OUTFILE=`echo $$FIL | sed -e 's/[\/\.]/-/g'`.out; \
-	  echo "# FILE: $$OUTFILE" >$$OUTFILE; \
-	  grep "$$FIL" $? >>$$OUTFILE; \
-	  grep "$$FIL" Doxyfile-c.log | grep Warn >>$$OUTFILE; \
-	done
-	@touch $@
-
-Doxyfile-c-report: .Doxyfile-c-doneflag
-	-ls -ltr *.out 2>/dev/null
-
-#
-#  doc/html-c++ subdirectory: make C++ docs
-#
-html-c++: Doxyfile-c++-report
-
-realclean::
-	rm -rf doc/html-c++ doc/rtf-c++
-	rm -f -- Doxyfile-c++.log Doxyfile-c++.rpt .Doxyfile-c++-doneflag *.out
-
-brickos-html-c++-dist.tar.gz: html-c++
-	cd doc;tar --gzip -cf $@ html-c++;mv $@ ..;cd -
-
-html-c++-dist: brickos-html-c++-dist.tar.gz
-
-html-c++-install: html-c++
-	cp -r doc/html-c++ ${pkghtmldir}
-
-Doxyfile-c++.log: 
-	doxygen  Doxyfile-c++ >$@ 2>&1
-
-Doxyfile-c++.rpt: Doxyfile-c++.log
-	@grep Warn $? | sed -e 's/^.*brickos\///' | cut -f1 -d: | sort | \
-	uniq -c | sort -rn | tee $@
-
-.Doxyfile-c++-doneflag:  Doxyfile-c++.rpt
-	@for FIL in `cat Doxyfile-c++.rpt | cut -c9-99`; do \
-       OUTFILE=`echo $$FIL | sed -e 's/[\/\.]/-/g'`.out; \
-       echo "# FILE: $$OUTFILE" >$$OUTFILE; \
-       grep "$$FIL" Doxyfile-c++.rpt >>$$OUTFILE; \
-       grep "$$FIL" Doxyfile-c++.log | grep Warn >>$$OUTFILE; \
-    done
-	@touch $@
-
-Doxyfile-c++-report: .Doxyfile-c++-doneflag
-	-ls -ltr *.out 2>/dev/null
-
-#
-#  doc/html-kern subdirectory: make kernel developer docs
-#
-html-kern: Doxyfile-kern-report
-
-realclean::
-	rm -rf doc/html-kern doc/rtf-kern
-	rm -f -- Doxyfile-kern.log Doxyfile-kern.rpt .Doxyfile-kern-doneflag *.out
-
-brickos-html-kern-dist.tar.gz: html-kern
-	cd doc;tar --gzip -cf $@ html-kern;mv $@ ..;cd -
-
-html-kern-dist: brickos-html-kern-dist.tar.gz
-
-html-kern-install: html-kern
-	cp -r doc/html-kern ${pkghtmldir}
-
-Doxyfile-kern.log: 
-	doxygen  Doxyfile >$@ 2>&1
-
-Doxyfile-kern.rpt: Doxyfile-kern.log
-	@grep Warn $? | sed -e 's/^.*brickos\///' | cut -f1 -d: | sort | \
-	uniq -c | sort -rn | tee $@
-
-.Doxyfile-kern-doneflag:  Doxyfile-kern.rpt
-	@for FIL in `cat Doxyfile-kern.rpt | cut -c9-99`; do \
-       OUTFILE=`echo $$FIL | sed -e 's/[\/\.]/-/g'`.out; \
-       echo "# FILE: $$OUTFILE" >$$OUTFILE; \
-       grep "$$FIL" Doxyfile-kern.rpt >>$$OUTFILE; \
-       grep "$$FIL" Doxyfile-kern.log | grep Warn >>$$OUTFILE; \
-    done
-	@touch $@
-
-Doxyfile-kern-report: .Doxyfile-kern-doneflag
-	-ls -ltr *.out 2>/dev/null
-
-#
-#  make all API documentation
-#
-api-docs-build: html-c html-c++ html-kern
-
-docs: docs-build api-docs-build
-
-#
-#  make distribution files for all API documentation
-#
-api-dist: html-c-dist html-c++-dist html-kern-dist
-
-#
-#  install all API documentation
-#
-docs-install:: html-c-install html-c++-install html-kern-install
+makefiles-realclean:: makefiles-clean
 
 #  NOTE: --format=1 is not supported on Linux ([ce]tags in emacs2[01] packages)
 #   please set in your own environment
@@ -250,7 +152,7 @@ tag::
 # ------------------------------------------------------------
 #
 
-DISTFILES += Doxyfile Doxyfile-c Doxyfile-c++ h8300-rcx.ld configure \
+DISTFILES += h8300-rcx.ld configure \
         makelx.sh README CONTRIBUTORS LICENSE \
     Makefile Makefile.common Makefile.lxprog
 
@@ -279,15 +181,6 @@ $(DISTDISTFILES): $(DISTDIR)/%: %
 	@echo $@
 	@mkdir -p $(dir $@)
 	@cp -p $< $@
-
-#
-# install makefiles
-#
-uninstall::
-	rm -rf ${pkglibdir} ${pkgincludedir} ${pkgdocdir}
-
-clean::
-	rm -f Makefile.common.dist demo/c/Makefile.dist demo/c++/Makefile.dist config.h.dist
 
 
 ###

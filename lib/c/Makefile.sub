@@ -4,19 +4,21 @@
 ###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
-LIBCSRC:= memcpy.c memset.c strcmp.c strcpy.c strlen.c random.c \
+LIBCSRC := memcpy.c memset.c strcmp.c strcpy.c strlen.c random.c \
           calloc.c printf.c
+LIBC := lib/libc.a
 
 DISTFILES += $(patsubst %,lib/c/%, Makefile.sub $(LIBCSRC))
 
-LIBRARIES+=lib/libc.a
+LIBRARIES+=$(LIBC)
 LIBCOBJS=$(LIBCSRC:%.c=lib/c/%.o)
 
-clean::
+libs-clean::
 	rm -f lib/c/*.d lib/c/*.o
-realclean::
+
+libs-realclean::
 	rm -f lib/c/*~ lib/c/*.bak lib/c/tags
 
-lib/libc.a: $(LIBCOBJS)
+$(LIBC): $(LIBCOBJS)
 	rm -f $@
 	$(CROSSAR) -sq $@ $^

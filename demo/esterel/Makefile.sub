@@ -4,32 +4,35 @@
 ###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
-DEMO_ESTEREL_SOURCES1=bumper.strl line1.strl border1.strl line2.strl border2.strl
-DEMO_ESTEREL_SOURCES=$(DEMO_ESTEREL_SOURCES1:%=demo/esterel/%)
+DEMO_ESTEREL_SOURCE_FILES=bumper.strl line1.strl border1.strl line2.strl border2.strl
+DEMO_ESTEREL_SOURCE_PATHS=$(DEMO_ESTEREL_SOURCE_FILES:%=demo/esterel/%)
 
 # Only build the Esterel programs if the Esterel compiler can be found
 ifneq ($(shell which esterel),)
-  DEMO_ESTEREL_PROGRAMS=$(patsubst %.strl,%.lx,$(DEMO_ESTEREL_SOURCES))
+  DEMO_ESTEREL_PROGRAMS=$(patsubst %.strl,%.lx,$(DEMO_ESTEREL_SOURCE_PATHS))
+  DEMO_ESTEREL_PROGRAM_OUTPUTS=$(DEMO_ESTEREL_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_ESTEREL_PROGRAMS))
   DEMO_ESTEREL_OBJS=
+
+  DEMO_PROGRAMS += DEMO_ESTEREL_PROGRAMS
 else
   $(warning Esterel compiler not found; skipping Esterel demo programs)
 endif
 
-DISTFILES += demo/esterel/Makefile.sub demo/esterel/README $(DEMO_ESTEREL_SOURCES)
+DISTFILES += demo/esterel/Makefile.sub demo/esterel/README $(DEMO_ESTEREL_SOURCE_PATHS)
 
-all:: $(DEMO_ESTEREL_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_ESTEREL_PROGRAMS))
+demo:: $(DEMO_ESTEREL_PROGRAM_OUTPUTS)
 
 # Tell Make not to auto-delete:
 # *.o files are needed by the emulator when loading a program as a *.a file
 #.SECONDARY:: $(DEMO_ESTEREL_OBJS)
 
-clean::
+demo-clean::
 	rm -f demo/esterel/*.dis  demo/esterel/*.dis2 demo/esterel/*.s demo/esterel/*.ds1 demo/esterel/*.ds2
 	rm -f demo/esterel/*.dc1  demo/esterel/*.dc2  demo/esterel/*.d
 	rm -f demo/esterel/*.dmap demo/esterel/*.dcoff 
 	rm -f demo/esterel/*~     demo/esterel/*.bak  demo/esterel/*.srec demo/esterel/*.map demo/esterel/*.coff
 
-realclean:: clean
+demo-realclean:: clean
 	rm -f demo/esterel/*.lx   demo/esterel/*.a  demo/esterel/*.o
 
 # depencencies

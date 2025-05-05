@@ -4,11 +4,14 @@
 ###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
-DEMO_C_SOURCES1=hello-C.c helloworld_lnp.c cpu.c dccthrottle.c edgecounting.c \
+DEMO_C_SOURCE_FILES=hello-C.c helloworld_lnp.c cpu.c dccthrottle.c edgecounting.c \
           keypad.c linetrack.c memtest.c motor.c music.c powerfunctions.c \
           primitives.c robots.c rover.c screen.c sound.c trailerbot.c
-DEMO_C_SOURCES=$(DEMO_C_SOURCES1:%=demo/c/%)
-DEMO_C_PROGRAMS=$(patsubst %.c,%.lx,$(DEMO_C_SOURCES))
+DEMO_C_SOURCE_PATHS=$(DEMO_C_SOURCE_FILES:%=demo/c/%)
+DEMO_C_PROGRAMS=$(patsubst %.c,%.lx,$(DEMO_C_SOURCE_PATHS))
+DEMO_C_PROGRAM_OUTPUTS=$(DEMO_C_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_C_PROGRAMS))
+
+DEMO_PROGRAMS += DEMO_C_PROGRAMS
 
 # extra dynamic sources  - program name (e.g. helloworld.c/.cpp) is always assumed
 # NOTE: must specify path (is relative to the directory of the main Makefile)
@@ -30,24 +33,24 @@ screen_SRC =
 sound_SRC =
 trailerbot_SRC =
 
-DEMO_C_SOURCES_ALL = $(DEMO_C_SOURCES) \
+DEMO_C_SOURCES_ALL = $(DEMO_C_SOURCE_PATHS) \
         $(foreach prog,$(DEMO_C_PROGRAMS:%.lx=%),$($(notdir $(prog))_SRC))
 DEMO_C_OBJS = $(patsubst %.c,%.o,$(DEMO_C_SOURCES_ALL))
 DISTFILES += demo/c/Makefile.sub $(DEMO_C_SOURCES_ALL)
 
-all:: $(DEMO_C_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_C_PROGRAMS))
+demo:: $(DEMO_C_PROGRAM_OUTPUTS)
 
 # Tell Make not to auto-delete:
 #   *.o files are needed by the emulator when loading a program as a *.a file
 .SECONDARY:: $(DEMO_C_OBJS)
 
-clean::
+demo-clean::
 	rm -f demo/c/*.dis  demo/c/*.dis2 demo/c/*.s demo/c/*.ds1 demo/c/*.ds2
 	rm -f demo/c/*.dc1  demo/c/*.dc2  demo/c/*.d
 	rm -f demo/c/*.dmap demo/c/*.dcoff 
 	rm -f demo/c/*~     demo/c/*.bak  demo/c/*.srec demo/c/*.map demo/c/*.coff
 
-realclean:: clean
+demo-realclean:: clean
 	rm -f demo/c/*.lx  demo/c/*.a  demo/c/*.o
 
 # depencencies

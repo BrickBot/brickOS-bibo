@@ -19,10 +19,25 @@ HEADERS=config.h conio.h dbutton.h dchars.h dirpd.h dkey.h dlcd.h dmotor.h \
 DISTFILES += include/Makefile.sub $(HEADERS:%=include/%)
 
 
-install::
+host-install:: headers-install
+
+host-uninstall:: headers-uninstall
+
+host-clean:: headers-clean
+
+host-realclean:: headers-realclean
+
+headers-install::
 	test -d $(DESTDIR)$(pkgincludedir)     || mkdir -p $(DESTDIR)$(pkgincludedir)
 	test -d $(DESTDIR)$(pkgincludedir)/rom || mkdir -p $(DESTDIR)$(pkgincludedir)/rom
 	test -d $(DESTDIR)$(pkgincludedir)/sys || mkdir -p $(DESTDIR)$(pkgincludedir)/sys
 	for i in $(HEADERS); do \
 	    install -m 644 include/$$i $(DESTDIR)${pkgincludedir}/$$i ; \
 	done
+
+headers-uninstall::
+	rm -f -r $(DESTDIR)$(pkgincludedir)
+
+headers-clean::
+
+headers-realclean:: headers-clean

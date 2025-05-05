@@ -18,10 +18,11 @@ XS_STACKSIZE=1024
 #OPTIONS=-DLISTLIB
 OPTIONS=
 
-XSTARGET     = xs$(EXT)
-XSHOSTTARGET = xs-host$(EXT)
-XSRCXTARGET  = xs-rcx$(EXT)
-XSIRTARGET   = xs-ir$(EXT)
+# XS builds are specific to a given kernel configuration
+XSTARGET     = xs-$(KERNEL)$(EXT)
+XSHOSTTARGET = xs-$(KERNEL)-host$(EXT)
+XSRCXTARGET  = xs-$(KERNEL)-rcx$(EXT)
+XSIRTARGET   = xs-$(KERNEL)-ir$(EXT)
 
 # XSFILES      = front.c eval.c wtobj.c test.c errmsg.c
 XSSRCDIR     = xs/lisp
@@ -34,23 +35,47 @@ XSFILES     := $(XSFRONT) $(XSEVAL) $(XSHDRFILES) $(XSSRCFILES) $(XSTESTFILES)
 
 DISTFILES += xs/lisp/Makefile.sub $(XSFILES)
 
-XSBIN = $(XSTARGET:%=xs/%) $(XSHOSTTARGET:%=xs/%) $(XSRCXTARGET:%=xs/%) $(XSIRTARGET:%=xs/%)
+XSBIN_FILES = $(XSTARGET) $(XSHOSTTARGET) $(XSRCXTARGET) $(XSIRTARGET)
+XSBIN_PATHS = $(XSBIN_FILES:%=xs/%)
 XSLX = xs/eval-ir.lx
 
 #NATIVEOBJS += $(XSOBJS)
 
 #all:: ircom.o xs$(EXT) xs-ir$(EXT) xs-host$(EXT) xs-rcx$(EXT) eval-ir.lx eval-host$(EXT) eval-rcx.lx
-all:: $(XSBIN) $(XSLX)
 
-clean::
+#
+# Setup the relationships between "kernel" targets and "lang-lisp" targets
+#
+kernel:: lang-lisp
+
+kernel-clean:: lang-lisp-clean
+
+kernel-realclean:: lang-lisp-realclean
+
+kernel-install:: lang-lisp-install
+
+kernel-uninstall:: lang-lisp-uninstall
+
+
+lang-lisp:: $(XSBIN_PATHS) $(XSLX)
+
+lang-lisp-clean::
 	rm -f xs/lisp/*.d xs/lisp/*.o xs/lisp/*.a
 	rm -f xs/lisp/*.dc1 xs/lisp/*.dc2
 	rm -f xs/lisp/*.ds1 xs/lisp/*.ds2
 	rm -f xs/lisp/xsout-rcx xs/lisp/xsout-host
 	rm -f xs/lisp/eval-ir.lx
 
-realclean::
-	rm -f $(XSBIN) $(XSLX)
+lang-lisp-realclean::
+	rm -f $(XSBIN_PATHS) $(XSLX)
+
+lang-lisp-install:: lang-lisp
+	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
+	install -s -m 755  $(XSBIN_PATHS) $(DESTDIR)$(bindir)/
+
+lang-lisp-uninstall::
+	rm -f $(XSBIN_FILES:%=$(DESTDIR)$(bindir)/%)
+
 
 #ircom.o: ircom.c
 #	$(CC) -o ircom.o -c ircom.c -O2 -Wall -O2 -Wall -I$(UTIL) -I$(XSROOT)include/lnp

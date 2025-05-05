@@ -4,32 +4,35 @@
 ###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
-DEMO_CPP_SOURCES1=hello-C++.cpp
-DEMO_CPP_SOURCES=$(DEMO_CPP_SOURCES1:%=demo/c++/%)
-DEMO_CPP_PROGRAMS=$(patsubst %.cpp,%.lx,$(DEMO_CPP_SOURCES))
+DEMO_CPP_SOURCE_FILES=hello-C++.cpp
+DEMO_CPP_SOURCE_PATHS=$(DEMO_CPP_SOURCE_FILES:%=demo/c++/%)
+DEMO_CPP_PROGRAMS=$(patsubst %.cpp,%.lx,$(DEMO_CPP_SOURCE_PATHS))
+DEMO_CPP_PROGRAM_OUTPUTS=$(DEMO_CPP_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_CPP_PROGRAMS))
+
+DEMO_PROGRAMS += DEMO_CPP_PROGRAMS
 
 # extra dynamic sources  - program name (e.g. helloworld.c/.cpp) is always assumed
 # NOTE: must specify path (is relative to the directory of the main Makefile)
 hello-C++_SRC =
 
-DEMO_CPP_SOURCES_ALL = $(DEMO_CPP_SOURCES) \
+DEMO_CPP_SOURCES_ALL = $(DEMO_CPP_SOURCE_PATHS) \
         $(foreach prog,$(DEMO_CPP_PROGRAMS:%.lx=%),$($(notdir $(prog))_SRC))
 DEMO_CPP_OBJS = $(patsubst %.cpp,%.o,$(DEMO_CPP_SOURCES_ALL))
 DISTFILES += demo/c++/Makefile.sub $(DEMO_CPP_SOURCES_ALL)
 
-all:: $(DEMO_CPP_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_CPP_PROGRAMS))
+demo:: $(DEMO_CPP_PROGRAM_OUTPUTS)
 
 # Tell Make not to auto-delete:
 # *.o files are needed by the emulator when loading a program as a *.a file
 .SECONDARY:: $(DEMO_CPP_OBJS)
 
-clean::
+demo-clean::
 	rm -f demo/c++/*.dis  demo/c++/*.dis2 demo/c++/*.s demo/c++/*.ds1 demo/c++/*.ds2
 	rm -f demo/c++/*.dc1  demo/c++/*.dc2  demo/c++/*.d
 	rm -f demo/c++/*.dmap demo/c++/*.dcoff 
 	rm -f demo/c++/*~     demo/c++/*.bak  demo/c++/*.srec demo/c++/*.map demo/c++/*.coff
 
-realclean:: clean
+demo-realclean:: clean
 	rm -f demo/c++/*.lx  demo/c++/*.a  demo/c++/*.o
 
 # depencencies

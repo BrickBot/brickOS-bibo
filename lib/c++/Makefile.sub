@@ -4,18 +4,20 @@
 ###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
-LIBCPPCSRC:= stub.c
-LIBCPPSRC:= mem.cpp
+LIBCPPCSRC := stub.c
+LIBCPPSRC := mem.cpp
+LIBCPP := lib/libc++.a
 
 DISTFILES += $(patsubst %,lib/c++/%, Makefile.sub $(LIBCPPCSRC) $(LIBCPPSRC))
-LIBRARIES+=lib/libc++.a
+LIBRARIES+=$(LIBCPP)
 LIBCPPOBJS=$(LIBCPPCSRC:%.c=lib/c++/%.o) $(LIBCPPSRC:%.cpp=lib/c++/%.o)
 
-clean::
+libs-clean::
 	rm -f lib/c++/*.d lib/c++/*.o
-realclean::
+
+libs-realclean::
 	rm -f lib/c++/*~ lib/c/*.bak lib/c/tags
 
-lib/libc++.a: $(LIBCPPOBJS)
+$(LIBCPP): $(LIBCPPOBJS)
 	rm -f $@
 	$(CROSSAR) -sq $@ $^

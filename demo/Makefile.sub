@@ -13,3 +13,18 @@ include demo/esterel/Makefile.sub
 #include demo/pascal/Makefile.sub
 #include demo/pascal.oop/Makefile.sub
 include demo/xs-lisp/Makefile.sub
+
+
+$(DEMO_PROGRAMS):: kernel lib
+
+# Declare default demo targets that might or might not be used
+#   in language-specific demo Makefile.sub files
+demo::
+
+demo-clean::
+
+demo-realclean:: demo-clean
+
+demo-install:: demo
+
+demo-uninstall::

@@ -41,31 +41,34 @@ DISTFILES += $(patsubst %,util/host/%, Makefile.sub $(sort $(FONTSRC) $(FIRMDLSR
 DISTFILES := $(filter-out util/host/lnp.c util/host/lnp-logical.c, $(DISTFILES))
 LIBS=
 
-BIN = $(FONTTARGET:%=util/%) $(FIRMDLTARGET:%=util/%) $(DLLALLTARGETS:%=util/%) \
-    $(LNPMSGTARGET:%=util/%) $(IRSRVRTARGET:%=util/%)
-MAN1 = $(FIRMDLMAN1:%=util/host/%) $(DLLALLMAN1:%=util/host/%)
+HOST_FILES = $(FONTTARGET) $(FIRMDLTARGET) $(DLLALLTARGETS) \
+    $(LNPMSGTARGET) $(IRSRVRTARGET)
+HOST_PATHS = $(HOST_FILES:%=util/%)
+MAN1_FILES = $(FIRMDLMAN1) $(DLLALLMAN1)
+MAN1_PATHS = $(MAN1_FILES:%=util/host/%)
 
-all::  $(BIN)
 
-clean::
+host:: $(HOST_PATHS)
+
+host-clean::
 	rm -f util/host/*.d util/host/*.o
 	rm -f util/host/*.srec util/host/*.coff
 	rm -f $(MKIMG) util/host/fastdl.h
 	rm -f util/host/lnp-logical.c util/host/lnp.c
 	rm -f util/host/fastdl_*.h
 
-realclean:: clean
+host-realclean:: host-clean
 	rm -f util/host/*~ util/host/*.bak 
-	rm -f $(BIN)
+	rm -f $(HOST_PATHS)
 
-install:: $(BIN) $(MAN1)
+host-install:: $(HOST_PATHS) $(MAN1_PATHS)
 	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
+	install -s -m 755  $(HOST_PATHS) $(DESTDIR)$(bindir)/
 	test -d $(DESTDIR)$(mandir)/man1 || mkdir -p $(DESTDIR)$(mandir)/man1
-	install -s -m 755  $(BIN) $(DESTDIR)$(bindir)/
-	install -m 644 $(MAN1) $(DESTDIR)$(mandir)/man1/
+	install -m 644 $(MAN1_PATHS) $(DESTDIR)$(mandir)/man1/
 
-uninstall::
-	rm -f $(mandir)/man1/$(MAN1) $(bindir)/$(EXE1)
+host-uninstall::
+	rm -f $(MAN1_FILES:%=$(DESTDIR)$(mandir)/man1/%) $(HOST_FILES:%=$(DESTDIR)$(bindir)/%)
 
 
 util/host/lnp.o: kernel/lnp.c

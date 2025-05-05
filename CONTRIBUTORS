@@ -47,7 +47,8 @@ Matthew Sheets (mesheets@users.sourceforge.net)
     - Remove duplications and reduce number of Makefiles to simplify
     - Update "make install" to better support DESTDIR
     - Enable configurable kernel naming
-    - Enable building/installing/uninstalling just the kernel (useful if only changing kernel config)
+    - Enable building/installing/uninstalling just specific parts,
+        such as the libs, kernel, or libs+kernel+demos ("rcx").
     - Minimize the hardcoding of absolute paths in the Makefile that gets installed
     - Support building programs written in Esterel and XS:Lisp
     - For the Makefile for *.lx programs, verify that the needed kernel files exist

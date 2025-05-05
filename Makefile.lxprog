@@ -119,5 +119,5 @@ realclean:: clean
 .PHONY: all clean realclean
 
 ### --------------------------------------------------------------------------
-###                          End of FILE: demo/Makefile
+###                          End of FILE: Makefile.lxprpog
 ### ==========================================================================
