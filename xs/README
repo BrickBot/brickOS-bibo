@@ -14,10 +14,10 @@ IMPORTANT USAGE NOTES
     - CONF_VIEW_BUTTON
    In newer kernels, disabling the following is also recommended:
     - CONF_DCC
- * XS will function without CONF_ASCII; however, "puts" and "putc"
-   functionality will be limited.  Without CONF_ASCII defined, puts
-   will always display "ASCII" and putc will dispaly a '-' in the
-   specified position.
+ * XS will also function without CONF_ASCII, saving even more space;
+   however, "puts" and "putc" functionality will be limited.  Without
+   CONF_ASCII defined, puts will always display "ASCII" and putc will
+   dispaly a '-' in the specified position.
     - It appears XS putc and even puts could perhaps be adapted to
       be supported via putc_native, which does not require ASCII
  * For autonomous programs, the demo program rover-watcher is suggested
