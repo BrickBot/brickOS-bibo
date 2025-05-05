@@ -2073,7 +2073,7 @@ Object receive() {
 				Object port = *--rs_top;
 				Object c = *--rs_top;
 				if (!(typeOf(port) == t_Wrapper && INTP(port->w.clone))) {
-					fputs("Error: wront port number -- ", stdout);
+					fputs("Error: wrong port number -- ", stdout);
 					writeObject(stdout, port);
 					putchar('\n');
 					wtInit();
@@ -3525,7 +3525,7 @@ int main(int argc, char **argv) {
             timeout = atoi(optarg);
             break;
           case 'h':
-            fprintf(stderr, usage_string, argv[0]);
+            fprintf(stdout, usage_string, argv[0]);
             return 1;
             break;
           case 't':
