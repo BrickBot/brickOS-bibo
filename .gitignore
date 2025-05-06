@@ -1,5 +1,6 @@
-# Output Folder
+# Output Folders
 build/
+sysroot/
 
 # Prerequisites
 *.d

@@ -28,14 +28,14 @@ jobs:
     - name: Execute the build
       run:  make
 
-    - name: Test-run a host installation
-      run:  make DESTDIR=$(pwd)/build/destdir install
+    - name: Test install the new build to a sysroot
+      run:  make DESTDIR=$(pwd)/sysroot install
 
     # Before archiving, tar the host installation output to preserve file permission
     # c.f. https://github.com/actions/upload-artifact?tab=readme-ov-file#permission-loss
     # To avoid including a "." or other unwanted directory, c.f. https://stackoverflow.com/a/39530409
     - name: Tar the host installation snapshot to preserve file permissions
-      run:  find build/destdir/ -printf "%P\n" | tar --verbose --create --file build/install.tar --no-recursion --directory=build/destdir/ --files-from=-
+      run:  find sysroot/ -printf "%P\n" | tar --verbose --create --file build/install.tar --no-recursion --directory=sysroot/ --files-from=-
 
     - name: Archive the host installation snapshot tar file
       uses: actions/upload-artifact@v4
@@ -63,3 +63,6 @@ jobs:
           demo/**/*.coff
           demo/**/*.lx
           demo/**/*.a
+
+    - name: Install the new build using Stow
+      run:  sudo make stow
