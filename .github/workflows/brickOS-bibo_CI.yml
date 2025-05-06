@@ -23,7 +23,7 @@ jobs:
       run:  sudo apt-get --assume-yes update
 
     - name: Install build dependencies
-      run:  sudo apt-get --assume-yes install binutils-h8300-hms gcc-h8300-hms
+      run:  sudo apt-get --assume-yes install binutils-h8300-hms gcc-h8300-hms stow
 
     - name: Execute the build
       run:  make
