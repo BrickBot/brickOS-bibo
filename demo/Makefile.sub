@@ -25,6 +25,8 @@ demo-clean::
 
 demo-realclean:: demo-clean
 
-demo-install:: demo
+demo-install::
 
 demo-uninstall::
+
+.PHONY: demo demo-clean demo-realclean demo-install demo-uninstall
