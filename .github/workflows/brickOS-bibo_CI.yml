@@ -29,19 +29,19 @@ jobs:
       run:  make
 
     - name: Test install the new build to a sysroot
-      run:  make DESTDIR=$(pwd)/sysroot install
+      run:  make DESTDIR=$(pwd)/sysroot prefix=/ install
 
     # Before archiving, tar the host installation output to preserve file permission
     # c.f. https://github.com/actions/upload-artifact?tab=readme-ov-file#permission-loss
     # To avoid including a "." or other unwanted directory, c.f. https://stackoverflow.com/a/39530409
     - name: Tar the host installation snapshot to preserve file permissions
-      run:  find sysroot/ -printf "%P\n" | tar --verbose --create --file build/install.tar --no-recursion --directory=sysroot/ --files-from=-
+      run:  find sysroot/ -printf "%P\n" | tar --verbose --create --file install.tar --no-recursion --directory=sysroot/ --files-from=-
 
     - name: Archive the host installation snapshot tar file
       uses: actions/upload-artifact@v4
       with:
         name: brickOS-bibo_install_[runner~${{ matrix.os }}]_run${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
-        path: build/install.tar
+        path: install.tar
 
     - name: Prepare the firmware and program images for archiving
       run:  cp --preserve kernel/*.srec kernel/*.coff  demo/
