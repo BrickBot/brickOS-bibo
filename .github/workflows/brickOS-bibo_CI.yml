@@ -2,6 +2,10 @@ name: brickOS-bibo CI
 
 on:
   workflow_dispatch:
+  schedule:
+    # Following POSIX cron syntax, run every Tuesday morning at 5:30 AM UTC
+    #   https://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html#tag_20_25_07
+    - cron:   '30 5 * * 2'
   push:
     branches: [ master ]
   pull_request:
