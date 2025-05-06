@@ -76,5 +76,5 @@ $(KERNEL_FILES_BASE).coff: $(KOBJECTS) $(KLIBRARIES)
 -include $(KSOURCES:%.c=%.d)
 
 ### --------------------------------------------------------------------------
-###                         End of FILE: boot/Makefile
+###                         End of FILE: kernel/Makefile.sub
 ### ==========================================================================

@@ -80,6 +80,7 @@ Makefile.config:
 include Makefile.common
 include $(SUBDIRS:%=%/Makefile.sub)
 include Makefile.doxygen
+include Makefile.utility
 
 
 clean:: $(MAKE_ALL_TARGETS:%=%-clean)
