@@ -20,99 +20,134 @@
 #
 
 echo ""
-echo "Welcome to the brickOS Makefile configurator."
+echo "Welcome to the brickOS-bibo Makefile configurator."
 echo "Attempting to find the gcc compiler for the h8300. (This might take some time.)"
 echo ""
 
-#
-#  check for known files in known locations, first,
-#    so can avoid expensive search
-#
-#   known PATHs in which h8*gcc may be found
-TOOL_PATH="/usr/local/bin
-           /usr/bin
-           /usr/local/brickbot/bin
-           /usr/local/brickos/bin
-           /usr/local/lego/bin
-           /usr/local/rcx/bin
-           /usr/local/h8300-hms/bin
-           /usr/h8300-hitachi-hms/bin
-           /usr/local/crossgcc/h8300-hitachi-hms/bin"
+TOOL_BASE_NAME=gcc
 
-#   known PREFIXs of h8*gcc
-TOOL_PREFIX="h8300-hitachi-coff-
-             h8300-hitachi-hms-
-             h8300-hms-
-             h8300hms-"
+if [ -z ${CROSSTOOLPREFIX+x} ] ; then
+  #  Check for known files in known locations, first,
+  #    so can avoid expensive search
+  #
+  #   Known directories in which the h8300 toolchain might be found
+  TOOL_DIR="\"\"
+             /usr/local/bin
+             /usr/bin
+             /usr/local/brickbot/bin
+             /usr/local/brickos/bin
+             /usr/local/lego/bin
+             /usr/local/rcx/bin
+             /usr/local/h8300-hms/bin
+             /usr/h8300-hitachi-hms/bin
+             /usr/local/crossgcc/h8300-hitachi-hms/bin
+            "
+  
+  #   Known PREFIXs of the h8300 toolchain
+  TOOL_PREFIX="
+               h8300-hitachi-coff-
+               h8300-hitachi-hms-
+               h8300-hms-
+               h8300hms-
+              "
 
-H8FULL=""
-#  for each path, do...
-for TOOL_PATH_CANDIDATE in $TOOL_PATH
-do
-  #  for each basename prefix. do...
-  for TOOL_PREFIX_CANDIDATE in $TOOL_PREFIX
+  TOOL_SUFFIX="\"\"
+               -3
+               -4.4
+              "
+
+  #  for each path, do...
+  for TOOL_DIR_CANDIDATE in $TOOL_DIR
   do
-    GCCBASE="$TOOL_PATH_CANDIDATE/${TOOL_PREFIX_CANDIDATE}gcc"
-    #echo "(DBG)Testing GCCBASE=[$GCCBASE]"
-    #  for each suffix (.exe and empty str), do...
-    for EXT in ".exe" ""
+    # Handle the empty string ("")
+    TOOL_DIR_CANDIDATE=${TOOL_DIR_CANDIDATE%\"\"}
+	# Append a trailing slash only if non-empty
+	TOOL_DIR_CANDIDATE=${TOOL_DIR_CANDIDATE}${TOOL_DIR_CANDIDATE:+/}
+
+    #  for each basename prefix. do...
+    for TOOL_PREFIX_CANDIDATE in $TOOL_PREFIX
     do
-      GCCFSPEC="${GCCBASE}$EXT"
-      if test -f "$GCCFSPEC"
+      TOOL_PATH_PREFIX_CANDIDATE="${TOOL_DIR_CANDIDATE}${TOOL_PREFIX_CANDIDATE}"
+
+      #  for each suffix (empty string, -3, and -4.4)
+      for TOOL_SUFFIX_CANDIDATE in ${CROSSTOOLSUFFIX:-$TOOL_SUFFIX}
+      do
+        TOOL_SUFFIX_CANDIDATE="${TOOL_SUFFIX_CANDIDATE%\"\"}"
+
+        #  for each suffix (.exe and empty str), do...
+        for TOOL_EXT_CANDIDATE in ".exe" ""
+        do
+          echo "Testing \"${TOOL_PATH_PREFIX_CANDIDATE}${TOOL_BASE_NAME}${TOOL_SUFFIX_CANDIDATE}${TOOL_EXT_CANDIDATE}\""
+          if which "${TOOL_PATH_PREFIX_CANDIDATE}${TOOL_BASE_NAME}${TOOL_SUFFIX_CANDIDATE}${TOOL_EXT_CANDIDATE}" > /dev/null
+          then
+            CROSSTOOLPREFIX="$TOOL_PATH_PREFIX_CANDIDATE"
+            CROSSTOOLSUFFIX="$TOOL_SUFFIX_CANDIDATE"
+            CROSSTOOLEXT="$TOOL_EXT_CANDIDATE"
+            break  #  have answer, exit extension loop
+          fi
+        done
+        if test -n "$CROSSTOOLPREFIX"
+        then
+          break  #  have answer, exit filename suffix loop
+        fi
+      done
+      if test -n "$CROSSTOOLPREFIX"
       then
-        H8FULL="$GCCFSPEC"
-        break  #  have answer, exit inner loop
+        break  #  have answer, exit filename prefix loop
       fi
     done
-    if test -n "$H8FULL"
+    if test -n "$CROSSTOOLPREFIX"
     then
-      break  #  have answer, exit middle loop
+      break  #  have answer, exit directory loop
     fi
   done
-  if test -n "$H8FULL"
+  
+  #
+  #  if didn't find in expected location...
+  #   search filesystem for full name of hitachi gcc compiler and path
+  #
+  #  This can be quite harmful. Uncomment if you really want it.
+  #if test -z "$H8FULL"
+  #then
+  #  H8FULL=`find / -type f \( -name 'h8*gcc' -o -name 'h8*gcc.exe' \) -print`
+  #fi
+
+  
+  #
+  # if no compiler is found, exit
+  #
+  if test -z "$CROSSTOOLPREFIX"
   then
-    break  #  have answer, exit outer loop
+     echo "No gcc compiler found for the h8300, please install compiler or edit" \
+  		"the configure script and try again."
+     exit 1
   fi
-done
-
-#
-#  if didn't find in expected location...
-#   search filesystem for full name of hitachi gcc compiler and path
-#
-#  This can be quite harmful. Uncomment if you really want it.
-#if test -z "$H8FULL"
-#then
-#  H8FULL=`find / -type f \( -name 'h8*gcc' -o -name 'h8*gcc.exe' \) -print`
-#fi
-
-#
-# if no compiler is found, exit
-#
-if test -z "$H8FULL"
-then
-   echo "No gcc compiler found for the h8300, please install compiler or edit" \
-		"the configure script and try again."
-   exit 1
+else
+  if which "${CROSSTOOLPREFIX}${TOOL_BASE_NAME}${CROSSTOOLSUFFIX}${CROSSTOOLEXT}" > /dev/null
+  then
+    echo "No gcc compiler found using the specified CROSSTOOL variables."
+    echo "Please install compiler or edit the supplied CROSSTOOL variables and try again."
+  	echo "Supplied values were:"
+    echo " - CROSSTOOLPREFIX = \"$CROSSTOOLPREFIX\""
+    echo " - CROSSTOOLSUFFIX = \"$CROSSTOOLSUFFIX\""
+    echo " - CROSSTOOLEXT    = \"$CROSSTOOLEXT\""
+    exit 1
+  fi
 fi
 
-#
-# CrossToolPrefix is full path and compiler name without 'gcc'
-#
-DIRNAME=`dirname $H8FULL`
-BASENAME=`basename $H8FULL`
+echo " - CROSSTOOLPREFIX = \"$CROSSTOOLPREFIX\""
+echo " - CROSSTOOLSUFFIX = \"$CROSSTOOLSUFFIX\""
+echo " - CROSSTOOLEXT    = \"$CROSSTOOLEXT\""
 
-CROSSTOOLPREFIX=$DIRNAME/`echo $BASENAME | sed "s/gcc.*//"`
 
 # Common CFLAGS for standard (non-cross) compilation
 CFLAGS="-O2 -Wall"
-
-echo " - CrossToolPrefix = "$CROSSTOOLPREFIX
 
 #
 #  look for .exe in the compiler name. This indicates Windows environment
 #   which means that CYGWIN or DJGPP toolset is being used
 #
-case "$H8FULL" in
+case "$CROSSTOOLEXT" in
 *.exe)
        echo " - Found Cygwin/DJGPP system"
        SED_SFLAG=1
@@ -139,6 +174,8 @@ BRICKOS_ROOT=`pwd`
 cat > Makefile.config <<EOF
 # DO NOT EDIT: This file is auto-generated by configure
 CROSSTOOLPREFIX?=$CROSSTOOLPREFIX
+CROSSTOOLSUFFIX?=$CROSSTOOLSUFFIX
+CROSSTOOLEXT?=$CROSSTOOLEXT
 CC=$CC
 CFLAGS+=$CFLAGS
 SED_SFLAG=$SED_SFLAG

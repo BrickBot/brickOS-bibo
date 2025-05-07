@@ -118,14 +118,18 @@ makefiles-install::
 	sed -e '/Installation Variables/a \
 	ORG = $(ORG)\
 	PACKAGE = $(PACKAGE)\
-	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)'\
+	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)\
+	CROSSTOOLSUFFIX = $(CROSSTOOLSUFFIX)\
+	CROSSTOOLEXT    = $(CROSSTOOLEXT)'\
 		< Makefile.lxprog  > $(DESTDIR)$(pkgdatadir)/Makefile
 	chmod 644 $(DESTDIR)$(pkgdatadir)/Makefile
 	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
 	sed -e '/Installation Variables/a \
 	ORG=$(ORG)\
 	PACKAGE=$(PACKAGE)\
-	CROSSTOOLPREFIX=$(CROSSTOOLPREFIX)'\
+	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)\
+	CROSSTOOLSUFFIX = $(CROSSTOOLSUFFIX)\
+	CROSSTOOLEXT    = $(CROSSTOOLEXT)'\
 		< makelx.sh  > $(DESTDIR)$(bindir)/makelx
 	chmod 755 $(DESTDIR)$(bindir)/makelx
 
