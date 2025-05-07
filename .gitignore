@@ -58,13 +58,16 @@ dkms.conf
 # Makefile Configuration File
 Makefile.config
 
-# BrickOS / Bibo RCX Outputs
-*.lx
+# BrickOS / Bibo RCX Kernel Outputs
+*.coff
 *.srec
+*.bin
+*.lds
+
+# BrickOS / Bibo RCX Program Outputs
+*.lx
 
 # BrickOS / Bibo Intermediate Files
-*.coff
-*.lds
 util/host/fastdl_*.h
 util/include/
 

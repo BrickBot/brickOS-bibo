@@ -5,20 +5,21 @@
 ### --------------------------------------------------------------------------
 
 # kernel source files
-KSOURCES1=kmain.c mm.c systime.c tm.c semaphore.c conio.c lcd.c \
+KSOURCE_FILES=kmain.c mm.c systime.c tm.c semaphore.c conio.c lcd.c \
           lnp-logical.c lnp.c remote.c program.c vis.c battery.c \
           dkey.c dmotor.c dsensor.c dsound.c swmux.c handlers.c \
           mutex.c dcc.c powerfunctions.c
-KSOURCES=$(KSOURCES1:%=kernel/%)
+KSOURCE_PATHS=$(KSOURCE_FILES:%=kernel/%)
 
-KASMSOURCES1=dccasm.S
-KASMSOURCES=$(KASMSOURCES1:%=kernel/%)
+KASMSOURCE_FILES=dccasm.S
+KASMSOURCE_PATHS=$(KASMSOURCE_FILES:%=kernel/%)
 
-KERNEL_FILES:=$(KERNEL_FILES_BASE).coff $(KERNEL_FILES_BASE).srec $(KERNEL_FILES_BASE).lds
+KERNEL_FILE_TYPES=coff srec bin lds
+KERNEL_FILES:=$(KERNEL_FILE_TYPES:%=$(KERNEL_FILES_BASE).%)
 KERNEL_TARGETS:=$(KERNEL_FILES)
 
 # Files of the source distribution
-DISTFILES += kernel/Makefile.sub $(KSOURCES) $(KASMSOURCES)
+DISTFILES += kernel/Makefile.sub $(KSOURCE_PATHS) $(KASMSOURCE_PATHS)
 
 
 #
@@ -49,7 +50,7 @@ kernel-realclean:: kernel-clean
 ##
 
 # kernel object files
-KOBJECTS=$(KSOURCES:.c=.o) $(KASMSOURCES:.S=.o)
+KOBJECTS=$(KSOURCE_PATHS:.c=.o) $(KASMSOURCE_PATHS:.S=.o)
 
 # Kernel libraries. Use second version to link all
 # libraries statically to kernel. Change Makefile.common, too.
@@ -73,7 +74,7 @@ $(KERNEL_FILES_BASE).coff: $(KOBJECTS) $(KLIBRARIES)
 	$(CROSSNM) $*.coff | sort -u | $(GENLDS) $* > $*.lds
 
 #  dependencies 
--include $(KSOURCES:%.c=%.d)
+-include $(KSOURCE_PATHS:%.c=%.d)
 
 ### --------------------------------------------------------------------------
 ###                         End of FILE: kernel/Makefile.sub

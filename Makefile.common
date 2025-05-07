@@ -190,9 +190,12 @@ BaseAddresses: $(KERNEL_FILES_BASE).lds
 	$(WRITELX) $*.ds1 $*.ds2 $@
 
 
-#  How to make srec from coff (for download)
+#  How to make srec and bin from coff (for download)
 %.srec: %.coff
-	$(CROSSOBJCOPY) -I coff-h8300 -O srec $*.coff $*.srec
+	$(CROSSOBJCOPY) -I coff-h8300 -O srec $< $@
+
+%.bin: %.coff
+	$(CROSSOBJCOPY) -I coff-h8300 -O binary $< $@
 
 ### --------------------------------------------------------------------------
 ###                          End of FILE: Makefile.common
