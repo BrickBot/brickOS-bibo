@@ -77,8 +77,9 @@ if [ -z ${CROSSTOOLPREFIX+x} ] ; then
         #  for each suffix (.exe and empty str), do...
         for TOOL_EXT_CANDIDATE in ".exe" ""
         do
-          echo "Testing \"${TOOL_PATH_PREFIX_CANDIDATE}${TOOL_BASE_NAME}${TOOL_SUFFIX_CANDIDATE}${TOOL_EXT_CANDIDATE}\""
-          if which "${TOOL_PATH_PREFIX_CANDIDATE}${TOOL_BASE_NAME}${TOOL_SUFFIX_CANDIDATE}${TOOL_EXT_CANDIDATE}" > /dev/null
+          TOOL_FULL_PATH_TEST="${TOOL_PATH_PREFIX_CANDIDATE}${TOOL_BASE_NAME}${TOOL_SUFFIX_CANDIDATE}${TOOL_EXT_CANDIDATE}"
+          #echo "Testing \"${TOOL_FULL_PATH_TEST}\""
+          if which "${TOOL_FULL_PATH_TEST}" > /dev/null
           then
             CROSSTOOLPREFIX="$TOOL_PATH_PREFIX_CANDIDATE"
             CROSSTOOLSUFFIX="$TOOL_SUFFIX_CANDIDATE"
