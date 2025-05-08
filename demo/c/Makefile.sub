@@ -42,7 +42,7 @@ demo:: $(DEMO_C_PROGRAM_OUTPUTS)
 
 # Tell Make not to auto-delete:
 #   *.o files are needed by the emulator when loading a program as a *.a file
-.SECONDARY:: $(DEMO_C_OBJS)
+.SECONDARY: $(DEMO_C_OBJS)
 
 demo-clean::
 	rm -f demo/c/*.dis  demo/c/*.dis2 demo/c/*.s demo/c/*.ds1 demo/c/*.ds2
