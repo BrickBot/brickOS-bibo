@@ -19,7 +19,10 @@ VERSION = 0.10.0
 LIBDIR?=lib
 UTILDIR?=util
 INCLUDEDIR?=include
-KERNELDIR=kernel
+KERNELDIR?=kernel
+KERNELCONFIGDIR?=kconfig/$(KERNEL)
+KERNELCONFIG_HEADER = $(KERNELCONFIGDIR)/kernel-config.h
+
 
 #
 #  Define our default install locations (overridden by packaging systems)
@@ -47,6 +50,9 @@ pkgexampledir ?= ${pkgdocdir}/examples
 pkgincludedir ?= ${targetdir}/include
 pkglibdir ?= ${targetdir}/lib
 
+pkgkconfigdir ?= ${targetdir}/kconfig
+pkgkconfigkerneldir ?= ${pkgkconfigdir}/$(KERNEL)
+
 
 # ------------------------------------------------------------
 #  No user customization below here...
@@ -55,7 +61,7 @@ pkglibdir ?= ${targetdir}/lib
 #
 #  makefile to build the brickOS operating system and demo files
 # 
-SUBDIRS=util lib include kernel xs
+SUBDIRS=util lib include kconfig kernel xs
 
 # Only build the demo programs if program support is enabled
 ifeq ($(shell grep --quiet '^\#define CONF_PROGRAM' include/config.h && echo 1),1)

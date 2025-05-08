@@ -25,7 +25,7 @@ CFLAGS =$(COPT) $(CWARN) $(CINC)
 #
 CROSSCOPT  =$(COPT) -mquickcall
 CROSSCWARN =$(CWARN)
-CROSSCINC  =-I$(INCLUDEDIR)
+CROSSCINC  =-I$(INCLUDEDIR) -I$(KERNELCONFIGDIR)
 CROSSCFLAGS   =$(CROSSCOPT) $(CROSSCWARN) $(CROSSCINC) $(CROSSCDEFINES)
 CROSSCXXFLAGS =-DCXX -fno-rtti -fno-exceptions $(CROSSCFLAGS)
 CROSSPFLAGS   =$(CROSSCFLAGS) --extended-syntax --unit-path=$(BRICKOS_ROOT)/lib/p --automake
@@ -82,12 +82,6 @@ BASE2 = 0xaf40
 # $(BASEx) value from $(DYNAMIC_LDS) file, $(BASEx), and then $(BASEx)_DEFAULT
 GET_BASE = $(or $(call GET_BASE_FROM_LDS,$(1)),$($(1)),$($(1)_DEFAULT))
 
-kernel:: BaseAddresses
-else
-# Alway lookup BASE1 and BASE2 from the dynamic LDS file
-GET_BASE = $(or $(call GET_BASE_FROM_LDS,$(1)),$(error ERROR: Unable to get $(1) from the "$(DYNAMIC_LDS)" dynamic LDS file))
-endif
-
 # Empty if the base has not changed, new base value if it has changed
 BASE_CHANGED = $(if $(findstring $(call GET_BASE_FROM_FILE,$(1),Makefile.common),$(call GET_BASE,$(1))),,$(call GET_BASE,$(1)))
 
@@ -95,6 +89,12 @@ BASE_CHANGED = $(if $(findstring $(call GET_BASE_FROM_FILE,$(1),Makefile.common)
 BaseAddresses: $(KERNEL_FILES_BASE).lds
 	[ -z '$(call BASE_CHANGED,BASE1)' ] || sed -i -r 's/^BASE1[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE1 = $(call GET_BASE,BASE1)/' Makefile.common
 	[ -z '$(call BASE_CHANGED,BASE2)' ] || sed -i -r 's/^BASE2[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$$/BASE2 = $(call GET_BASE,BASE2)/' Makefile.common
+
+kernel:: BaseAddresses
+else
+# Alway lookup BASE1 and BASE2 from the dynamic LDS file
+GET_BASE = $(or $(call GET_BASE_FROM_LDS,$(1)),$(error ERROR: Unable to get $(1) from the "$(DYNAMIC_LDS)" dynamic LDS file))
+endif
 
 
 # ----------------------------------------------------------------------------

@@ -19,13 +19,11 @@ HEADERS=config.h conio.h dbutton.h dchars.h dirpd.h dkey.h dlcd.h dmotor.h \
 DISTFILES += include/Makefile.sub $(HEADERS:%=include/%)
 
 
-host-install:: headers-install
+headers::
 
-host-uninstall:: headers-uninstall
+headers-clean::
 
-host-clean:: headers-clean
-
-host-realclean:: headers-realclean
+headers-realclean:: headers-clean
 
 headers-install::
 	test -d $(DESTDIR)$(pkgincludedir)     || mkdir -p $(DESTDIR)$(pkgincludedir)
@@ -37,7 +35,3 @@ headers-install::
 
 headers-uninstall::
 	rm -f -r $(DESTDIR)$(pkgincludedir)
-
-headers-clean::
-
-headers-realclean:: headers-clean

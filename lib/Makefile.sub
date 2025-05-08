@@ -11,27 +11,17 @@ include lib/float/Makefile.sub
 
 DISTFILES += lib/Makefile.sub
 
-kernel:: libs
-
-kernel-clean:: libs-clean
-
-kernel-realclean:: libs-realclean
-
-kernel-install:: libs-install
-
-kernel-uninstall:: libs-uninstall
-
 
 libs:: $(LIBRARIES)
 
 libs-clean::
 
-libs-realclean:: libs-clean
+libs-realclean:: libs-clean kconfig-realclean
 	rm -f $(LIBRARIES)
 
 libs-install:: libs
 	test -d $(DESTDIR)$(pkglibdir) || mkdir -p $(DESTDIR)$(pkglibdir)
-	install -m 644 $(LIBRARIES) $(DESTDIR)$(pkglibdir)
+libs-install:: libs kconfig-install
 
-libs-uninstall::
-	rm -f -r $(DESTDIR)$(pkglibdir)
+libs-uninstall:: kconfig-uninstall
+	rm -f -r $(DESTDIR)$(pkglibdir)/$(KERNEL)

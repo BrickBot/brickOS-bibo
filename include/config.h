@@ -90,6 +90,11 @@
 #define CONF_POWERFUNCTIONS               //!< act as power functions remote control
 
 
+// Kernel-Specific modifications
+//
+#include <kernel-config.h>
+
+
 // dependencies
 //
 #if defined(CONF_ASCII) && !defined(CONF_CONIO)

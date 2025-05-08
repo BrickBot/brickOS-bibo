@@ -16,17 +16,19 @@ MAKEFILE_NAME  := $(notdir $(MAKEFILE_PATH))
 #   (This file is only named "Makefile" if installed)
 ifeq ("$(MAKEFILE_NAME)","Makefile")
   # Running as installed
-  INSTALLED_ROOT ?= $(realpath $(MAKEFILE_DIR)/../..)
-  UTILDIR        ?= $(INSTALLED_ROOT)/bin
-  KERNELDIR      ?= $(MAKEFILE_DIR)
-  LIBDIR         ?= $(INSTALLED_ROOT)/$(ARCH)/lib
-  INCLUDEDIR     ?= $(INSTALLED_ROOT)/$(ARCH)/include
+  INSTALLED_ROOT  ?= $(realpath $(MAKEFILE_DIR)/../..)
+  UTILDIR         ?= $(INSTALLED_ROOT)/bin
+  KERNELDIR       ?= $(MAKEFILE_DIR)/$(KERNEL)
+  LIBDIR          ?= $(INSTALLED_ROOT)/$(ARCH)/lib/$(KERNEL)
+  INCLUDEDIR      ?= $(INSTALLED_ROOT)/$(ARCH)/include
+  KERNELCONFIGDIR ?= $(INSTALLED_ROOT)/$(ARCH)/config
 else
   # Running from the source tree
-  UTILDIR    ?= $(MAKEFILE_DIR)/util
-  KERNELDIR  ?= $(MAKEFILE_DIR)/kernel
-  LIBDIR     ?= $(MAKEFILE_DIR)/lib
-  INCLUDEDIR ?= $(MAKEFILE_DIR)/include
+  UTILDIR         ?= $(MAKEFILE_DIR)/util
+  KERNELDIR       ?= $(MAKEFILE_DIR)/kernel
+  LIBDIR          ?= $(MAKEFILE_DIR)/lib
+  INCLUDEDIR      ?= $(MAKEFILE_DIR)/include
+  KERNELCONFIGDIR ?= $(MAKEFILE_DIR)/config
 endif
 
 
