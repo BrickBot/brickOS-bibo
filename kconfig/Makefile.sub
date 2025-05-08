@@ -1,6 +1,6 @@
 ### ==========================================================================
 ###  $Id: Makefile.sub  |  Matthew Sheets
-###  FILE: demo/Makefile.sub - make the demo programs
+###  FILE: kconfig/Makefile.sub - kernel-specific configuration
 ###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
