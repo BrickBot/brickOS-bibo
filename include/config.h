@@ -90,8 +90,17 @@
 #define CONF_POWERFUNCTIONS               //!< act as power functions remote control
 
 
-// Kernel-Specific modifications
+// Kernel-Specific Configuration Modifications
+// The kernel-config.h file is pulled in automatically by Make from the
+//   subdirectory under the kconfig matching the name of the kernel.
 //
+// Entries in kernel-config.h should only #define or #undef the configuration
+//   differences between the standard kernel configuration in this file and
+//   what might be desired for the given kernel configuration.
+//
+// Example: To add a kernel named "dcc" that adds DCC capabilities, the file
+//   kconfig/dcc/kernel-config.h would be created with the single entry of
+//   "#define CONF_DCC"
 #include <kernel-config.h>
 
 
@@ -145,7 +154,7 @@
 #error "Velocity sensor needs rotation sensor support."
 #endif
 
-//! macro used to put some legOS function in high memory area.
+//! macro used to put some kernel function in high memory area.
 #define __TEXT_INIT__  __attribute__ ((__section__ (".text.in")))
 #define __TEXT_HI__  __attribute__ ((__section__ (".text.hi")))
 
