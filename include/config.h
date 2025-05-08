@@ -37,7 +37,7 @@
 #define CONF_TIME                       //!< system time
 #define CONF_MM                         //!< memory management
 #define CONF_TM                         //!< task management
-#define CONF_SETJMP                     //!< non local goto
+//#define CONF_SETJMP                     //!< non-local goto
 #define CONF_SEMAPHORES                 //!< POSIX semaphores
 #define CONF_PROGRAM                    //!< dynamic program loading support
 #define CONF_VIS                        //!< generic visualization.
@@ -91,6 +91,7 @@
 
 
 // Kernel-Specific Configuration Modifications
+//
 // The kernel-config.h file is pulled in automatically by Make from the
 //   subdirectory under the kconfig matching the name of the kernel.
 //
