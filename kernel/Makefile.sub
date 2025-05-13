@@ -14,7 +14,7 @@ KSOURCE_PATHS=$(KSOURCE_FILES:%=kernel/%)
 KASMSOURCE_FILES=dccasm.S
 KASMSOURCE_PATHS=$(KASMSOURCE_FILES:%=kernel/%)
 
-KERNEL_FILE_TYPES=coff srec bin lds
+KERNEL_FILE_TYPES=coff srec bin lds lxMakeconf
 KERNEL_FILES:=$(KERNEL_FILE_TYPES:%=$(KERNEL_FILES_BASE).%)
 KERNEL_TARGETS:=$(KERNEL_FILES)
 
@@ -30,19 +30,20 @@ DISTFILES += kernel/Makefile.sub $(KSOURCE_PATHS) $(KASMSOURCE_PATHS)
 kernel:: $(KERNEL_TARGETS) libs
 
 kernel-clean:: libs-clean
-	rm -f kernel/*.srec kernel/*.o kernel/*.lds kernel/*.dis kernel/*.coff kernel/*.map kernel/*.d
+	rm -f $(KERNEL_TARGETS)
+	rm -f kernel/*.o kernel/*.dis kernel/*.map kernel/*.d
 
 kernel-realclean:: kernel-clean libs-realclean
 	rm -rf kernel/*~ kernel/*.bak kernel/*.tgz kernel/*.s kernel/tags kernel/*.dcoff kernel/*.dmap kernel/*.dsrec
 	rm -f  kernel/*.srec kernel/install-stamp
 
 kernel-install:: $(KERNEL_TARGETS) libs-install
-	test -d $(DESTDIR)$(pkgdatadir)/$(KERNEL) || mkdir -p $(DESTDIR)$(pkgdatadir)/$(KERNEL)
-	install -m 644 $(KERNEL_FILES) $(DESTDIR)$(pkgdatadir)/$(KERNEL)
+	test -d $(DESTDIR)$(pkgtargetkerneldir)/$(KERNEL) || mkdir -p $(DESTDIR)$(pkgtargetkerneldir)/$(KERNEL)
+	install -m 644 $(KERNEL_FILES) $(DESTDIR)$(pkgtargetkerneldir)/$(KERNEL)
 
 kernel-uninstall:: libs-uninstall
-#	cd $(DESTDIR)$(pkgdatadir)/$(KERNEL) && rm -f $(notdir $(KERNEL_FILES))
-	rm -f -r $(DESTDIR)$(pkgdatadir)/$(KERNEL)
+#	cd $(DESTDIR)$(pkgtargetkerneldir)/$(KERNEL) && rm -f $(notdir $(KERNEL_FILES))
+	rm -f -r $(DESTDIR)$(pkgtargetkerneldir)/$(KERNEL)
 
 .PHONY: all kernel kernel-install kernel-uninstall tag clean realclean depend
 
@@ -65,6 +66,11 @@ KLDFLAGS=-Th8300-rcx.ld -relax
 
 
 ############ kernel stuff
+
+# how to create the kernel-specific Makefile include for building *.lx files
+$(KERNEL_LX_MAKEFILE):
+	echo "# This file is auto-generated when making the kernel" >  $(KERNEL_LX_MAKEFILE)
+	echo "VERSION_GROUP = $(VERSION_GROUP)" >> $(KERNEL_LX_MAKEFILE)
 
 # how to build coff kernel (for symbols, disassembly etc)
 $(KERNEL_FILES_BASE).coff: $(KOBJECTS) $(KLIBRARIES)

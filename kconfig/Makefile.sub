@@ -7,6 +7,8 @@
 DISTFILES += kconfig/Makefile.sub kconfig/kernel-config.h
 DISTFILES += $(wildcard kconfig/*/kernel-config.h)
 
+KERNELCONFIG_HEADER = $(KERNELCONFIGDIR)/kernel-config.h
+
 kconfig:
 
 kconfig-clean:
@@ -14,8 +16,8 @@ kconfig-clean:
 kconfig-realclean: kconfig-clean
 
 kconfig-install:
-	test -d $(DESTDIR)$(pkgkconfigkerneldir)     || mkdir -p $(DESTDIR)$(pkgkconfigkerneldir)
-	install -m 644 $(KERNELCONFIG_HEADER) $(DESTDIR)$(pkgkconfigkerneldir)
+	test -d $(DESTDIR)$(pkgtargetkconfigkerneldir)     || mkdir -p $(DESTDIR)$(pkgtargetkconfigkerneldir)
+	install -m 644 $(KERNELCONFIG_HEADER) $(DESTDIR)$(pkgtargetkconfigkerneldir)
 
 kconfig-uninstall:
-	rm -r $(DESTDIR)$(pkgkconfigkerneldir)
+	rm -r $(DESTDIR)$(pkgtargetkconfigkerneldir)

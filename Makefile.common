@@ -6,6 +6,30 @@
 ###       (this file is included by Makefiles that build programs)
 
 # ----------------------------------------------------------------------------
+#   Environment differentiation
+# ----------------------------------------------------------------------------
+
+# "INSTALLED_ROOT" will only be defined if installed (and not if running from source tree)
+ifdef INSTALLED_ROOT
+  UTILDIR              ?= $(INSTALLED_ROOT)/bin
+  KERNELDIR            ?= $(INSTALLED_ROOT)/$(TARGET_ARCH)/boot/$(KERNEL)
+  KERNELSUBDIR_PATTERN ?= /*
+  INCLUDEDIR           ?= $(INSTALLED_ROOT)/$(TARGET_ARCH)/include/$(PACKAGE)/$(VERSION_GROUP)
+  LIBDIR               ?= $(INSTALLED_ROOT)/$(TARGET_ARCH)/lib/$(KERNEL)
+  KERNELCONFIGDIR      ?= $(INSTALLED_ROOT)/$(TARGET_ARCH)/include/kconfig
+else
+  SOURCE_ROOT          ?= .
+
+  UTILDIR              ?= $(SOURCE_ROOT)/util
+  KERNELDIR            ?= $(SOURCE_ROOT)/kernel
+  KERNELSUBDIR_PATTERN ?= 
+  INCLUDEDIR           ?= $(SOURCE_ROOT)/include
+  LIBDIR               ?= $(SOURCE_ROOT)/lib
+  KERNELCONFIGDIR      ?= $(SOURCE_ROOT)/kconfig
+endif
+
+
+# ----------------------------------------------------------------------------
 #   Variable declarations
 # ----------------------------------------------------------------------------
 
@@ -55,6 +79,7 @@ ARCH := $(shell $(CROSSCC) -dumpmachine)
 #  Linker command files dynamic executables  (variable "$(KERNEL_FILES_BASE)" is without the extension).
 #
 KERNEL_FILES_BASE = $(KERNELDIR)/$(KERNEL)
+KERNEL_LX_MAKEFILE = $(KERNEL_FILES_BASE).lxMakeconf
 DYNAMIC_LDS = $(KERNEL_FILES_BASE).lds
 DLDFLAGS    = -T $(DYNAMIC_LDS) -relax -L$(LIBDIR)
 
@@ -65,8 +90,8 @@ DLDFLAGS    = -T $(DYNAMIC_LDS) -relax -L$(LIBDIR)
 BASE1_DEFAULT = 0xb000
 BASE2_DEFAULT = 0xb210
 
-GET_BASE_FROM_FILE = $(shell [ -e $(2) ] && cat $(2) | grep -E ^$(1)[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$ | sed s/$(1)[[:space:]]*=[[:space:]]*// )
-GET_BASE_FROM_LDS  = $(call GET_BASE_FROM_FILE,$(1),$(DYNAMIC_LDS))
+GET_CONF_FROM_FILE = $(shell [ -e $(2) ] && cat $(2) | grep -E ^$(1)[[:space:]]*=[[:space:]]*0x[0-9A-Fa-f]{4}$ | sed s/$(1)[[:space:]]*=[[:space:]]*// )
+GET_BASE_FROM_LDS    = $(call GET_CONF_FROM_FILE,$(1),$(DYNAMIC_LDS))
 
 # Tracking BASE1 and BASE2 in the Makefile provides fallback support if unable
 #   to read the dynamic LDS file, but such static tracking breaks support for
@@ -83,7 +108,7 @@ BASE2 = 0xaf40
 GET_BASE = $(or $(call GET_BASE_FROM_LDS,$(1)),$($(1)),$($(1)_DEFAULT))
 
 # Empty if the base has not changed, new base value if it has changed
-BASE_CHANGED = $(if $(findstring $(call GET_BASE_FROM_FILE,$(1),Makefile.common),$(call GET_BASE,$(1))),,$(call GET_BASE,$(1)))
+BASE_CHANGED = $(if $(findstring $(call GET_CONF_FROM_FILE,$(1),Makefile.common),$(call GET_BASE,$(1))),,$(call GET_BASE,$(1)))
 
 # Update the BASE1 and BASE2 addresses in Makefile.common only if there has been a change
 BaseAddresses: $(KERNEL_FILES_BASE).lds

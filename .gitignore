@@ -63,6 +63,7 @@ Makefile.config
 *.srec
 *.bin
 *.lds
+*.lxMakeconf
 
 # BrickOS / Bibo RCX Program Outputs
 *.lx

@@ -8,27 +8,21 @@
 
 # PACKAGE MAINTAINERS: Adjust here the default paths of where files were installed
 #   if these paths differ from your packaging system defaults.
-MAKEFILE_PATH  := $(realpath $(lastword $(MAKEFILE_LIST)))
-MAKEFILE_DIR   := $(realpath $(dir $(MAKEFILE_PATH)))
+# Using $(abspath x) here so that symlinks are NOT replaced
+MAKEFILE_PATH  := $(abspath $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_DIR   := $(abspath $(dir $(MAKEFILE_PATH)))
 MAKEFILE_NAME  := $(notdir $(MAKEFILE_PATH))
 
 # Determine whether running from source tree or if installed
 #   (This file is only named "Makefile" if installed)
 ifeq ("$(MAKEFILE_NAME)","Makefile")
-  # Running as installed
-  INSTALLED_ROOT  ?= $(realpath $(MAKEFILE_DIR)/../..)
-  UTILDIR         ?= $(INSTALLED_ROOT)/bin
-  KERNELDIR       ?= $(MAKEFILE_DIR)/$(KERNEL)
-  LIBDIR          ?= $(INSTALLED_ROOT)/$(ARCH)/lib/$(KERNEL)
-  INCLUDEDIR      ?= $(INSTALLED_ROOT)/$(ARCH)/include
-  KERNELCONFIGDIR ?= $(INSTALLED_ROOT)/$(ARCH)/config
+  # Running as installed, so set the root path of the installation
+  INSTALLED_ROOT ?= $(abspath $(MAKEFILE_DIR)/../..)
+  $(info "Running as installed from $(INSTALLED_ROOT)")
 else
   # Running from the source tree
-  UTILDIR         ?= $(MAKEFILE_DIR)/util
-  KERNELDIR       ?= $(MAKEFILE_DIR)/kernel
-  LIBDIR          ?= $(MAKEFILE_DIR)/lib
-  INCLUDEDIR      ?= $(MAKEFILE_DIR)/include
-  KERNELCONFIGDIR ?= $(MAKEFILE_DIR)/config
+  include $(MAKEFILE_DIR)/Makefile.config
+  $(info "Running from source tree at $(MAKEFILE_DIR)")
 endif
 
 
@@ -58,52 +52,55 @@ PROGRAM_MAIN_SOURCES := $(PROGRAM_MAIN_SOURCE)
 $(PROGRAM_MAIN_NAME)_SRC := $(filter-out $(PROGRAM_MAIN_SOURCE),$(SOURCES))
 else
 # Hard-coded example:
-PROGRAM_MAIN_SOURCES?=helloworld.c
+PROGRAM_MAIN_SOURCES?=hello-C.c
 
 # extra dynamic sources  - program name (e.g. helloworld.c/.cpp) is always assumed
-helloworld_SRC?= 
+hello-C_SRC?= 
 endif
 
 # Program list and dependencies
 #
 PROGRAMS?=$(call replace_extensions,PROGRAM_MAIN_SOURCES,.lx)
+# Library form of programs for use with emulator
+PROGRAMS_AS_LIBRARIES=$(patsubst %.lx,%.a,$(PROGRAMS))
+PROGRAM_OUTPUTS=$(PROGRAMS) $(PROGRAMS_AS_LIBRARIES)
+
 PROGRAM_ADDITIONAL_SOURCES = $(foreach prog,$(basename $(PROGRAMS)),$($(prog)_SRC))
-PROGRAM_OBJECTS = $(call replace_extensions,PROGRAM_ADDITIONAL_SOURCES,.o)
--include $(PROGRAMS:%.lx=%.d) $(PROGRAM_OBJECTS:%.o=%.d)
+PROGRAM_ADDITIONAL_OBJECTS = $(call replace_extensions,PROGRAM_ADDITIONAL_SOURCES,.o)
+-include $(PROGRAMS:%.lx=%.d) $(PROGRAM_ADDITIONAL_OBJECTS:%.o=%.d)
 
 
 # Default target
 #
-all:: $(PROGRAMS) $(patsubst %.lx,%.a,$(PROGRAMS)) $(patsubst %.o,%.a,$(PROGRAM_OBJECTS))
+all:: $(PROGRAM_OUTPUTS) $(patsubst %.o,%.a,$(PROGRAM_ADDITIONAL_OBJECTS))
 
 # Tell Make not to auto-delete:
 #   *.o files are needed by the emulator when loading a program as a *.a file
-.SECONDARY:: $(PROGRAM_OBJECTS)
-
-
-include $(MAKEFILE_DIR)/Makefile.common
+.SECONDARY:: $(PROGRAM_ADDITIONAL_OBJECTS)
 
 
 # Verify that a valid kernel has been specified and a corresponding *.lds file exists
 #
-ifdef KERNEL
-ifeq ($(words $(wildcard $(DYNAMIC_LDS))),0)
-  $(error ERROR: File "$(DYNAMIC_LDS)" for kernel "$(KERNEL)" not found)
-else
-  $(info Found "$(DYNAMIC_LDS)" for kernel "$(KERNEL)")
-endif
-else
-  FOUND_LDS_FILES := $(wildcard $(KERNELDIR)/*.lds)
+ifndef KERNEL
+  # Search both the current directory (for if running from the source tree)
+  #   and any immediate subdirectories (for if installed)
+  FOUND_LDS_FILES := $(wildcard $(KERNELDIR)$(KERNELDIR_PATTERN)/*.lds)
   ifeq ($(words $(FOUND_LDS_FILES)),1)
     KERNEL := $(basename $(notdir $(FOUND_LDS_FILES)))
     # Now that KERNEL has been found and defined, DYNAMIC_LDS should work	
-    $(info A single LDS file "$(DYNAMIC_LDS)" found, for kernel "$(KERNEL)")
+    $(info A single LDS file "$(FOUND_LDS_FILES)" found, for kernel "$(KERNEL)")
   else ifeq ($(words $(FOUND_LDS_FILES)),0)
     $(error ERROR: No kernel specified, and no dynamic linker "*.lds" files found under "$(KERNELDIR)")
   else
     $(error ERROR: No kernel specified, but multiple dynamic linker "*.lds" files found under "$(KERNELDIR)")
   endif
 endif
+
+
+include $(MAKEFILE_DIR)/Makefile.common
+
+# Include dynamic settings specific to a given kernel configuration
+include $(KERNEL_LX_MAKEFILE)
 
 
 # Targets

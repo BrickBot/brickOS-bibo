@@ -7,25 +7,23 @@
 
 include Makefile.config
 
-#  org and package/distribution names (all lowercase by convention)
+# Project-related names (all lowercase by convention)
 ORG = brickbot
-PACKAGE ?= brickos
+PACKAGE = brickos
+TARGET_ARCH = h8300-lego-brickos-coff
 KERNEL ?= bibo
 
-#  version of this release
-VERSION = 0.10.0
+# Version of this release
+VERSION_MAJOR = 1
+VERSION_MINOR = 0
+VERSION_PATCH = 0
+VERSION = $(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
 
-# Default values to use when building prior to installation
-LIBDIR?=lib
-UTILDIR?=util
-INCLUDEDIR?=include
-KERNELDIR?=kernel
-KERNELCONFIGDIR?=kconfig/$(KERNEL)
-KERNELCONFIG_HEADER = $(KERNELCONFIGDIR)/kernel-config.h
+VERSION_GROUP = v$(VERSION_MAJOR)
 
 
 #
-#  Define our default install locations (overridden by packaging systems)
+#  Define default install locations (overridden by packaging systems)
 #
 DESTDIR ?= 
 prefix ?= /opt/stow/${PACKAGE}
@@ -35,23 +33,26 @@ bindir ?= ${exec_prefix}/bin
 sbindir ?= ${exec_prefix}/sbin
 libexecdir ?= ${exec_prefix}/lib
 datarootdir ?= ${prefix}/share
+datadir ?= ${datarootdir}
 docdir ?= ${prefix}/share/doc
-targetdir ?= ${prefix}/${ARCH}
 sysconfdir ?= ${prefix}/etc
 sharedstatedir ?= ${prefix}/com
 localstatedir ?= ${prefix}/var
-mandir ?= ${datarootdir}/man
+mandir ?= ${datadir}/man
 includedir ?= ${prefix}/include
 
-pkgdatadir ?= ${datarootdir}/${PACKAGE}
+pkgdatadir ?= ${datadir}/${PACKAGE}
 pkgdocdir ?= ${docdir}/packages/${PACKAGE}
 pkghtmldir ?= ${pkgdocdir}/html
 pkgexampledir ?= ${pkgdocdir}/examples
-pkgincludedir ?= ${targetdir}/include
-pkglibdir ?= ${targetdir}/lib
 
-pkgkconfigdir ?= ${targetdir}/kconfig
-pkgkconfigkerneldir ?= ${pkgkconfigdir}/$(KERNEL)
+pkgtargetdir ?= ${prefix}/${TARGET_ARCH}
+pkgtargetkerneldir ?= ${pkgtargetdir}/boot
+pkgtargetlibdir ?= ${pkgtargetdir}/lib
+pkgtargetdatadir ?= ${pkgtargetdir}/share
+pkgtargetincludedir ?= ${pkgtargetdir}/include/${PACKAGE}/${VERSION_GROUP}
+pkgtargetkconfigdir ?= ${pkgtargetdir}/include/kconfig
+pkgtargetkconfigkerneldir ?= ${pkgtargetkconfigdir}/${KERNEL}
 
 
 # ------------------------------------------------------------
@@ -124,6 +125,7 @@ makefiles-install::
 	sed -e '/Installation Variables/a \
 	ORG = $(ORG)\
 	PACKAGE = $(PACKAGE)\
+	TARGET_ARCH = $(TARGET_ARCH)\
 	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)\
 	CROSSTOOLSUFFIX = $(CROSSTOOLSUFFIX)\
 	CROSSTOOLEXT    = $(CROSSTOOLEXT)'\
@@ -133,9 +135,10 @@ makefiles-install::
 	sed -e '/Installation Variables/a \
 	ORG=$(ORG)\
 	PACKAGE=$(PACKAGE)\
-	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)\
-	CROSSTOOLSUFFIX = $(CROSSTOOLSUFFIX)\
-	CROSSTOOLEXT    = $(CROSSTOOLEXT)'\
+	TARGET_ARCH=$(TARGET_ARCH)\
+	CROSSTOOLPREFIX=$(CROSSTOOLPREFIX)\
+	CROSSTOOLSUFFIX=$(CROSSTOOLSUFFIX)\
+	CROSSTOOLEXT=$(CROSSTOOLEXT)'\
 		< makelx.sh  > $(DESTDIR)$(bindir)/makelx
 	chmod 755 $(DESTDIR)$(bindir)/makelx
 
