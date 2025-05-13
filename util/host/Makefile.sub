@@ -50,24 +50,24 @@ MAN1_PATHS = $(MAN1_FILES:%=util/host/%)
 
 host:: $(HOST_PATHS)
 
-host-clean:: headers-clean
+host-clean::
 	rm -f util/host/*.d util/host/*.o
 	rm -f util/host/*.srec util/host/*.coff
 	rm -f $(MKIMG) util/host/fastdl.h
 	rm -f util/host/lnp-logical.c util/host/lnp.c
 	rm -f util/host/fastdl_*.h
 
-host-realclean:: host-clean headers-realclean
+host-realclean:: host-clean
 	rm -f util/host/*~ util/host/*.bak 
 	rm -f $(HOST_PATHS)
 
-host-install:: $(HOST_PATHS) $(MAN1_PATHS) headers-install
+host-install:: $(HOST_PATHS) $(MAN1_PATHS)
 	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
 	install -s -m 755  $(HOST_PATHS) $(DESTDIR)$(bindir)/
 	test -d $(DESTDIR)$(mandir)/man1 || mkdir -p $(DESTDIR)$(mandir)/man1
 	install -m 644 $(MAN1_PATHS) $(DESTDIR)$(mandir)/man1/
 
-host-uninstall:: headers-uninstall
+host-uninstall::
 	rm -f $(MAN1_FILES:%=$(DESTDIR)$(mandir)/man1/%) $(HOST_FILES:%=$(DESTDIR)$(bindir)/%)
 
 
