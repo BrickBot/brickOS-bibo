@@ -90,8 +90,8 @@
 
 #define RCX_COMM_OPTIONS	"Options:\n" \
 	"  -t<device>   , --tty=<device>        set the IR device to <device>\n" \
-    RCX_PLATFORM_DEVICE_OPTIONS \
 	"    <device> may take one of the following formats:\n" \
+    RCX_PLATFORM_DEVICE_OPTIONS \
 	"                 tcp:<host>[:<port>]   (e.g. tcp:localhost:50637)\n" \
 	"                 ncd:<host>:<port>     (e.g. tcp:localhost:87)\n" \
     "                 com:<device name>     non-echo, non-keepalive serial device\n" \
