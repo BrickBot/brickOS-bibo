@@ -50,7 +50,7 @@ demo-clean::
 	rm -f demo/c/*.dmap demo/c/*.dcoff 
 	rm -f demo/c/*~     demo/c/*.bak  demo/c/*.srec demo/c/*.map demo/c/*.coff
 
-demo-realclean:: clean
+demo-realclean:: demo-clean
 	rm -f demo/c/*.lx  demo/c/*.a  demo/c/*.o
 
 # depencencies

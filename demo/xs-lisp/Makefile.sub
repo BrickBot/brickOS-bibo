@@ -37,7 +37,7 @@ demo-clean::
 	rm -f demo/xs-lisp/*.srec  demo/xs-lisp/*.coff  demo/xs-lisp/*.map
 	rm -f demo/xs-lisp/*~      demo/xs-lisp/*.bak
 
-demo-realclean::
+demo-realclean:: demo-clean
 	rm -f demo/xs-lisp/*.lx  demo/xs-lisp/*.a  demo/xs-lisp/*.o
 
 #eval-host$(EXT): $(XSEVAL) $(XSSRC)

@@ -32,7 +32,7 @@ demo-clean::
 	rm -f demo/esterel/*.dmap demo/esterel/*.dcoff 
 	rm -f demo/esterel/*~     demo/esterel/*.bak  demo/esterel/*.srec demo/esterel/*.map demo/esterel/*.coff
 
-demo-realclean:: clean
+demo-realclean:: demo-clean
 	rm -f demo/esterel/*.lx   demo/esterel/*.a  demo/esterel/*.o
 
 # depencencies
