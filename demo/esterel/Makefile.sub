@@ -10,7 +10,9 @@ DEMO_ESTEREL_SOURCE_PATHS=$(DEMO_ESTEREL_SOURCE_FILES:%=demo/esterel/%)
 # Only build the Esterel programs if the Esterel compiler can be found
 ifneq ($(shell which esterel),)
   DEMO_ESTEREL_PROGRAMS=$(patsubst %.strl,%.lx,$(DEMO_ESTEREL_SOURCE_PATHS))
-  DEMO_ESTEREL_PROGRAM_OUTPUTS=$(DEMO_ESTEREL_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_ESTEREL_PROGRAMS))
+  # Library form of programs for use with emulator
+  DEMO_ESTEREL_PROGRAMS_AS_LIBRARIES=$(patsubst %.lx,%.a,$(DEMO_ESTEREL_PROGRAMS))
+  DEMO_ESTEREL_PROGRAM_OUTPUTS=$(DEMO_ESTEREL_PROGRAMS) $(DEMO_ESTEREL_PROGRAMS_AS_LIBRARIES)
   DEMO_ESTEREL_OBJS=
 
   DEMO_PROGRAMS += DEMO_ESTEREL_PROGRAMS

@@ -9,7 +9,9 @@ DEMO_C_SOURCE_FILES=hello-C.c helloworld_lnp.c cpu.c dccthrottle.c edgecounting.
           primitives.c robots.c rover.c screen.c sound.c trailerbot.c
 DEMO_C_SOURCE_PATHS=$(DEMO_C_SOURCE_FILES:%=demo/c/%)
 DEMO_C_PROGRAMS=$(patsubst %.c,%.lx,$(DEMO_C_SOURCE_PATHS))
-DEMO_C_PROGRAM_OUTPUTS=$(DEMO_C_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_C_PROGRAMS))
+# Library form of programs for use with emulator
+DEMO_C_PROGRAMS_AS_LIBRARIES=$(patsubst %.lx,%.a,$(DEMO_C_PROGRAMS))
+DEMO_C_PROGRAM_OUTPUTS=$(DEMO_C_PROGRAMS) $(DEMO_C_PROGRAMS_AS_LIBRARIES)
 
 DEMO_PROGRAMS += DEMO_C_PROGRAMS
 

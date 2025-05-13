@@ -14,7 +14,9 @@ DEMO_XS_SOURCE_FILES=fact.lsp hello-xsLisp.lsp lib.lsp range.lsp remote.lsp rove
 # sample.lsp is too large to build under a typical kernel configuration
 DEMO_XS_SOURCE_PATHS=$(DEMO_XS_SOURCE_FILES:%=demo/xs-lisp/%)
 DEMO_XS_PROGRAMS=$(patsubst %.lsp, %.lx, $(DEMO_XS_SOURCE_PATHS))
-DEMO_XS_PROGRAM_OUTPUTS=$(DEMO_XS_PROGRAMS) $(patsubst %.lx,%.a,$(DEMO_XS_PROGRAMS))
+# Library form of programs for use with emulator
+DEMO_XS_PROGRAMS_AS_LIBRARIES=$(patsubst %.lx,%.a,$(DEMO_XS_PROGRAMS))
+DEMO_XS_PROGRAM_OUTPUTS=$(DEMO_XS_PROGRAMS) $(DEMO_XS_PROGRAMS_AS_LIBRARIES)
 DEMO_XS_OBJS=
 
 DEMO_PROGRAMS += DEMO_XS_PROGRAMS
