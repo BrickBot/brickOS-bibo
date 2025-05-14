@@ -68,6 +68,9 @@ Makefile.config
 # BrickOS / Bibo RCX Program Outputs
 *.lx
 
+# BrickOS / Bibo RCX Program Intermediate Outputs
+*.d[cs][12]
+
 # BrickOS / Bibo Intermediate Files
 util/host/fastdl_*.h
 util/include/
