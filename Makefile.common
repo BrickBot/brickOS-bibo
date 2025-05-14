@@ -6,31 +6,166 @@
 ###       (this file is included by Makefiles that build programs)
 
 # ----------------------------------------------------------------------------
-#   Environment differentiation
+#   Initialization
+# ----------------------------------------------------------------------------
+
+# Using $(abspath x) here so that symlinks are NOT replaced
+MAKEFILE_PATH  := $(abspath $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_DIR   := $(abspath $(dir $(MAKEFILE_PATH)))
+MAKEFILE_NAME  := $(notdir $(MAKEFILE_PATH))
+
+
+# ----------------------------------------------------------------------------
+#   Environment Differentiation: Source Tree vs. Installed
 # ----------------------------------------------------------------------------
 
 # "INSTALLED_ROOT" will only be defined if installed (and not if running from source tree)
-ifdef INSTALLED_ROOT
-  UTILDIR              ?= $(INSTALLED_ROOT)/bin
-  KERNELDIR            ?= $(INSTALLED_ROOT)/$(TARGET_ARCH)/boot/$(KERNEL)
-  KERNELSUBDIR_PATTERN ?= /*
-  INCLUDEDIR           ?= $(INSTALLED_ROOT)/$(TARGET_ARCH)/include/$(PACKAGE)/$(VERSION_GROUP)
-  LIBDIR               ?= $(INSTALLED_ROOT)/$(TARGET_ARCH)/lib/$(KERNEL)
-  KERNELCONFIGDIR      ?= $(INSTALLED_ROOT)/$(TARGET_ARCH)/include/kconfig
+ifeq ("$(wildcard $(MAKEFILE_DIR)/makelx.sh)","")
+  # Running as installed, so set the root path of the installation
+  RUNTIME_ROOT         ?= $(abspath $(MAKEFILE_DIR)/../../..)
+  $(info Running as installed from $(RUNTIME_ROOT))
+  
+  BINDIR     ?= $(RUNTIME_ROOT)/$(BINSUBDIR)
+  LIBEXECDIR ?= $(RUNTIME_ROOT)/$(LIBEXECSUBDIR)
+  
+  ARCHDIR            ?= $(RUNTIME_ROOT)/$(ARCHSUBDIR)
+  INCLUDEDIR         ?= $(ARCHDIR)/$(ARCH_INCLUDE_PACKAGESUBDIR)
+  KCONFIGDIR         ?= $(ARCHDIR)/$(ARCH_INCLUDE_KCONFIGSUBDIR)
+  KCONFIGINSTANCEDIR ?= $(ARCHDIR)/$(ARCH_INCLUDE_KCONFIG_INSTANCESUBDIR)
+  KERNELDIR          ?= $(ARCHDIR)/$(ARCH_KERNELSUBDIR)
+  KERNELINSTANCEDIR  ?= $(ARCHDIR)/$(ARCH_KERNEL_INSTANCESUBDIR)
+  LIBDIR             ?= $(ARCHDIR)/$(ARCH_LIB_INSTANCESUBDIR)
+  
+  MULTIKERNELSUBDIR_SEARCH_PATTERN ?= /*
 else
-  SOURCE_ROOT          ?= .
+  # Running from the source tree
+  RUNTIME_ROOT         ?= $(MAKEFILE_DIR)
+  $(info Running relative to the source tree at $(MAKEFILE_DIR))
 
-  UTILDIR              ?= $(SOURCE_ROOT)/util
-  KERNELDIR            ?= $(SOURCE_ROOT)/kernel
-  KERNELSUBDIR_PATTERN ?= 
-  INCLUDEDIR           ?= $(SOURCE_ROOT)/include
-  LIBDIR               ?= $(SOURCE_ROOT)/lib
-  KERNELCONFIGDIR      ?= $(SOURCE_ROOT)/kconfig
+  BINDIR     ?= util
+  LIBEXECDIR ?= util
+  
+  INCLUDEDIR         ?= $(INCLUDESUBDIR)
+  KCONFIGDIR         ?= $(KCONFIGSUBDIR)
+  KCONFIGINSTANCEDIR ?= $(KCONFIGINSTANCESUBDIR)
+  KERNELDIR          ?= kernel
+  KERNELINSTANCEDIR  ?= $(KERNELDIR)
+  LIBDIR             ?= $(LIBSUBDIR)
+
+  MULTIKERNELSUBDIR_SEARCH_PATTERN ?=
+
+# Since we are not installed, we need to ensure we are properly configured
+include $(MAKEFILE_DIR)/Makefile.config
+
+$(MAKEFILE_DIR)/Makefile.config:
+	$(MAKEFILE_DIR)/configure
+
 endif
 
 
 # ----------------------------------------------------------------------------
-#   Variable declarations
+#   Directory Path Variables Configuration
+# ----------------------------------------------------------------------------
+
+# PACKAGE MAINTAINERS: Adjust here the default paths of where files were installed
+#   if these paths differ from your packaging system defaults.
+
+# Default subdirectory names
+BINSUBDIR         ?= bin
+SBINSUBDIR        ?= sbin
+LIBEXECSUBDIR     ?= libexec
+LIBSUBDIR         ?= lib
+SYSCONFSUBDIR     ?= etc
+SHAREDSTATESUBDIR ?= com
+LOCALSTATESUBDIR  ?= var
+INCLUDESUBDIR     ?= include
+DATASUBDIR        ?= share
+INFOSUBDIR        ?= info
+LOCALESUBDIR      ?= locale
+MANSUBDIR         ?= man
+MAN1SUBDIR        ?= man1
+DOCSUBDIR         ?= doc
+HTMLSUBDIR        ?= html
+
+ARCHSUBDIR            ?= $(TARGET_ARCH)
+KERNELSUBDIR          ?= boot
+KCONFIGSUBDIR         ?= kconfig
+KCONFIGINSTANCESUBDIR ?= $(KCONFIGSUBDIR)/$(KERNEL)
+
+# Default subdir combinations
+ARCH_SYSCONF_PACKAGESUBDIR          ?= $(SYSCONFSUBDIR)/$(PACKAGE)
+ARCH_INCLUDE_PACKAGESUBDIR          ?= $(INCLUDESUBDIR)/$(PACKAGE)/$(VERSION_SERIES)
+ARCH_INCLUDE_KCONFIGSUBDIR          ?= $(INCLUDESUBDIR)/$(KCONFIGSUBDIR)
+ARCH_INCLUDE_KCONFIG_INSTANCESUBDIR ?= $(INCLUDESUBDIR)/$(KCONFIGINSTANCESUBDIR)
+ARCH_KERNELSUBDIR                   ?= $(KERNELSUBDIR)
+ARCH_KERNEL_INSTANCESUBDIR          ?= $(KERNELSUBDIR)/$(KERNEL)
+ARCH_LIB_INSTANCESUBDIR             ?= $(LIBSUBDIR)/$(KERNEL)
+
+#
+#  Define default install paths (overridden by packaging systems)
+#
+DESTDIR ?= 
+prefix ?= /opt/stow/${PACKAGE}
+exec_prefix ?= ${prefix}
+
+bindir ?= ${exec_prefix}/${BINSUBDIR}
+sbindir ?= ${exec_prefix}/${SBINSUBDIR}
+libexecdir ?= ${exec_prefix}/${LIBEXECSUBDIR}
+libdir ?= ${exec_prefix}/${LIBSUBDIR}
+
+sysconfdir ?= ${prefix}/${SYSCONFSUBDIR}
+sharedstatedir ?= ${prefix}/${SHAREDSTATESUBDIR}
+localstatedir ?= ${prefix}/${LOCALSTATESUBDIR}
+includedir ?= ${prefix}/${INCLUDESUBDIR}
+datarootdir ?= ${prefix}/${DATASUBDIR}
+
+datadir ?= ${datarootdir}
+infodir ?= ${datadir}/${INFOSUBDIR}
+localedir ?= ${datadir}/${LOCALESUBDIR}
+docdir ?= ${datadir}/${DOCSUBDIR}
+htmldir ?= ${docdir}/${HTMLSUBDIR}
+mandir ?= ${datadir}/${MANSUBDIR}
+man1dir ?= ${mandir}/${MAN1SUBDIR}
+
+pkgdatadir ?= ${datadir}/${PACKAGE}
+pkgdocdir ?= ${docdir}/packages/${PACKAGE}
+pkghtmldir ?= ${pkgdocdir}/${HTMLSUBDIR}
+pkgexampledir ?= ${pkgdocdir}/${EXAMPLESSUBDIR}
+
+pkgtargetdir                ?= ${prefix}/${ARCHSUBDIR}
+pkgtargetincludedir         ?= ${pkgtargetdir}/${ARCH_INCLUDE_PACKAGESUBDIR}
+pkgtargetkconfigdir         ?= ${pkgtargetdir}/${ARCH_INCLUDE_KCONFIGSUBDIR}
+pkgtargetkconfiginstancedir ?= ${pkgtargetdir}/${ARCH_INCLUDE_KCONFIG_INSTANCESUBDIR}
+pkgtargetkerneldir          ?= ${pkgtargetdir}/${ARCH_KERNELSUBDIR}
+pkgtargetkernelinstancedir  ?= ${pkgtargetdir}/${ARCH_KERNEL_INSTANCESUBDIR}
+pkgtargetlibinstancedir     ?= ${pkgtargetdir}/${ARCH_LIB_INSTANCESUBDIR}
+pkgtargetsysconfdir         ?= ${pkgtargetdir}/${ARCH_SYSCONF_PACKAGESUBDIR}
+
+
+# ----------------------------------------------------------------------------
+#   Kernel Name Check
+# ----------------------------------------------------------------------------
+
+# If building a kernel or *.lx program, a name (KERNEL) needs to be specified.
+#   If NOT specified, check if a single, distinct kernel name can be found.
+ifndef KERNEL
+  # Search both the current directory (for if running from the source tree)
+  #   and any immediate subdirectories (for if installed)
+  FOUND_LDS_FILES := $(wildcard $(KERNELDIR)$(MULTIKERNELSUBDIR_SEARCH_PATTERN)/*.lds)
+  ifeq ($(words $(FOUND_LDS_FILES)),1)
+    KERNEL := $(basename $(notdir $(FOUND_LDS_FILES)))
+    # Now that KERNEL has been found and defined, DYNAMIC_LDS should work	
+    $(info A single LDS file "$(FOUND_LDS_FILES)" found, for kernel "$(KERNEL)")
+  else ifeq ($(words $(FOUND_LDS_FILES)),0)
+    $(error ERROR: No kernel specified, and no dynamic linker "*.lds" files found under "$(KERNELDIR)")
+  else
+    $(error ERROR: No kernel specified, but multiple dynamic linker "*.lds" files found under "$(KERNELDIR)")
+  endif
+endif
+
+
+# ----------------------------------------------------------------------------
+#   Build Variables Configuration
 # ----------------------------------------------------------------------------
 
 #  User application libraries. Comment out if linking
@@ -49,7 +184,7 @@ CFLAGS =$(COPT) $(CWARN) $(CINC)
 #
 CROSSCOPT  =$(COPT) -mquickcall
 CROSSCWARN =$(CWARN)
-CROSSCINC  =-I$(INCLUDEDIR) -I$(KERNELCONFIGDIR)
+CROSSCINC  =-I$(INCLUDEDIR) -I$(KCONFIGINSTANCEDIR)
 CROSSCFLAGS   =$(CROSSCOPT) $(CROSSCWARN) $(CROSSCINC) $(CROSSCDEFINES)
 CROSSCXXFLAGS =-DCXX -fno-rtti -fno-exceptions $(CROSSCFLAGS)
 CROSSPFLAGS   =$(CROSSCFLAGS) --extended-syntax --unit-path=$(BRICKOS_ROOT)/lib/p --automake
@@ -68,17 +203,17 @@ CROSSCC  =$(CROSSTOOLPREFIX)gcc$(CROSSTOOLSUFFIX)
 CROSSCXX =$(CROSSTOOLPREFIX)g++$(CROSSTOOLSUFFIX)
 CROSSGPC =$(CROSSTOOLPREFIX)gpc$(CROSSTOOLSUFFIX)
 
-MERGEMAP =$(UTILDIR)/merge-map$(EXT)
-FIXDEPS	 =$(UTILDIR)/fixdeps$(EXT)
-GENLDS   =$(UTILDIR)/genlds$(EXT)
-WRITELX	 =$(UTILDIR)/writelx$(EXT)
+#MERGEMAP = $(LIBEXECDIR)/merge-map$(EXT)
+#FIXDEPS  = $(LIBEXECDIR)/fixdeps$(EXT)
+GENLDS   = $(LIBEXECDIR)/genlds$(EXT)
+WRITELX	 = $(LIBEXECDIR)/writelx$(EXT)
 
 ARCH := $(shell $(CROSSCC) -dumpmachine)
 
 
 #  Linker command files dynamic executables  (variable "$(KERNEL_FILES_BASE)" is without the extension).
 #
-KERNEL_FILES_BASE = $(KERNELDIR)/$(KERNEL)
+KERNEL_FILES_BASE = $(KERNELINSTANCEDIR)/$(KERNEL)
 KERNEL_LX_MAKEFILE = $(KERNEL_FILES_BASE).lxMakeconf
 DYNAMIC_LDS = $(KERNEL_FILES_BASE).lds
 DLDFLAGS    = -T $(DYNAMIC_LDS) -relax -L$(LIBDIR)
@@ -97,7 +232,7 @@ GET_BASE_FROM_LDS    = $(call GET_CONF_FROM_FILE,$(1),$(DYNAMIC_LDS))
 #   to read the dynamic LDS file, but such static tracking breaks support for
 #   dynamically installing and working with different kernels. Leaving support
 #   for static BASE tracking for if needed but disabling by default.
-ifdef TRACK_BASE_IN_MAKEFILE
+ifdef RECORD_BASE_IN_MAKEFILE
 #  Base addresses updated from $(DYNAMIC_LDS) in kernel/Makefile.sub, target BaseAddresses
 #  (Values should be checked as kernel changes but kept as backup if GET_BASE fails)
 BASE1 = 0xad30
@@ -132,6 +267,10 @@ endif
 
 %.dcoff: %.o %.a $(DYNAMIC_LDS)
 	$(CROSSLD) $(DLDFLAGS) $*.o $*.a $(CROSSLIBS) -o $@ -Ttext $(call GET_BASE,BASE1) --oformat coff-h8300
+
+#  How to make kernel lds files
+%.lds: %.coff $(GENLDS)
+	$(CROSSNM) $< | sort -u | $(GENLDS) $* > $@
 
 #  How to make barebones dymanic executable map files
 %.dmap: %.dcoff

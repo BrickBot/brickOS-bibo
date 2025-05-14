@@ -5,12 +5,10 @@
 ### --------------------------------------------------------------------------
 ###   (This is the top-level Makefile.  All actions are performed from here)
 
-include Makefile.config
-
 # Project-related names (all lowercase by convention)
 ORG = brickbot
 PACKAGE = brickos
-TARGET_ARCH = h8300-lego-brickos-coff
+TARGET_ARCH = h8300-lego-coff
 KERNEL ?= bibo
 
 # Version of this release
@@ -19,40 +17,7 @@ VERSION_MINOR = 0
 VERSION_PATCH = 0
 VERSION = $(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
 
-VERSION_GROUP = v$(VERSION_MAJOR)
-
-
-#
-#  Define default install locations (overridden by packaging systems)
-#
-DESTDIR ?= 
-prefix ?= /opt/stow/${PACKAGE}
-exec_prefix ?= ${prefix}
-
-bindir ?= ${exec_prefix}/bin
-sbindir ?= ${exec_prefix}/sbin
-libexecdir ?= ${exec_prefix}/lib
-datarootdir ?= ${prefix}/share
-datadir ?= ${datarootdir}
-docdir ?= ${prefix}/share/doc
-sysconfdir ?= ${prefix}/etc
-sharedstatedir ?= ${prefix}/com
-localstatedir ?= ${prefix}/var
-mandir ?= ${datadir}/man
-includedir ?= ${prefix}/include
-
-pkgdatadir ?= ${datadir}/${PACKAGE}
-pkgdocdir ?= ${docdir}/packages/${PACKAGE}
-pkghtmldir ?= ${pkgdocdir}/html
-pkgexampledir ?= ${pkgdocdir}/examples
-
-pkgtargetdir ?= ${prefix}/${TARGET_ARCH}
-pkgtargetkerneldir ?= ${pkgtargetdir}/boot
-pkgtargetlibdir ?= ${pkgtargetdir}/lib
-pkgtargetdatadir ?= ${pkgtargetdir}/share
-pkgtargetincludedir ?= ${pkgtargetdir}/include/${PACKAGE}/${VERSION_GROUP}
-pkgtargetkconfigdir ?= ${pkgtargetdir}/include/kconfig
-pkgtargetkconfigkerneldir ?= ${pkgtargetkconfigdir}/${KERNEL}
+VERSION_SERIES = v$(VERSION_MAJOR)
 
 
 # ------------------------------------------------------------
@@ -75,14 +40,11 @@ endif
 SUBDIRS += doc
 
 # The "all" targets
-MAKE_ALL_TARGETS=host kernel demo
+MAKE_ALL_TARGETS=host headers kernel demo
 # Excluded targets: docs (currently broken?)
 
 all:: $(MAKE_ALL_TARGETS)
 
-
-Makefile.config:
-	./configure
 
 include Makefile.common
 include $(SUBDIRS:%=%/Makefile.sub)
@@ -120,8 +82,8 @@ host-realclean:: makefiles-realclean
 makefiles::
 
 makefiles-install::
-	test -d $(DESTDIR)$(pkgdatadir) || mkdir -p $(DESTDIR)$(pkgdatadir)
-	install -m 644 Makefile.common $(DESTDIR)$(pkgdatadir)
+	test -d $(DESTDIR)$(pkgtargetsysconfdir) || mkdir -p $(DESTDIR)$(pkgtargetsysconfdir)
+	install -m 644 Makefile.common $(DESTDIR)$(pkgtargetsysconfdir)
 	sed -e '/Installation Variables/a \
 	ORG = $(ORG)\
 	PACKAGE = $(PACKAGE)\
@@ -129,22 +91,20 @@ makefiles-install::
 	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)\
 	CROSSTOOLSUFFIX = $(CROSSTOOLSUFFIX)\
 	CROSSTOOLEXT    = $(CROSSTOOLEXT)'\
-		< Makefile.lxprog  > $(DESTDIR)$(pkgdatadir)/Makefile
-	chmod 644 $(DESTDIR)$(pkgdatadir)/Makefile
+		< Makefile.lxprog  > $(DESTDIR)$(pkgtargetsysconfdir)/Makefile
+	chmod 644 $(DESTDIR)$(pkgtargetsysconfdir)/Makefile
 	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
 	sed -e '/Installation Variables/a \
 	ORG=$(ORG)\
 	PACKAGE=$(PACKAGE)\
-	TARGET_ARCH=$(TARGET_ARCH)\
-	CROSSTOOLPREFIX=$(CROSSTOOLPREFIX)\
-	CROSSTOOLSUFFIX=$(CROSSTOOLSUFFIX)\
-	CROSSTOOLEXT=$(CROSSTOOLEXT)'\
+	SYSCONF_SUBDIR=$(ARCH_SYSCONF_PACKAGESUBDIR)\
+	TARGET_ARCH=$(TARGET_ARCH)'\
 		< makelx.sh  > $(DESTDIR)$(bindir)/makelx
 	chmod 755 $(DESTDIR)$(bindir)/makelx
 
 makefiles-uninstall::
-	rm -f $(DESTDIR)$(pkgdatadir)/Makefile
-	rm -f $(DESTDIR)$(pkgdatadir)/Makefile.common
+	rm -f $(DESTDIR)$(pkgtargetsysconfdir)/Makefile
+	rm -f $(DESTDIR)$(pkgtargetsysconfdir)/Makefile.common
 	rm -f $(DESTDIR)$(bindir)/makelx
 
 makefiles-clean::

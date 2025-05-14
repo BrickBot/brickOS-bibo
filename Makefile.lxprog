@@ -6,25 +6,10 @@
 
 # NOTE: When installed via "make install", this file is renamed and included as just "Makefile"
 
-# PACKAGE MAINTAINERS: Adjust here the default paths of where files were installed
-#   if these paths differ from your packaging system defaults.
 # Using $(abspath x) here so that symlinks are NOT replaced
 MAKEFILE_PATH  := $(abspath $(lastword $(MAKEFILE_LIST)))
 MAKEFILE_DIR   := $(abspath $(dir $(MAKEFILE_PATH)))
 MAKEFILE_NAME  := $(notdir $(MAKEFILE_PATH))
-
-# Determine whether running from source tree or if installed
-#   (This file is only named "Makefile" if installed)
-ifeq ("$(MAKEFILE_NAME)","Makefile")
-  # Running as installed, so set the root path of the installation
-  INSTALLED_ROOT ?= $(abspath $(MAKEFILE_DIR)/../..)
-  $(info "Running as installed from $(INSTALLED_ROOT)")
-else
-  # Running from the source tree
-  include $(MAKEFILE_DIR)/Makefile.config
-  $(info "Running from source tree at $(MAKEFILE_DIR)")
-endif
-
 
 # IMPORTANT: Do not modify the commented "paths" placeholder line below
 #   without also updating the "install" target in the main Makefile in the source project.
@@ -77,24 +62,6 @@ all:: $(PROGRAM_OUTPUTS) $(patsubst %.o,%.a,$(PROGRAM_ADDITIONAL_OBJECTS))
 # Tell Make not to auto-delete:
 #   *.o files are needed by the emulator when loading a program as a *.a file
 .SECONDARY:: $(PROGRAM_ADDITIONAL_OBJECTS)
-
-
-# Verify that a valid kernel has been specified and a corresponding *.lds file exists
-#
-ifndef KERNEL
-  # Search both the current directory (for if running from the source tree)
-  #   and any immediate subdirectories (for if installed)
-  FOUND_LDS_FILES := $(wildcard $(KERNELDIR)$(KERNELDIR_PATTERN)/*.lds)
-  ifeq ($(words $(FOUND_LDS_FILES)),1)
-    KERNEL := $(basename $(notdir $(FOUND_LDS_FILES)))
-    # Now that KERNEL has been found and defined, DYNAMIC_LDS should work	
-    $(info A single LDS file "$(FOUND_LDS_FILES)" found, for kernel "$(KERNEL)")
-  else ifeq ($(words $(FOUND_LDS_FILES)),0)
-    $(error ERROR: No kernel specified, and no dynamic linker "*.lds" files found under "$(KERNELDIR)")
-  else
-    $(error ERROR: No kernel specified, but multiple dynamic linker "*.lds" files found under "$(KERNELDIR)")
-  endif
-endif
 
 
 include $(MAKEFILE_DIR)/Makefile.common

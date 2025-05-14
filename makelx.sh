@@ -16,7 +16,11 @@ MAKE_PROGRAM=make
 
 # Variable Initialization
 SCRIPT_NAME=$(basename $0)
+SCRIPT_EXTENSION=${SCRIPT_NAME##*.}
 SCRIPT_DIR=$(realpath -s $(dirname $0))
+
+SOURCE_TREE_MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/Makefile.lxprog)
+INSTALLED_MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/../$TARGET_ARCH/$SYSCONF_SUBDIR/Makefile)
 
 # Functions
 output_usage()
@@ -35,11 +39,11 @@ output_usage()
 }
 
 # Locate the Makefile
-if [ -f $SCRIPT_DIR/Makefile.lxprog ] ; then
+if [ -f "$SOURCE_TREE_MAKEFILE_PATH" ] ; then
   # We are in the source tree
-  MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/Makefile.lxprog)
-elif [ -f $SCRIPT_DIR/../share/$PACKAGE/Makefile ] ; then
-  MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/../share/$PACKAGE/Makefile)
+  MAKEFILE_PATH="$SOURCE_TREE_MAKEFILE_PATH"
+elif [ -f "$INSTALLED_MAKEFILE_PATH" ] ; then
+  MAKEFILE_PATH="$INSTALLED_MAKEFILE_PATH"
 else
   output_usage
   echo "ERROR: Makefile needed by $SCRIPT_NAME not found."

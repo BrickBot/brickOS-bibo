@@ -9,8 +9,10 @@ FIRMDLTARGET=firmdl$(EXT)
 FIRMDLMAN1=firmdl.1
 LNPMSGTARGET=lnpmsg$(EXT)
 IRSRVRTARGET=ir-server$(EXT)
-DLLALLTARGETS=dll$(EXT) writelx$(EXT) genlds$(EXT)
-DLLALLMAN1=dll.1
+DLLTARGET=dll$(EXT)
+DLLMAN1=dll.1
+WRITELXTARGET=writelx$(EXT)
+GENLDSTARGET=genlds$(EXT)
 MKIMG := util/host/mkimg$(EXT)
 
 RCX_COMM_SRCS = rcx_comm.c lnp-logical.c lnp.c
@@ -37,18 +39,21 @@ GENLDSOBJS  := $(GENLDSSRC:%.c=util/host/%.o)
 DISTFILES += $(patsubst %,util/host/%, Makefile.sub $(sort $(FONTSRC) $(FIRMDLSRC) \
         $(MKIMGSRC) $(LNPMSGSRC) $(DLLSRC) $(WRITELXSRC) $(IRSRVRSRC) $(GENLDSSRC) \
         config.h fastdl.S srec.h srecload.h lx.h rcx_comm.h lnpmsg_comm.h \
-        $(DLLALLMAN1) $(FIRMDLMAN1) ))
+        $(DLLMAN1) $(FIRMDLMAN1) ))
 DISTFILES := $(filter-out util/host/lnp.c util/host/lnp-logical.c, $(DISTFILES))
 LIBS=
 
-HOST_FILES = $(FONTTARGET) $(FIRMDLTARGET) $(DLLALLTARGETS) \
-    $(LNPMSGTARGET) $(IRSRVRTARGET)
-HOST_PATHS = $(HOST_FILES:%=util/%)
-MAN1_FILES = $(FIRMDLMAN1) $(DLLALLMAN1)
+HOST_BIN_FILES = $(FIRMDLTARGET) $(DLLTARGET) $(LNPMSGTARGET) $(IRSRVRTARGET)
+HOST_LIBEXEC_FILES = $(WRITELXTARGET) $(GENLDSTARGET) $(FONTTARGET)
+
+HOST_BIN_PATHS = $(HOST_BIN_FILES:%=util/%)
+HOST_LIBEXEC_PATHS = $(HOST_LIBEXEC_FILES:%=util/%)
+
+MAN1_FILES = $(FIRMDLMAN1) $(DLLMAN1)
 MAN1_PATHS = $(MAN1_FILES:%=util/host/%)
 
 
-host:: $(HOST_PATHS)
+host:: $(HOST_BIN_PATHS) $(HOST_LIBEXEC_PATHS)
 
 host-clean::
 	rm -f util/host/*.d util/host/*.o
@@ -59,16 +64,18 @@ host-clean::
 
 host-realclean:: host-clean
 	rm -f util/host/*~ util/host/*.bak 
-	rm -f $(HOST_PATHS)
+	rm -f $(HOST_BIN_PATHS) $(HOST_LIBEXEC_PATHS)
 
-host-install:: $(HOST_PATHS) $(MAN1_PATHS)
+host-install:: $(HOST_BIN_PATHS) $(HOST_LIBEXEC_PATHS) $(MAN1_PATHS)
 	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
-	install -s -m 755  $(HOST_PATHS) $(DESTDIR)$(bindir)/
-	test -d $(DESTDIR)$(mandir)/man1 || mkdir -p $(DESTDIR)$(mandir)/man1
-	install -m 644 $(MAN1_PATHS) $(DESTDIR)$(mandir)/man1/
+	install -s -m 755  $(HOST_BIN_PATHS) $(DESTDIR)$(bindir)/
+	test -d $(DESTDIR)$(libexecdir) || mkdir -p $(DESTDIR)$(libexecdir)
+	install -s -m 755  $(HOST_LIBEXEC_PATHS) $(DESTDIR)$(libexecdir)/
+	test -d $(DESTDIR)$(man1dir) || mkdir -p $(DESTDIR)$(man1dir)
+	install -m 644 $(MAN1_PATHS) $(DESTDIR)$(man1dir)/
 
 host-uninstall::
-	rm -f $(MAN1_FILES:%=$(DESTDIR)$(mandir)/man1/%) $(HOST_FILES:%=$(DESTDIR)$(bindir)/%)
+	rm -f $(MAN1_FILES:%=$(DESTDIR)$(man1dir)/%) $(HOST_FILES:%=$(DESTDIR)$(bindir)/%)
 
 
 util/host/lnp.o: kernel/lnp.c

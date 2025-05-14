@@ -20,8 +20,8 @@ libs-realclean:: libs-clean kconfig-realclean
 	rm -f $(LIBRARIES)
 
 libs-install:: libs kconfig-install
-	test -d $(DESTDIR)$(pkgtargetlibdir)/$(KERNEL) || mkdir -p $(DESTDIR)$(pkgtargetlibdir)/$(KERNEL)
-	install -m 644 $(LIBRARIES) $(DESTDIR)$(pkgtargetlibdir)/$(KERNEL)
+	test -d $(DESTDIR)$(pkgtargetlibinstancedir) || mkdir -p $(DESTDIR)$(pkgtargetlibinstancedir)
+	install -m 644 $(LIBRARIES) $(DESTDIR)$(pkgtargetlibinstancedir)
 
 libs-uninstall:: kconfig-uninstall
-	rm -f -r $(DESTDIR)$(pkgtargetlibdir)/$(KERNEL)
+	rm -f -r $(DESTDIR)$(pkgtargetlibinstancedir)
