@@ -131,47 +131,47 @@ timer_t dsound_note_timer = {
 //! sound handler, called from system timer interrupt
 static void dsound_handler(void *data) {
     if(internote) {
-	play_pause();
-	add_timer(internote, &dsound_note_timer);
-	internote=0;
-	return;
+        play_pause();
+        add_timer(internote, &dsound_note_timer);
+        internote=0;
+        return;
     }
 
     for (;;) {
-	unsigned char pitch = dsound_next_note->pitch;
-	DEBUG("note: %d,%d (%d)", pitch, dsound_next_note->length,
-	      dsound_64th_ms * dsound_next_note->length - dsound_internote_ms);
-
+        unsigned char pitch = dsound_next_note->pitch;
+        DEBUG("note: %d,%d (%d)", pitch, dsound_next_note->length,
+              dsound_64th_ms * dsound_next_note->length - dsound_internote_ms);
+    
         if (pitch<=PITCH_MAX) {
-		play_freq(pitch2freq[pitch]);
-	    
-	    add_timer(dsound_64th_ms * dsound_next_note->length
-		      - dsound_internote_ms, &dsound_note_timer);
-	    dsound_next_note++;
-	    internote = dsound_internote_ms;
-	    return;
-	} else if (pitch == PITCH_TEMPO) {
-	    dsound_64th_ms = dsound_next_note->length;
-	    dsound_next_note++;
-	} else if (pitch == PITCH_INTERNOTE) {
-	    dsound_internote_ms = dsound_next_note->length;
-	    dsound_next_note++;
-	} else if (pitch == PITCH_REPEAT) {
-	    if (dsound_next_note->length
-		&& repcnt++ == dsound_next_note->length) {
-		repcnt = 0;
-		dsound_next_note += 2;
-	    } else {
-		dsound_next_note -= ((dsound_next_note[1].pitch) << 8) 
-		    | (dsound_next_note[1].length);
-	    }
-	} else { /* PITCH_END or broken sound */
-	    play_pause();
-	    dsound_next_note=0;  
-	    internote=0;
-	    wakeup(dsound_finished);
-	    return;
-	}
+            play_freq(pitch2freq[pitch]);
+            
+            add_timer(dsound_64th_ms * dsound_next_note->length
+                  - dsound_internote_ms, &dsound_note_timer);
+            dsound_next_note++;
+            internote = dsound_internote_ms;
+            return;
+        } else if (pitch == PITCH_TEMPO) {
+            dsound_64th_ms = dsound_next_note->length;
+            dsound_next_note++;
+        } else if (pitch == PITCH_INTERNOTE) {
+            dsound_internote_ms = dsound_next_note->length;
+            dsound_next_note++;
+        } else if (pitch == PITCH_REPEAT) {
+            if (dsound_next_note->length
+                  && repcnt++ == dsound_next_note->length) {
+                repcnt = 0;
+                dsound_next_note += 2;
+            } else {
+                dsound_next_note -= ((dsound_next_note[1].pitch) << 8) 
+                    | (dsound_next_note[1].length);
+            }
+        } else { /* PITCH_END or broken sound */
+            play_pause();
+            dsound_next_note=0;  
+            internote=0;
+            wakeup(dsound_finished);
+            return;
+        }
     }
 }
 

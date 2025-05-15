@@ -267,14 +267,14 @@ extern "C" {
 //! NOTE: Repeats cannot be nested
 #define PITCH_REPEAT     252
 
-//! mark the end of a list of note_t entries
-#define PITCH_END        255
+//! set duration of internote spacing
+#define PITCH_INTERNOTE  253
 
 //! set duration of 1/64th note
 #define PITCH_TEMPO      254
 
-//! set duration of internote spacing
-#define PITCH_INTERNOTE  253
+//! mark the end of a list of note_t entries
+#define PITCH_END        255
 
 //! calculate duration for PITCH_TEMPO based on beats per minute (bpm)
 #define TEMPO_FROM_BPM(note_type,beats_per_minute)  (60000 / (note_type * beats_per_minute))
