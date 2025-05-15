@@ -1,0 +1,80 @@
+### ==========================================================================
+###  $Id: Makefile.sub 904 2009-05-13 11:00:45Z hoenicke $
+###  FILE: rom/Makefile.sub - build an open source ROM implementation
+###  bibo - another LEGO MindStorms RCX OS
+### --------------------------------------------------------------------------
+
+# rom source files
+ROM_BASENAME=foss-rom
+ROM_BASESUBDIR=rom
+ROM_FILES_BASE=$(ROM_BASESUBDIR)/$(ROM_BASENAME)
+
+ROMSOURCE_FILES=
+ROMSOURCE_PATHS=$(ROMSOURCE_FILES:%=$(ROM_BASESUBDIR)/%)
+
+ROMASMSOURCE_FILES=$(ROM_BASENAME).s $(ROM_BASENAME)-lcd.s
+ROMASMSOURCE_PATHS=$(ROMASMSOURCE_FILES:%=$(ROM_BASESUBDIR)/%)
+
+# rom object files (foss-rom.s adn foss-rom-lcd.s produce only a single object file)
+ROMOBJECTS=$(ROM_FILES_BASE).o
+
+ROMLD_FILE=h8300-rcx-rom.ld
+ROMLD_PATH=$(ROM_BASESUBDIR)/$(ROMLD_FILE)
+
+ROM_FILE_TYPES=coff srec bin
+ROM_FILES=$(ROM_FILE_TYPES:%=$(ROM_BASENAME).%)
+ROM_PATHS=$(ROM_FILES:%=$(ROM_BASESUBDIR)/%)
+ROM_TARGETS=$(ROM_PATHS)
+
+# Files of the source distribution
+DISTFILES += rom/Makefile.sub $(ROMSOURCE_PATHS) $(ROMASMSOURCE_PATHS)
+
+
+#
+# NOTE: uncomment out the first line if you need a rom disassembly file.
+# This will not work on Windows unless you have perl installed.
+#
+
+rom:: $(ROM_TARGETS)
+
+rom-clean::
+	rm -f $(ROM_TARGETS)
+	rm -f rom/*.o rom/*.dis rom/*.map rom/*.d
+
+rom-realclean:: rom-clean
+	rm -rf rom/*~ rom/*.bak rom/*.tgz rom/tags rom/*.dcoff rom/*.dmap rom/*.dsrec
+	rm -f  rom/*.srec rom/*.coff rom/*.bin rom/install-stamp
+
+rom-install:: $(ROM_TARGETS)
+	test -d $(DESTDIR)$(pkgtargetkerneldir) || mkdir -p $(DESTDIR)$(pkgtargetkerneldir)
+	install -m 644 $(ROM_TARGETS) $(DESTDIR)$(pkgtargetkerneldir)
+
+rom-uninstall::
+	cd $(DESTDIR)$(pkgtargetkerneldir) && rm -f $(notdir $(ROM_TARGETS))
+
+.PHONY: all rom rom-clean rom-realclean rom-install rom-uninstall tag depend
+
+##
+## no user servicable parts below
+##
+
+# linker command files for rom
+ROMLDFLAGS=-T $(ROMLD_PATH) -nostdlib -relax
+
+
+############ rom stuff
+
+# how to build rom object from assembly
+$(ROM_FILES_BASE).o: $(ROM_FILES_BASE).s $(ROM_FILES_BASE)-lcd.s
+	$(CROSSAS) -I $(ROM_BASESUBDIR) -o $@ $<
+
+# how to build coff rom (for symbols, disassembly etc)
+$(ROM_FILES_BASE).coff: $(ROMOBJECTS) $(ROMLD_PATH)
+	$(CROSSLD) $(ROMLDFLAGS) $(ROMOBJECTS) -o $@
+
+#  dependencies 
+-include $(ROMSOURCE_PATHS:%.c=%.d)
+
+### --------------------------------------------------------------------------
+###                         End of FILE: rom/Makefile.sub
+### ==========================================================================

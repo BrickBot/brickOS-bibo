@@ -27,7 +27,7 @@ VERSION_SERIES = v$(VERSION_MAJOR)
 #
 #  makefile to build the brickOS operating system and demo files
 # 
-SUBDIRS=util lib include kconfig kernel xs
+SUBDIRS=util lib include kconfig kernel rom xs
 
 # Only build the demo programs if program support is enabled
 ifeq ($(shell grep --quiet '^\#define CONF_PROGRAM' include/config.h && echo 1),1)
@@ -40,7 +40,7 @@ endif
 SUBDIRS += doc
 
 # The "all" targets
-MAKE_ALL_TARGETS=host headers kernel demo
+MAKE_ALL_TARGETS=host headers kernel rom demo
 # Excluded targets: docs (currently broken?)
 
 all:: $(MAKE_ALL_TARGETS)
