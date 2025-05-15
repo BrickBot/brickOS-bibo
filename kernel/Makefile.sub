@@ -35,7 +35,7 @@ kernel-clean:: libs-clean
 
 kernel-realclean:: kernel-clean libs-realclean
 	rm -rf kernel/*~ kernel/*.bak kernel/*.tgz kernel/*.s kernel/tags kernel/*.dcoff kernel/*.dmap kernel/*.dsrec
-	rm -f  kernel/*.srec kernel/install-stamp
+	rm -f  kernel/*.srec kernel/*.coff kernel/*.bin kernel/*.lds kernel/*.lxMakeconf kernel/install-stamp
 
 kernel-install:: $(KERNEL_TARGETS) libs-install
 	test -d $(DESTDIR)$(pkgtargetkernelinstancedir) || mkdir -p $(DESTDIR)$(pkgtargetkernelinstancedir)
@@ -45,7 +45,7 @@ kernel-uninstall:: libs-uninstall
 #	cd $(DESTDIR)$(pkgtargetkernelinstancedir) && rm -f $(notdir $(KERNEL_FILES))
 	rm -f -r $(DESTDIR)$(pkgtargetkernelinstancedir)
 
-.PHONY: all kernel kernel-install kernel-uninstall tag clean realclean depend
+.PHONY: all kernel kernel-clean kernel-realclean kernel-install kernel-uninstall tag depend
 
 ##
 ## no user servicable parts below
