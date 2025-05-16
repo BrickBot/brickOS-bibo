@@ -1,7 +1,7 @@
 brickOS-bibo contributors
 =================
 
-V0.10.0
+V1.0.0
 ---------
 
 Jochen Hoenicke (hoenicke@users.sourceforge.net)
@@ -10,31 +10,29 @@ Jochen Hoenicke (hoenicke@users.sourceforge.net)
 
 Matthew Sheets (mesheets@users.sourceforge.net)
   Bug Fix: dkey_wait() and getchar() calls in user programs would lock the brick
-  Updated utils to better facilitate using TCP as a tty.
-  Made NCD tty types a runtime option instead of a compile-time #define.
+  Added support for using the system buttons (On-Off, Run) in user programs
   Merged patches for BrickOS with Bibo,
     including LDCC, lnp_printf, and lnpmsg (formerly LegOShrink)
-  Reworked firmdl3, dll, and lnpmsg under utils as well as
-    lnp and lnp-logic in the kernel to facilitate better code reuse,
-    remove essentially duplicate code, and establish a set of common
-    functions for rcx_comm and LNP.  Merged the resulting code into
-    util/host, deprecating util/firmld, util/dll-src, and util/fontdesign.c.
-  Util dll: made fast mode a runtime option instead of a compile-time #define.
-  Added ability to send LNP messages directly from the lnpmsg command line.
-  Added ir-server from Jochen Hoenicke's BrickEmu package and used
-    the code reworked from above to add support for tty downlinking
-    (e.g. serial, USB, TCP) or TCP uplinking.
-  Merged XS (based on BrickOS 0.2.6.10) with Bibo.
-    - Added support for additional conio functions to XS
-  Changed baud rate, carrier state, and timeout settings from compile-time
-    defines to run-time options
-  Standardized parity for all baud rates to "odd"
-  Added support for RCX-based communication that does not echo (e.g. bluetooth hacks)
-  Enabled more flexible communication options for downloading firmware
-  Modified conio to remove the CONF_ASCII dependency from CONF_PROGRAM
-  Expand musical scale note defines
-  Added tempo calculation support for sound/music
-  Added support for using the system buttons (On-Off, Run) in user programs
+  Host Utilities
+    - Updated utils to better facilitate using TCP as a tty.
+    - Made NCD tty types a runtime option instead of a compile-time #define.
+    - Reworked firmdl3, dll, and lnpmsg under utils as well as
+        lnp and lnp-logic in the kernel to facilitate better code reuse,
+        remove essentially duplicate code, and establish a set of common
+        functions for rcx_comm and LNP.  Merged the resulting code into
+        util/host, deprecating util/firmld, util/dll-src, and util/fontdesign.c.
+    - Util dll: made fast mode a runtime option instead of a compile-time #define.
+  Host Communication
+    - Added ability to send LNP messages directly from the lnpmsg command line.
+    - Added ir-server from Jochen Hoenicke's BrickEmu package and used
+        the code reworked from above to add support for tty downlinking
+        (e.g. serial, USB, TCP) or TCP uplinking.
+  Communication
+    - Changed baud rate, carrier state, and timeout settings from compile-time
+        defines to run-time options
+    - Standardized parity for all baud rates to "odd"
+    - Added support for RCX-based communication that does not echo (e.g. bluetooth hacks)
+    - Enabled more flexible communication options for downloading firmware
   Refactored direct motor code
     - Added support motor variables (instead of motor-specific functions)
     - Added support for retrieving current speed and direction values
@@ -44,15 +42,38 @@ Matthew Sheets (mesheets@users.sourceforge.net)
     - Update search paths
   Refactor "makelx" to "writelx" so that the makelx name can be repurposed
   Make and Makefiles
-    - Remove duplications and reduce number of Makefiles to simplify
+    - Remove duplications across Makefiles to simplify
     - Update "make install" to better support DESTDIR
     - Enable configurable kernel naming
+    - Create a "version series" (first digit of the version number) for include files
+      ~ Includes for legacy brickOS 0.9.0 are "v0"
+      ~ Includes for this version are "v1"
+    - Enable "multi-kernel" support for working among kernels of differing configurations
+      ~ Is backwards compatible with having the legacy brickOS 0.9.0 kernel installed
+        as a kernel within the multi-kernel structure
     - Enable building/installing/uninstalling just specific parts,
-        such as the libs, kernel, or libs+kernel+demos ("rcx").
+        such as the libs, kernel, rom, or libs+kernel+demos ("rcx").
     - Minimize the hardcoding of absolute paths in the Makefile that gets installed
-    - Support building programs written in Esterel and XS:Lisp
     - For the Makefile for *.lx programs, verify that the needed kernel files exist
-  Various updates and refactors to reduce firmware size
+    - Create a "makelx" script that can be used to build programs without
+        needing to know how Make or Makefiles work
+    - Support building programs written in Esterel and XS:Lisp
+  Programming Languages
+    - Merged XS:Lisp (based on BrickOS 0.2.6.10) with Bibo.
+      ~ Added support for additional conio functions to XS
+    - Added support for building Esterel programs if the Esterel compiler is installed
+  Various updates and refactors to reduce firmware size, including:
+    - Updated code so that CONF_ASCII can be disabled by default, including:
+      ~ Modified conio to remove the CONF_ASCII dependency from CONF_PROGRAM
+    - Adding a CONF_EXTENDED_MUSIC configuration so that the pitch2freq array
+        is only included if absolutely needed, such as for scenarios like
+        transposing note_t arrays or reducing combined kernel+program size if
+        the number of note_t element in programs exceed ~100
+  Sound and Music (in addition to CONF_EXTENDED_MUSIC above)
+    - Expanded musical scale note defines
+    - Added defines for the individual note frequencies
+    - Added tempo calculation support for sound/music
+  Added the open source ROM implementation from Jochen Hoenicke's BrickEmu package
   Various code cleanups...
 
 Carl Troein (troein@users.sourceforge.net)
