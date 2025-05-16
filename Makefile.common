@@ -235,8 +235,8 @@ GET_BASE_FROM_LDS    = $(call GET_CONF_FROM_FILE,$(1),$(DYNAMIC_LDS))
 ifdef RECORD_BASE_IN_MAKEFILE
 #  Base addresses updated from $(DYNAMIC_LDS) in kernel/Makefile.sub, target BaseAddresses
 #  (Values should be checked as kernel changes but kept as backup if GET_BASE fails)
-BASE1 = 0xad30
-BASE2 = 0xaf40
+BASE1 = 0xac44
+BASE2 = 0xae54
 
 # Use precedence ordering for obtaining BASE1 and BASE2 values:
 # $(BASEx) value from $(DYNAMIC_LDS) file, $(BASEx), and then $(BASEx)_DEFAULT
