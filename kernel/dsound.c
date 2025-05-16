@@ -46,18 +46,21 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+
+#ifdef CONF_EXTENDED_MUSIC
 //! note pitch -> frequency generator lookup table, index 0 = rest and 1 ^= A0
-static const unsigned short pitch2freq[]={ /* rest ( */ 0x0000, /* ) */         0x8d03, 0x8603, 0x7d03,  // Octave 0
-  0x7703, 0x7003, 0x6a03, 0x6303, 0x5e03, 0x5903, 0x5403, 0x4f03, 0x4a03, 0x4603, 0x4203, 0xfd83,  // Octave 1
-  0xee83, 0xe083, 0xd483, 0xc783, 0xbc83, 0xb283, 0xa883, 0x9e83, 0x9583, 0x8d83, 0x8583, 0x7e83,  // Octave 2
-  0x7683, 0x7083, 0x6983, 0x6383, 0x5e83, 0x5983, 0x5383, 0x4f83, 0x4a83, 0x4683, 0x4283, 0xfc02,  // Octave 3
-  0xee02, 0xe102, 0xd402, 0xc802, 0xbd02, 0xb202, 0xa802, 0x9e02, 0x9502, 0x8d02, 0x8502, 0xfc82,  // Octave 4
-  0xee82, 0xe082, 0xd482, 0xc882, 0xbd82, 0xb282, 0xa882, 0x9e82, 0x9682, 0x8d82, 0x8582, 0x7e82,  // Octave 5
-  0x7682, 0x7082, 0x6982, 0x6382, 0x5e82, 0x5882, 0x5382, 0x4f82, 0x4a82, 0x4682, 0x4282, 0xfc01,  // Octave 6
-  0xee01, 0xe001, 0xd401, 0xc801, 0xbd01, 0xb201, 0xa801, 0x9e01, 0x9501, 0x8d01, 0x8501, 0x7e01,  // Octave 7
-  0x7601, 0x7001, 0x6901, 0x6301, 0x5e01, 0x5801, 0x5301, 0x4f01, 0x4a01, 0x4601                   // Octave 8
-//  C     C#/Db     D     D#/Eb     E       F     F#/Gb     G     G#/Ab     A     A#/Bb     B      // Note Columns
+static const unsigned short pitch2freq[]={   /*  rest ( */ 0x0000, /* )  */            FREQ_A0, FREQ_Am0, FREQ_B0,  // Octave 0
+  FREQ_C1, FREQ_Cm1, FREQ_D1, FREQ_Dm1, FREQ_E1, FREQ_F1, FREQ_Fm1, FREQ_G1, FREQ_Gm1, FREQ_A1, FREQ_Am1, FREQ_B1,  // Octave 1
+  FREQ_C2, FREQ_Cm2, FREQ_D2, FREQ_Dm2, FREQ_E2, FREQ_F2, FREQ_Fm2, FREQ_G2, FREQ_Gm2, FREQ_A2, FREQ_Am2, FREQ_B2,  // Octave 2
+  FREQ_C3, FREQ_Cm3, FREQ_D3, FREQ_Dm3, FREQ_E3, FREQ_F3, FREQ_Fm3, FREQ_G3, FREQ_Gm3, FREQ_A3, FREQ_Am3, FREQ_B3,  // Octave 3
+  FREQ_C4, FREQ_Cm4, FREQ_D4, FREQ_Dm4, FREQ_E4, FREQ_F4, FREQ_Fm4, FREQ_G4, FREQ_Gm4, FREQ_A4, FREQ_Am4, FREQ_B4,  // Octave 4
+  FREQ_C5, FREQ_Cm5, FREQ_D5, FREQ_Dm5, FREQ_E5, FREQ_F5, FREQ_Fm5, FREQ_G5, FREQ_Gm5, FREQ_A5, FREQ_Am5, FREQ_B5,  // Octave 5
+  FREQ_C6, FREQ_Cm6, FREQ_D6, FREQ_Dm6, FREQ_E6, FREQ_F6, FREQ_Fm6, FREQ_G6, FREQ_Gm6, FREQ_A6, FREQ_Am6, FREQ_B6,  // Octave 6
+  FREQ_C7, FREQ_Cm7, FREQ_D7, FREQ_Dm7, FREQ_E7, FREQ_F7, FREQ_Fm7, FREQ_G7, FREQ_Gm7, FREQ_A7, FREQ_Am7, FREQ_B7,  // Octave 7
+  FREQ_C8, FREQ_Cm8, FREQ_D8, FREQ_Dm8, FREQ_E8, FREQ_F8, FREQ_Fm8, FREQ_G8, FREQ_Gm8, FREQ_A8                      // Octave 8
+//   C      C#/Db       D      D#/Eb       E        F      F#/Gb       G      G#/Ab       A      A#/Bb       B      // Note Columns
 };
+#endif
 
 //! single beep
 static const note_t sys_beep[]={
@@ -138,13 +141,22 @@ static void dsound_handler(void *data) {
     }
 
     for (;;) {
-        unsigned char pitch = dsound_next_note->pitch;
+        pitch_conf_t pitch = dsound_next_note->pitch;
         DEBUG("note: %d,%d (%d)", pitch, dsound_next_note->length,
               dsound_64th_ms * dsound_next_note->length - dsound_internote_ms);
-    
-        if (pitch<=PITCH_MAX) {
+
+#ifdef CONF_EXTENDED_MUSIC
+        if (pitch<=PITCH_MAX)
+#else
+        if (((pitch & 0xFF00) != 0) || pitch == PITCH_REST)
+#endif
+        {
+#ifdef CONF_EXTENDED_MUSIC
             play_freq(pitch2freq[pitch]);
-            
+#else
+            play_freq(pitch);
+#endif
+
             add_timer(dsound_64th_ms * dsound_next_note->length
                   - dsound_internote_ms, &dsound_note_timer);
             dsound_next_note++;

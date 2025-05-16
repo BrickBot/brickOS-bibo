@@ -39,6 +39,7 @@ static note_t tuning[] = {
   { PITCH_END, 0 }
 };
 
+#ifdef CONF_EXTENDED_MUSIC
 static note_t chromatic_scale[] = { 
   { PITCH_TEMPO, TEMPO_FROM_BPM(QUARTER, 120) },
   { PITCH_INTERNOTE, DSOUND_DEFAULT_internote_ms },
@@ -52,6 +53,35 @@ static note_t chromatic_scale[] = {
 
   { PITCH_END, 0 }
 };
+
+void play_full_chromatic_scale() {
+  int note_duration_ms = chromatic_scale[2].length * chromatic_scale[0].length;
+
+  dsound_play(chromatic_scale);
+  msleep(chromatic_scale[1].length);  // Internote duration
+
+  unsigned char i;
+  for (i = 2; i <= PITCH_MAX; i++) {
+    // Update the chromatic scale data structure on the fly
+	//   - This type of dynamic transposition requires CONF_EXTENDED_MUSIC
+    // (NOTE: Really shouldn't attempt this for normal dsound_play() use)
+    chromatic_scale[2].pitch = i;
+    msleep(note_duration_ms);
+#ifdef CONF_CONIO
+    cputc_hex_1(i % 10);
+    cputc_hex_2(i / 10);
+#endif // CONF_CONIO
+  }
+
+
+  // End of loop; wait for playing to stop
+#ifdef CONF_CONIO
+  cputc_native_5(CHAR_DASH);
+#endif // CONF_CONIO
+
+  dsound_wait();
+}
+#endif // CONF_EXTENDED_MUSIC
 
 int main(int argc,char *argv[]) {
 
@@ -105,28 +135,9 @@ int main(int argc,char *argv[]) {
   cputc_hex_1(i);
 #endif // CONF_CONIO
 
-  int note_duration_ms = chromatic_scale[2].length * chromatic_scale[0].length;
-
-  dsound_play(chromatic_scale);
-  msleep(chromatic_scale[1].length);  // Internote duration
-
-  for (i = 2; i <= PITCH_MAX; i++) {
-    // Update the chromatic scale data structure on the fly
-    // (NOTE: Really shouldn't attempt this for normal dsound_play() use)
-    chromatic_scale[2].pitch = i;
-    msleep(note_duration_ms);
-#ifdef CONF_CONIO
-    cputc_hex_1(i % 10);
-    cputc_hex_2(i / 10);
-#endif // CONF_CONIO
-  }
-
-  // End of loop; wait for playing to stop
-#ifdef CONF_CONIO
-  cputc_native_5(CHAR_DASH);
-#endif // CONF_CONIO
-
-  dsound_wait();
+#ifdef CONF_EXTENDED_MUSIC
+  play_full_chromatic_scale();
+#endif
 
 #ifdef CONF_CONIO
   cls();

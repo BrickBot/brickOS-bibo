@@ -37,7 +37,7 @@
 #define CONF_TIME                       //!< system time
 #define CONF_MM                         //!< memory management
 #define CONF_TM                         //!< task management
-//#define CONF_SETJMP                     //!< non-local goto
+#define CONF_SETJMP                     //!< non-local goto
 #define CONF_SEMAPHORES                 //!< POSIX semaphores
 #define CONF_PROGRAM                    //!< dynamic program loading support
 #define CONF_VIS                        //!< generic visualization.
@@ -77,9 +77,10 @@
 #define CONF_VIEW_BUTTON                //!< view button information display
 #define CONF_DSOUND                     //!< direct sound
 #define CONF_ON_OFF_SOUND               //!< sound on switch on/off
+//#define CONF_EXTENDED_MUSIC             //!< use to enable dynamic transposing or save space with longer (100+ notes) music
 #define CONF_DMOTOR                     //!< direct motor
-//#define CONF_DMOTOR_HOLD               //!< experimental: use hold mode PWM instead of coast mode.
-//#define CONF_DCC                        //!< Digital Command Control capability on motor output
+//#define CONF_DMOTOR_HOLD                //!< experimental: use hold mode PWM instead of coast mode
+//#define CONF_DCC                        //!< Digital Command Control (DCC) capability on motor output
 #define CONF_DSENSOR                    //!< direct sensor
 #define CONF_DSENSOR_FAST               //!< poll all sensors in 1 ms
 #define CONF_DSENSOR_ROTATION           //!< rotation sensor

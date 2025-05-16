@@ -91,6 +91,7 @@ int main(int argc, char *argv[]) {
   int i;
   int intro_ms = 0;
   
+  // Calculate the length of the into in milliseconds
   for(i = 2; i <=6; i++) {
     intro_ms += amazing_grace[i].length;
   }

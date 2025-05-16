@@ -49,6 +49,13 @@ extern "C" {
 //
 ///////////////////////////////////////////////////////////////////////
 
+// The data type/size for pitch varies based on the configuration
+#ifdef CONF_EXTENDED_MUSIC    
+typedef unsigned char   pitch_conf_t;
+#else
+typedef unsigned short  pitch_conf_t;
+#endif
+
 /// the note structure describing a single note.
 /// \note a song to play is made up of an array of these structures
 /// which is then handed to dsound_play() [in C] or Sound::play() [in C++].
@@ -58,7 +65,7 @@ extern "C" {
 /// Rests should be specified by placing \ref PITCH_REST in the {pitch} value.
 /// The duration of the rest is placed in {length}.
 typedef struct {
-  unsigned char pitch;      //!< note pitch: 0 = rest, 1 ^= A_0 (~55 Hz)
+  pitch_conf_t pitch;      //!< note pitch: 0 = rest, 1 ^= A_0 (~55 Hz)
   unsigned char length;     //!< note length in 1/64ths
 } note_t;
 
@@ -101,7 +108,7 @@ extern const note_t *dsound_system_sounds[];    //!< system sound data
 //! play a sequence of notes
 extern void dsound_play(const note_t *notes);
 
-//! play a system sound
+//! play a predefined sound
 static inline void dsound_system(unsigned char nr) {
     if(nr < DSOUND_SYS_MAX) {
         dsound_play(dsound_system_sounds[nr]);
