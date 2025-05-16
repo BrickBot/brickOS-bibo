@@ -126,6 +126,54 @@ extern char dsound_wait(void);
 //! stop playing sound
 extern void dsound_stop(void);
 
+
+///////////////////////////////////////////////////////////////////////
+//
+// ROM calls
+//
+///////////////////////////////////////////////////////////////////////
+
+/*  ROM sound_system calls apparently does not work because
+ *    this kernel does not use the "init_timer" ROM call (?).
+ *    The sound never plays, but sound_playing() seems to
+ *    indicate that the sound never finishes playing (a loop on that never exits).
+ *    c.f. librcx -> first.c (58), rom.h (792), rcall2.c
+ *  Further details:
+ *    - https://github.com/BrickBot/librcx/blob/master/lib/rom.h#L477
+ *    - https://www.mralligator.com/rcx/
+
+//! play a system sound
+extern inline void dsound_play_system(unsigned char nr)
+{
+  __asm__ (
+      "push %0\n"
+      "mov.w #0x4003,r6\n"
+      "jsr @sound_system\n"
+      "adds #0x2,r7\n"
+      : // output
+      :"r"(nr)  // input
+      :"r6", "cc", "memory" // clobbered
+  );
+}
+
+extern inline int dsound_playing_system(void)
+{
+  int rv;
+  __asm__ __volatile__ (
+      "mov.w r7,r6\n"
+      "push r6\n"
+      "mov.w #0x700c,r6\n"
+      "jsr @sound_playing\n"
+      "adds #0x2,r7\n"
+      "mov.w @r7,%0\n"
+      : "=r"(rv) // output
+      :              // input
+      :"r6", "cc", "memory" // clobbered
+  );
+  return rv;
+}
+// */
+
 #endif // CONF_DSOUND
 
 #ifdef  __cplusplus
