@@ -44,6 +44,7 @@ Matthew Sheets (mesheets@users.sourceforge.net)
   Make and Makefiles
     - Remove duplications across Makefiles to simplify
     - Update "make install" to better support DESTDIR
+    - Provide consistent path configuration for both source tree and installation
     - Enable configurable kernel naming
     - Create a "version series" (first digit of the version number) for include files
       ~ Includes for legacy brickOS 0.9.0 are "v0"
