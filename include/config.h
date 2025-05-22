@@ -32,6 +32,11 @@
 //
 // #define CONF_RCX_COMPILER              //!< a special RCX compiler is used.
 
+// kernel configuration values
+//
+#define PROG_MAX  8   	                //!< maximum number of programs
+#define DEFAULT_SHUTOFF_TIME (2*60)     //!< default timeout interval for auto-shutoff
+
 // core system services
 //
 #define CONF_TIME                       //!< system time

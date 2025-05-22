@@ -42,10 +42,6 @@ extern "C" {
 //
 ///////////////////////////////////////////////////////////////////////
 
-#define PROG_MAX  8   	//!< maximum number of programs
-
-#define DEFAULT_SHUTOFF_TIME (2*60)
-
 
 #ifndef DOXYGEN_SHOULD_SKIP_INTERNALS
 /**
