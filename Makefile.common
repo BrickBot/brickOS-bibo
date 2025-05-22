@@ -232,7 +232,7 @@ ARCH := $(shell $(CROSSCC) -dumpmachine)
 #  Linker command files dynamic executables  (variable "$(KERNEL_FILES_BASE)" is without the extension).
 #
 KERNEL_FILES_BASE = $(KERNELINSTANCEDIR)/$(KERNEL)
-KERNEL_LX_MAKEFILE = $(KERNEL_FILES_BASE).lxMakeconf
+KERNEL_LX_CONF_FILE = $(KERNEL_FILES_BASE).lxconf
 DYNAMIC_LDS = $(KERNEL_FILES_BASE).lds
 DLDFLAGS    = -T $(DYNAMIC_LDS) -relax -L$(LIBDIR)
 

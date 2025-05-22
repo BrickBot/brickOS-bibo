@@ -14,7 +14,7 @@ KSOURCE_PATHS=$(KSOURCE_FILES:%=kernel/%)
 KASMSOURCE_FILES=dccasm.S
 KASMSOURCE_PATHS=$(KASMSOURCE_FILES:%=kernel/%)
 
-KERNEL_FILE_TYPES=coff srec bin lds lxMakeconf
+KERNEL_FILE_TYPES=coff srec bin lds lxconf
 KERNEL_FILES:=$(KERNEL_FILE_TYPES:%=$(KERNEL_FILES_BASE).%)
 KERNEL_TARGETS:=$(KERNEL_FILES)
 
@@ -35,7 +35,7 @@ kernel-clean:: libs-clean
 
 kernel-realclean:: kernel-clean libs-realclean
 	rm -rf kernel/*~ kernel/*.bak kernel/*.tgz kernel/*.s kernel/tags kernel/*.dcoff kernel/*.dmap kernel/*.dsrec
-	rm -f  kernel/*.srec kernel/*.coff kernel/*.bin kernel/*.lds kernel/*.lxMakeconf kernel/install-stamp
+	rm -f  kernel/*.srec kernel/*.coff kernel/*.bin kernel/*.lds kernel/*.lxconf kernel/install-stamp
 
 kernel-install:: $(KERNEL_TARGETS) libs-install
 	test -d $(DESTDIR)$(pkgtargetkernelinstancedir) || mkdir -p $(DESTDIR)$(pkgtargetkernelinstancedir)
@@ -61,9 +61,10 @@ KLDFLAGS=-Th8300-rcx.ld -relax
 ############ kernel stuff
 
 # how to create the kernel-specific Makefile include for building *.lx files
-$(KERNEL_LX_MAKEFILE):
-	echo "# This file is auto-generated when making the kernel" >  $(KERNEL_LX_MAKEFILE)
-	echo "VERSION_SERIES=$(VERSION_SERIES)" >> $(KERNEL_LX_MAKEFILE)
+$(KERNEL_LX_CONF_FILE):
+	echo "# This file is auto-generated when making the kernel" >  $(KERNEL_LX_CONF_FILE)
+	echo "VERSION=$(VERSION)" >> $(KERNEL_LX_CONF_FILE)
+	echo "VERSION_SERIES=$(VERSION_SERIES)" >> $(KERNEL_LX_CONF_FILE)
 
 # how to build coff kernel (for symbols, disassembly etc)
 $(KERNEL_FILES_BASE).coff: $(KOBJECTS) $(KLIBRARIES)
