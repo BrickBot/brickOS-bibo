@@ -15,10 +15,10 @@ int main(int argc, char **argv) {
   sleep(1);
 #endif
   cputc_native_user(CHAR_I, CHAR_n, CHAR_t, CHAR_g);  // Intg
-  lnp_integrity_printf("Hello, World!");
+  lnp_integrity_puts("Hello, World!");
   sleep(1);
   cputc_native_user(CHAR_A, CHAR_d, CHAR_d, CHAR_r);  // Addr
-  lnp_addressing_printf(0x00, 0x05, "Hello, World!");
+  lnp_addressing_puts(0x00, 0x05, "Hello, World!");
   sleep(1);
 #else
   cputc_native_user(CHAR_N, CHAR_O, CHAR_N, CHAR_E);  // None

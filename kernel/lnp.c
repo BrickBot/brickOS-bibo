@@ -230,6 +230,7 @@ __TEXT_HI__ int lnp_addressing_write(const unsigned char *data,unsigned char len
   return r;
 }
 
+#if defined(CONF_PRINTF)
 //! send a LNP integrity layer packet in "printf" fashion
 /*! \return 0 on success.
 */
@@ -282,6 +283,7 @@ __TEXT_HI__ int lnp_addressing_printf(unsigned char dest,
 
   return writeResult;
 }
+#endif // CONF_PRINTF
 
 //! handle LNP packet from the integrity layer
 void lnp_receive_packet(const unsigned char *data) {

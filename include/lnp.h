@@ -31,6 +31,7 @@ extern "C" {
 #endif
 
 #include <config.h>
+#include <string.h>
 
 #ifdef CONF_LNP
 
@@ -207,7 +208,7 @@ wakeup_t msg_received(wakeup_t m);
 //! read received message from standard firmware
 extern unsigned char get_msg(void);
 
-#endif
+#endif // CONF_RCX_MESSAGE
 
 //! send a LNP integrity layer packet of given length
 /*! \return 0 on success.
@@ -220,6 +221,17 @@ extern int lnp_integrity_write(const unsigned char *data,unsigned char length);
 extern int lnp_addressing_write(const unsigned char *data,unsigned char length,
                          unsigned char dest,unsigned char srcport);
 
+//! send a LNP integrity layer packet in "puts" fashion
+/*! \return 0 on success.
+*/
+#define lnp_integrity_puts(msg)  lnp_integrity_write((unsigned char*)msg, strlen(msg))
+
+//! send a LNP addressing layer packet in "puts" fashion
+/*! \return 0 on success.
+*/
+#define lnp_addressing_puts(msg,dest,srcport)  lnp_addressing_write((unsigned char*)msg, strlen(msg), dest, srcport);
+
+#if defined(CONF_PRINTF) || defined(CONF_HOST)
 //! send a LNP integrity layer packet in "printf" fashion
 /*! \return 0 on success.
 */
@@ -230,6 +242,7 @@ extern int lnp_integrity_printf(const char *fmt, ...);
 */
 extern int lnp_addressing_printf(unsigned char dest,
         unsigned char srcport, const char *fmt, ...);
+#endif // CONF_PRINTF
 
 #endif // CONF_LNP
 

@@ -74,6 +74,7 @@
 #define CONF_LCD_REFRESH                //!< automatic display updates
 #define CONF_CONIO                      //!< console
 //#define CONF_ASCII                      //!< ascii console
+//#define CONF_PRINTF                     //!< string formatting support
 #define CONF_VIEW_BUTTON                //!< view button information display
 #define CONF_DSOUND                     //!< direct sound
 #define CONF_ON_OFF_SOUND               //!< sound on switch on/off
