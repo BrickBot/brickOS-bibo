@@ -1,0 +1,23 @@
+### ==========================================================================
+###  $Id: Makefile.sub 893 2025-05-21 17:24:04Z sheets $
+###  FILE: lib/printf/Makefile.sub - make the printf library
+###  bibo - another LEGO MindStorms RCX OS
+### --------------------------------------------------------------------------
+
+LIBPRINTFSRC := printf.c
+LIBPRINTF := lib/libprintf.a
+
+DISTFILES += $(patsubst %,lib/printf/%, Makefile.sub $(LIBPRINTFSRC))
+
+LIBRARIES+=$(LIBPRINTF)
+LIBPRINTFOBJS=$(LIBPRINTFSRC:%.c=lib/printf/%.o)
+
+libs-clean::
+	rm -f lib/printf/*.d lib/printf/*.o
+
+libs-realclean::
+	rm -f lib/printf/*~ lib/printf/*.bak lib/printf/tags
+
+$(LIBPRINTF): $(LIBPRINTFOBJS)
+	rm -f $@
+	$(CROSSAR) -sq $@ $^

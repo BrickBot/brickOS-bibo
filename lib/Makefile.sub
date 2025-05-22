@@ -8,6 +8,7 @@ include lib/c/Makefile.sub
 include lib/c++/Makefile.sub
 include lib/mint/Makefile.sub
 include lib/float/Makefile.sub
+include lib/printf/Makefile.sub
 
 DISTFILES += lib/Makefile.sub
 

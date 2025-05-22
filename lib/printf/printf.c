@@ -29,10 +29,10 @@ static const char hexdigits[] = "0123456789ABCDEF";
 static const char lhexdigits[] = "0123456789abcdef";
 static const char empty_string[] = "(null string)";
 
-/* This function takes an unsigned int and puts its ascii
+/* This function takes an unsigned int and puts its ASCII
  * representation at a particular location in a buffer of given
- * length.  The radix used is must also be provided, as well as a
- * string containing the characters used in the ascii representation.
+ * length.  The radix used must also be provided, as well as a
+ * string containing the characters used in the ASCII representation.
  *
  * This function makes no attempt to handle two-byte characters. 
  */

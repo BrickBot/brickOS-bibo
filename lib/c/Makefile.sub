@@ -4,8 +4,8 @@
 ###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
-LIBCSRC := memcpy.c memset.c strcmp.c strcpy.c strlen.c random.c \
-          calloc.c printf.c
+LIBCSRC := memcpy.c memset.c random.c calloc.c \
+           strcmp.c strcpy.c strlen.c
 LIBC := lib/libc.a
 
 DISTFILES += $(patsubst %,lib/c/%, Makefile.sub $(LIBCSRC))
