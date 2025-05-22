@@ -230,7 +230,7 @@ __TEXT_HI__ int lnp_addressing_write(const unsigned char *data,unsigned char len
   return r;
 }
 
-#if defined(CONF_PRINTF)
+#if defined(CONF_PRINTF) || defined(CONF_HOST)
 //! send a LNP integrity layer packet in "printf" fashion
 /*! \return 0 on success.
 */
