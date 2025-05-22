@@ -77,7 +77,6 @@ TAGS:
 
 clean::
 	rm -f *.dis *.dis2 *.s *.ds1 *.ds2 *.dmap *.dcoff 
-	rm -f *.srec *.coff
 
 realclean:: clean
 	rm -f *~ *.bak *.lx *.a *.o TAGS

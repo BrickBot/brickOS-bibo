@@ -67,6 +67,10 @@ else
         KERNEL="${1#*=}"
         MAKE_VARS="$MAKE_VARS KERNEL=$KERNEL"
         ;;
+      -h | --help)
+        output_usage
+        exit 0
+        ;;
       *=*)
         MAKE_VARS="$MAKE_VARS '$1'"
         ;;
@@ -78,10 +82,12 @@ else
     output_usage
     echo "ERROR: No source file(s) specified."
     exit 1
+  else
+    MAKE_SOURCES="SOURCES='$*'"
   fi
 
   # Generate and execute the make command to build the LX program
-  MAKE_COMMAND="${MAKE_PROGRAM} ${MAKE_VARS} SOURCES='$*' --makefile='${MAKEFILE_PATH}'"
+  MAKE_COMMAND="${MAKE_PROGRAM} ${MAKE_VARS} ${MAKE_SOURCES} --makefile='${MAKEFILE_PATH}'"
   echo "Command: \"${MAKE_COMMAND}\""
   eval "${MAKE_COMMAND}"
 fi
