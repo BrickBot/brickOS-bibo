@@ -40,6 +40,8 @@
 #if defined(CONF_DSENSOR)
 int get_battery_mv()
 {
+    // From librcx documentation:
+    //   "Units are strange, multiply by 43988 then divide by 1560 to get mV."
     long b = ds_scale(BATTERY) * 0xABD4L;
     return (int)(b / 0x618L);
 }

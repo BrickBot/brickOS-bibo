@@ -87,6 +87,7 @@ extern void free(void *ptr);
 /*! The random() function returns successive pseudo-random numbers 
  *  \return a random number in the range from 0 to RAND_MAX
  */
+
 extern long int random(void);
 //! seed the random number generator
 /*! The srandom() function sets its argument as the seed for a new sequence

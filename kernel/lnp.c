@@ -72,6 +72,19 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 //
+// Internal Types
+//
+///////////////////////////////////////////////////////////////////////////////
+
+//! The supported LNP modes
+//! The enum value indicates the number of bytes the message size is increased
+typedef enum {
+  lnp_integrity_mode = 0,
+  lnp_addressing_mode = 2
+} lnp_mode_t;
+
+///////////////////////////////////////////////////////////////////////////////
+//
 // Variables
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -171,7 +184,7 @@ __asm__(
 	);
 #endif
 
-//! send a LNP integrity layer packet of given length
+//! send a LNP integrity layer packet of the given length
 /*! \return 0 on success.
 */
 __TEXT_HI__ int lnp_integrity_write(const unsigned char *data,unsigned char length) {
@@ -240,7 +253,7 @@ __TEXT_HI__ int lnp_integrity_printf(const char *fmt, ...)
   free(buf);
 #endif // CONF_MM
 
- return writeResult;
+  return writeResult;
 }
 
 //! send a LNP addressing layer packet in "printf" fashion
