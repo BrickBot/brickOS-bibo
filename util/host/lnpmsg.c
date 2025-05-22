@@ -365,11 +365,11 @@ int main(int argc, char **argv)
       send_code((unsigned int) remoteMessage);
       break;
     case do_integrity_msg:
-      lnp_integrity_printf(sendMessage);
+      lnp_integrity_puts(sendMessage);
       break;
     case do_addressing_msg:
-      lnp_addressing_printf((atoi(destAddr) << 4) | (atoi(destPort) & 0x0F),
-                            atoi(srcPort), sendMessage);
+      lnp_addressing_puts(sendMessage, (atoi(destAddr) << 4) | (atoi(destPort) & 0x0F),
+                            atoi(srcPort));
       break;
     default:
       fprintf(stderr, "\n%s", usageString);  // Display help info
