@@ -20,6 +20,16 @@ int main(int argc, char **argv) {
   cputc_native_user(CHAR_A, CHAR_d, CHAR_d, CHAR_r);  // Addr
   lnp_addressing_puts(0x00, 0x05, "Hello, World!");
   sleep(1);
+#ifdef CONF_PRINT
+  cputc_native_user(CHAR_I, CHAR_n, CHAR_t, CHAR_g);  // Intg
+  cputc_native_5(CHAR_DASH);
+  lnp_integrity_printf("High %d!", 5);
+  sleep(1);
+  cputc_native_user(CHAR_A, CHAR_d, CHAR_d, CHAR_r);  // Addr
+  cputc_native_5(CHAR_DASH);
+  lnp_addressing_printf(0x00, 0x05, "High %i!", 5);
+  sleep(1);
+#endif
 #else
   cputc_native_user(CHAR_N, CHAR_O, CHAR_N, CHAR_E);  // None
   sleep(1);
