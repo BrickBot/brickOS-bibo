@@ -58,6 +58,8 @@ Matthew Sheets (mesheets@users.sourceforge.net)
     - For the Makefile for *.lx programs, verify that the needed kernel files exist
     - Create a "makelx" script that can be used to build programs without
         needing to know how Make or Makefiles work
+    - Eliminate some of the manual updates needed when adding/removing shared libraries
+        or when switching between using static linking in the kernel
     - Support building programs written in Esterel and XS:Lisp
   Programming Languages
     - Merged XS:Lisp (based on BrickOS 0.2.6.10) with Bibo.
@@ -70,6 +72,10 @@ Matthew Sheets (mesheets@users.sourceforge.net)
         is only included if absolutely needed, such as for scenarios like
         transposing note_t arrays or reducing combined kernel+program size if
         the number of note_t element in programs exceed ~100
+    - Adding a CONF_PRINTF configuration so that *printf() and similar capabilities
+        (e.g. itoa()) are only included if needed
+    - Separated out *printf() and similar capabilities (e.g. itoa()) from libc
+        into a separate libprintf library
   Sound and Music (in addition to CONF_EXTENDED_MUSIC above)
     - Expanded musical scale note defines
     - Added defines for the individual note frequencies

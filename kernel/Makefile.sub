@@ -54,13 +54,6 @@ kernel-uninstall:: libs-uninstall
 # kernel object files
 KOBJECTS=$(KSOURCE_PATHS:.c=.o) $(KASMSOURCE_PATHS:.S=.o)
 
-# Kernel libraries. Use second version to link all
-# libraries statically to kernel. Change CROSSLIBS in Makefile.common, too.
-KLIBS=-Llib -lc -lmint
-KLIBRARIES=$(LIBC) $(LIBMINT)
-#KLIBS=--whole-archive -lc -lmint -lfloat
-#KLIBRARIES=$(LIBC) $(LIBMINT) $(LIBFLOAT)
-
 # linker command files for kernel
 KLDFLAGS=-Th8300-rcx.ld -relax
 

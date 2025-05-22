@@ -19,6 +19,9 @@ MAKEFILE_NAME  := $(notdir $(MAKEFILE_PATH))
 #   Environment Differentiation: Source Tree vs. Installed
 # ----------------------------------------------------------------------------
 
+# Lookup available shared libraries
+CROSSLIBS = $(patsubst $(LIBDIR)/lib%.a,-l%,$(wildcard $(LIBDIR)/lib*.a))
+  
 # "INSTALLED_ROOT" will only be defined if installed (and not if running from source tree)
 ifeq ("$(wildcard $(MAKEFILE_DIR)/makelx.sh)","")
   # Running as installed, so set the root path of the installation
@@ -52,6 +55,10 @@ else
   KERNELINSTANCEDIR  ?= $(KERNELDIR)
   LIBDIR             ?= $(LIBSUBDIR)
 
+  ifeq ("$(CROSSLIBS)","")
+    # Lib check based on lib*.a files didn't work, so now check for source tree subfolder names
+    CROSSLIBS = $(patsubst $(LIBDIR)/%/Makefile.sub,-l%,$(wildcard $(LIBDIR)/*/Makefile.sub))
+  endif
   MULTIKERNELSUBDIR_SEARCH_PATTERN ?=
 
 # Since we are not installed, we need to ensure we are properly configured
@@ -168,10 +175,19 @@ endif
 #   Build Variables Configuration
 # ----------------------------------------------------------------------------
 
-#  User application libraries. Comment out if linking
-#  them statically to kernel in Makefile.kernel.
-#CROSSLIBS = -lc -lmint -lfloat -lc++ -lprintf -lgpc -loogpc
-CROSSLIBS = -lc -lmint -lfloat -lc++ -lprintf
+#  Kernel libraries. Use second version to link all
+#  libraries statically to kernel. Change CROSSLIBS, too.
+#  - Version 1:  Dynamically Linked
+KLIBS=-Llib -lc -lmint
+KLIBRARIES=$(LIBC) $(LIBMINT)
+#  - Version 2:  Statically Linked
+#KLIBS=--whole-archive -lc -lmint
+#KLIBRARIES=$(LIBC) $(LIBMINT)
+
+#  User application libraries. Should be cleared if linking
+#  them statically to kernel in $(KLIBS).
+CROSSLIBS := $(if $(filter --whole-archive,$(KLIBS)),,$(CROSSLIBS))
+
 
 #  Defines for build of native parts: utils and other host-run programs
 #
