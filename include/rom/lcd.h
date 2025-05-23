@@ -189,7 +189,7 @@ extern inline void lcd_number(int i, lcd_number_style n, lcd_comma_style c)
 {
   __asm__ ASMVOLATILE(
 		       "push r6\n"
-		       "push %2         ; comma_style\n"
+		       "push %2         ; lcd_comma_style\n"
 		       "push %0         ; number       -> stack\n"
 		       "mov.w %1,r6     ; number_style -> r6\n"
 		       "jsr @lcd_number ; call ROM\n"
