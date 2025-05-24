@@ -1,0 +1,70 @@
+#include <conio.h>
+#include <unistd.h>
+
+#include <dsensor.h>
+#include <dmotor.h>
+
+//#include <sys/lcd.h>
+#include <tm.h>
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Functions
+//
+///////////////////////////////////////////////////////////////////////////////
+
+wakeup_t sensor_press_wakeup(wakeup_t data);
+
+// the rover driver
+//
+int main(int argc, char ??argv) {
+  int dir=0;
+
+  while (!shutdown_requested()) {
+    motor_a_speed(2*MAX_SPEED/3);		// go!
+    motor_c_speed(2*MAX_SPEED/3);
+
+    motor_a_dir(fwd);
+    motor_c_dir(fwd);
+
+    cputs("fwwd ");
+
+    if (wait_event(&sensor_press_wakeup, 0) != 0) {
+	    if(SENSOR_1<0xf000)    	      // keep in mind.
+  	    dir=0;
+    	else
+      	dir=1;
+
+	    // back up
+  	  //
+    	motor_a_dir(rev);
+	    motor_c_dir(rev);
+
+  	  cputs("rev  ");
+
+	    msleep(500);
+
+  	  motor_a_speed(MAX_SPEED);		// go!
+    	motor_c_speed(MAX_SPEED);
+
+	    if(dir==1) {
+  	    motor_c_dir(fwd);
+    	  cputs("left ");
+	    } else {
+  	    motor_a_dir(fwd);
+    	  cputs("right");
+	    }
+
+	    msleep(500);
+	  }
+  }
+  
+  return 0;
+}
+
+extern "C" void lcd_refresh();
+
+wakeup_t sensor_press_wakeup(wakeup_t data) {
+	lcd_refresh();
+	return (SENSOR_1<0xf000) || (SENSOR_3<0xf000);
+}

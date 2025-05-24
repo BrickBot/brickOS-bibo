@@ -1,0 +1,462 @@
+conio.h:
+hstub {
+  extern "C include" {
+    void delay(unsigned);
+    void cputc_native_0(char);
+    void cputc_native_1(char);
+    void cputc_native_2(char);
+    void cputc_native_3(char);
+    void cputc_native_4(char);
+    void cputc_native_5(char);
+    void cputc_native(char, int);
+    void cputw(unsigned);
+    void cls();
+
+    extern const char hex_display_codes[];
+    extern const char ascii_display_codes[];
+
+    static inline void cputc_hex_0(unsigned nibble)
+    {
+      cputc_native_0(hex_display_codes[(nibble) & 0x0f]);
+    }
+
+    static inline void cputc_hex_1(unsigned nibble)
+    {
+      cputc_native_1(hex_display_codes[(nibble) & 0x0f]);
+    }
+
+    static inline void cputc_hex_2(unsigned nibble)
+    {
+      cputc_native_2(hex_display_codes[(nibble) & 0x0f]);
+    }
+
+    static inline void cputc_hex_3(unsigned nibble)
+    {
+      cputc_native_3(hex_display_codes[(nibble) & 0x0f]);
+    }
+
+    static inline void cputc_hex_4(unsigned nibble)
+    {
+      cputc_native_4(hex_display_codes[(nibble) & 0x0f]);
+    }
+    
+    static inline void cputc_hex_5(unsigned nibble)
+    {
+      cputc_native_5(hex_display_codes[(nibble) & 0x0f]);
+    }
+
+    static inline void cputc_hex(char c, int pos)
+    {
+      cputc_native(hex_display_codes[(c) & 0x7f], pos);
+    }
+
+    static inline void cputc_0(unsigned c)
+    {
+      cputc_native_0(ascii_display_codes[(c) & 0x7f]);
+    }
+
+    static inline void cputc_1(unsigned c)
+    {
+      cputc_native_1(ascii_display_codes[(c) & 0x7f]);
+    }
+
+    static inline void cputc_2(unsigned c)
+    {
+      cputc_native_2(ascii_display_codes[(c) & 0x7f]);
+    }
+
+    static inline void cputc_3(unsigned c)
+    {
+      cputc_native_3(ascii_display_codes[(c) & 0x7f]);
+    }
+
+    static inline void cputc_4(unsigned c)
+    {
+      cputc_native_4(ascii_display_codes[(c) & 0x7f]);
+    }
+
+    static inline void cputc_5(unsigned c)
+    {
+      cputc_native_5(ascii_display_codes[(c) & 0x7f]);
+    }
+
+    static inline void cputc(char c, int pos)
+    {
+      cputc_native(ascii_display_codes[(c) & 0x7f], pos);
+    }
+
+  } export {
+    delay,
+    cputc_native_0,
+    cputc_native_1,
+    cputc_native_2,
+    cputc_native_3,
+    cputc_native_4,
+    cputc_native_5,
+    cputc_native,
+    cputw,
+    cls,
+    cputc_hex_0,
+    cputc_hex_1,
+    cputc_hex_2,
+    cputc_hex_3,
+    cputc_hex_4,
+    cputc_hex_5,
+    cputc_hex,
+    cputc_0,
+    cputc_1,
+    cputc_2,
+    cputc_3,
+    cputc_4,
+    cputc_5,
+    cputc
+  }
+}
+hstub {
+  extern void cputs(const char@);
+}
+cycstub {
+  namespace Cconio {
+    extern "C" void cputs(const char@);
+  }
+  void cputs(const char@s) {
+    Cconio::cputs(s);
+  }
+}
+;
+dkey.h:
+include {
+  KEY_ONOFF
+  KEY_RUN
+  KEY_VIEW
+  KEY_PRGM
+  KEY_ANY
+}
+hstub {
+#include <tm.h>
+  extern "C include" {
+    extern volatile unsigned char dkey_multi;
+    extern volatile unsigned char dkey;
+
+    wakeup_t dkey_pressed(wakeup_t);
+    wakeup_t dkey_released(wakeup_t);
+    int getchar();
+  }
+}
+;
+dlcd.h:
+include {
+  LCD_ARMS     
+  LCD_BODY     
+  LCD_1LEG     
+  LCD_2LEGS    
+  		     
+  LCD_0_TOP    
+  LCD_0_MID    
+  LCD_0_BOT    
+  LCD_0_TOPR   
+  LCD_0_BOTR   
+  LCD_0_TOPL   
+  LCD_0_BOTL   
+  		     
+  LCD_1_TOP    
+  LCD_1_MID    
+  LCD_1_BOT    
+  LCD_1_TOPR   
+  LCD_1_BOTR   
+  LCD_1_TOPL   
+  LCD_1_BOTL   
+  		     
+  LCD_2_TOP    
+  LCD_2_MID    
+  LCD_2_BOT    
+  LCD_2_TOPR   
+  LCD_2_BOTR   
+  LCD_2_TOPL   
+  LCD_2_BOTL   
+  LCD_2_DOT    
+  		     
+  LCD_3_TOP    
+  LCD_3_MID    
+  LCD_3_BOT    
+  LCD_3_TOPR   
+  LCD_3_BOTR   
+  LCD_3_TOPL   
+  LCD_3_BOTL   
+  LCD_3_DOT    
+  		     
+  LCD_4_TOP    
+  LCD_4_MID    
+  LCD_4_BOT    
+  LCD_4_TOPR   
+  LCD_4_BOTR   
+  LCD_4_TOPL   
+  LCD_4_BOTL   
+  LCD_4_DOT    
+  		     
+  LCD_5_MID    
+  		     
+  LCD_A_SELECT 
+  LCD_A_LEFT   
+  LCD_A_RIGHT  
+  		     
+  LCD_B_SELECT 
+  LCD_B_LEFT   
+  LCD_B_RIGHT  
+  		     
+  LCD_C_SELECT 
+  LCD_C_LEFT   
+  LCD_C_RIGHT  
+  		     
+  LCD_S1_SELECT
+  LCD_S1_ACTIVE
+  		     
+  LCD_S2_SELECT
+  LCD_S2_ACTIVE
+		     
+  LCD_S3_SELECT
+  LCD_S3_ACTIVE
+  		     
+  LCD_CIRCLE_0 
+  LCD_CIRCLE_1 
+  LCD_CIRCLE_2 
+  LCD_CIRCLE_3 
+  		     
+  LCD_DOT_0    
+  LCD_DOT_1    
+  LCD_DOT_2    
+  LCD_DOT_3    
+  LCD_DOT_4    
+  		     
+  LCD_IR_LOWER 
+  LCD_IR_UPPER 
+  		     
+  LCD_BATTERY_X
+  
+  LCD_EMPTY_1
+  LCD_EMPTY_2
+  
+  dlcd_show
+  dlcd_hide
+  dlcd_store
+
+  BYTE_OF
+  BIT_OF
+}
+;
+dmotor.h:
+include {
+  MotorDirection
+  MotorState
+  MIN_SPEED
+  MAX_SPEED
+}
+hstub {
+  extern "C include" {
+    extern const unsigned char	dm_a_pattern[4],
+				dm_b_pattern[4],
+				dm_c_pattern[4];
+    extern MotorState dm_a;
+    extern MotorState dm_b;
+    extern MotorState dm_c;
+ 
+    extern void motor_a_dir(MotorDirection);
+    extern void motor_b_dir(MotorDirection);
+    extern void motor_c_dir(MotorDirection);
+
+    static inline void motor_a_speed(unsigned char speed)
+    {
+      dm_a.access.c.delta = speed;
+    }
+
+    static inline void motor_b_speed(unsigned char speed)
+    {
+      dm_b.access.c.delta = speed;
+    }
+
+    static inline void motor_c_speed(unsigned char speed)
+    {
+      dm_c.access.c.delta = speed;
+    }
+
+  } export {
+    dm_a_pattern,
+    dm_b_pattern,
+    dm_c_pattern,
+    dm_a,
+    dm_b,
+    dm_c,
+    motor_a_dir, 
+    motor_b_dir,
+    motor_c_dir,
+    motor_a_speed,
+    motor_b_speed,
+    motor_c_speed
+  }
+}
+;
+dsensor.h:
+include {
+  LIGHT_RAW_BLACK
+  LIGHT_RAW_WHITE
+  LIGHT
+  LIGHT_MAX
+  TOUCH
+  ds_scale
+  ds_unscale
+}
+hstub {
+  extern "C include" {
+    extern volatile unsigned int AD_A;
+    extern volatile unsigned int AD_B;
+    extern volatile unsigned int AD_C;
+    extern volatile unsigned int AD_D;
+
+    extern volatile unsigned char PORT6;
+
+    extern unsigned char ds_activation;	//!< activation bitmask
+    
+    extern unsigned char ds_rotation;	//!< rotation   bitmask
+
+    extern volatile int ds_rotations[3];
+
+#define SENSOR_1	AD_C	//!< Sensor on input pad 1
+#define SENSOR_2	AD_B	//!< Sensor on input pad 2
+#define SENSOR_3	AD_A	//!< Sensor on input pad 3
+#define BATTERY		AD_D	//!< Battery sensor
+
+#define LIGHT_1     LIGHT(SENSOR_1)     //!< light sensor on input 1
+#define LIGHT_2     LIGHT(SENSOR_2)	//!< light sensor on input 2
+#define LIGHT_3     LIGHT(SENSOR_3)	//!< light sensor on input 3
+
+#define ROTATION_1  (ds_rotations[2])	//!< rotation sensor on input 1	
+#define ROTATION_2  (ds_rotations[1])	//!< rotation sensor on input 2	
+#define ROTATION_3  (ds_rotations[0])	//!< rotation sensor on input 3
+
+#define TOUCH_1     TOUCH(SENSOR_1)     //!< touch sensor on input 1
+#define TOUCH_2     TOUCH(SENSOR_2)	//!< touch sensor on input 2
+#define TOUCH_3     TOUCH(SENSOR_3)	//!< touch sensor on input 3
+
+    static inline void ds_active(volatile unsigned *sensor)
+    {
+      if (sensor == &AD_A)
+	__asm__ ( "bset %0,@%1" : : "i" (0),"r" (&ds_activation));
+      else if (sensor == &AD_B)
+	__asm__ ( "bset %0,@%1" : : "i" (1),"r" (&ds_activation));
+      else if (sensor == &AD_C)
+	__asm__ ( "bset %0,@%1" : : "i" (2),"r" (&ds_activation));
+    }
+
+    static inline void ds_passive(volatile unsigned *sensor)
+    {
+      if (sensor == &AD_A) {
+	__asm__ ( "bclr %0,@%1" : : "i" (0),"r" (&ds_activation));
+	__asm__ ( "bclr %0,@%1" : : "i" (0),"r" (&PORT6));
+      } else if (sensor == &AD_B) {
+	__asm__ ( "bclr %0,@%1" : : "i" (1),"r" (&ds_activation));
+	__asm__ ( "bclr %0,@%1" : : "i" (1),"r" (&PORT6));
+      } else if (sensor == &AD_C) {
+	__asm__ ( "bclr %0,@%1" : : "i" (2),"r" (&ds_activation));
+	__asm__ ( "bclr %0,@%1" : : "i" (2),"r" (&PORT6));
+      }
+    }
+
+    extern void ds_rotation_set(volatile unsigned *sensor, int pos);
+ 
+
+    static inline void ds_rotation_on(volatile unsigned *sensor)
+    {
+      if (sensor == &AD_A)
+	__asm__ ( "bset %0,@%1" : : "i" (0),"r" (&ds_rotation));
+      else if (sensor == &AD_B)
+	__asm__ ( "bset %0,@%1" : : "i" (1),"r" (&ds_rotation));
+      else if (sensor == &AD_C)
+	__asm__ ( "bset %0,@%1" : : "i" (2),"r" (&ds_rotation));
+    }
+
+
+    static inline void ds_rotation_off(volatile unsigned *sensor)
+    {
+      if (sensor == &AD_A)
+	__asm__ ( "bclr %0,@%1" : : "i" (0),"r" (&ds_rotation));
+      else if (sensor == &AD_B)
+	__asm__ ( "bclr %0,@%1" : : "i" (1),"r" (&ds_rotation));
+      else if (sensor == &AD_C)
+	__asm__ ( "bclr %0,@%1" : : "i" (2),"r" (&ds_rotation));
+    }
+  } export {
+    AD_A,
+    AD_B,
+    AD_C,
+    AD_D,
+    ds_activation,    
+    ds_rotation,
+    ds_rotations,
+    ds_active,
+    ds_passive,
+    ds_rotation_set,
+    ds_rotation_on,
+    ds_rotation_off
+  }
+}
+;
+
+time.h:
+include {
+  TICK_IN_MS
+  TICKS_PER_SEC
+  SECS_TO_TICKS
+  MSECS_TO_TICKS
+  time_t
+}
+hstub {
+  extern "C" {
+    time_t get_system_up_time(void);
+  }
+}
+;
+tm.h:
+hstub {
+  extern "C" {
+    extern tdata_t *ctid;
+  }
+#define shutdown_requested() ((ctid->tflags & T_SHUTDOWN) != 0)
+}
+include {
+  PRIO_LOWEST
+  PRIO_NORMAL
+  PRIO_HIGHEST
+  T_DEAD
+  T_ZOMBIE
+  T_WAITING
+  T_SLEEPING
+  T_RUNNING
+  T_KERNEL
+  T_USER
+  T_IDLE
+  T_SHUTDOWN
+  DEFAULT_STACK_SIZE
+  tdata_t
+  tstate_t
+  tflags_t
+  priority_t
+  wakeup_t
+  tid_t
+}
+;
+unistd.h:
+hstub {
+#include <tm.h>
+  extern "C" {
+    void exit(int) __attribute__((noreturn));
+    void yield(void);
+    wakeup_t wait_event(wakeup_t(@) (wakeup_t), wakeup_t);
+    unsigned int sleep(unsigned int);
+    unsigned int msleep(unsigned int);
+    void shutdown_task(tid_t);
+    void shutdown_tasks(tflags_t);
+    void kill(tid_t);
+    void killall(priority_t);
+  }
+}
+;
