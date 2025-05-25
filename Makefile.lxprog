@@ -67,7 +67,7 @@ all:: $(PROGRAM_OUTPUTS) $(patsubst %.o,%.a,$(PROGRAM_ADDITIONAL_OBJECTS))
 include $(MAKEFILE_DIR)/Makefile.common
 
 # Include dynamic settings specific to a given kernel configuration
-include $(KERNEL_LX_MAKEFILE)
+include $(KERNEL_METADATA_FILE)
 
 
 # Targets
