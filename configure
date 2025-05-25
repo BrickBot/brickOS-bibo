@@ -143,6 +143,7 @@ echo " - CROSSTOOLEXT    = \"$CROSSTOOLEXT\""
 
 # Common CFLAGS for standard (non-cross) compilation
 CFLAGS="-O2 -Wall"
+CC=gcc
 
 #
 #  look for .exe in the compiler name. This indicates Windows environment
@@ -153,7 +154,6 @@ case "$CROSSTOOLEXT" in
        echo " - Found Cygwin/DJGPP system"
        SED_SFLAG=1
        EXT=.exe
-       CC=gcc
        CFLAGS="-D_WIN32 ${CFLAGS}"
        CFLG_PE='+'
        ;;
@@ -162,7 +162,6 @@ case "$CROSSTOOLEXT" in
        echo " - Found Linux/Unix system"
        SED_SFLAG=""
        EXT=""
-       CC=gcc
        CFLAGS="-g ${CFLAGS}"
        CFLG_PE=""
        ;;
