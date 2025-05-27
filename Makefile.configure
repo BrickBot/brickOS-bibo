@@ -1,0 +1,152 @@
+### ==========================================================================
+###  $Id: Makefile.configure  2025-05-23  Sheets $
+###  FILE: Makefile.configure - environment-specific configuration
+###  bibo - another LEGO MindStorms RCX OS
+### --------------------------------------------------------------------------
+###       (this file is included by Makefiles that build programs)
+
+# ----------------------------------------------------------------------------
+#   Initialization
+# ----------------------------------------------------------------------------
+
+# Using $(abspath x) here so that symlinks are NOT replaced
+MAKEFILE_PATH  := $(abspath $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_DIR   := $(abspath $(dir $(MAKEFILE_PATH)))
+MAKEFILE_NAME  := $(notdir $(MAKEFILE_PATH))
+
+PREFIX_FOR_EXPORT := EXPORT_
+
+# ----------------------------------------------------------------------------
+#   Platform and Architecture
+# ----------------------------------------------------------------------------
+
+ifeq (Windows,$(findstring Windows,$(windir)))
+  HOST_OS_TYPE = Windows
+  ifeq ($(OS),Windows_NT)
+    HOST_OS_SUBTYPE = $(OS)
+    ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
+      HOST_ARCH = x86_64
+    else
+      # Can also be IA64, ARM64
+      #  - https://learn.microsoft.com/en-us/windows/win32/winprog64/wow64-implementation-details#environment-variables
+      HOST_ARCH = $(PROCESSOR_ARCHITECTURE)
+    endif
+  else
+    HOST_OS_SUBTYPE = Windows_9x
+	HOST_ARCH  = x86
+  endif
+  
+  HOST_EXEC_EXT = .exe
+  CROSSTOOL_EXTENSIONS = .bat .exe
+else
+  UNAME_S := $(shell uname -s)
+  ifeq ($(UNAME_S),Darwin)
+    HOST_OS_TYPE = OSX
+  else
+    HOST_OS_TYPE = $(UNAME_S)
+  endif
+
+  HOST_OS_SUBTYPE := $(shell cat /etc/*-release* | grep "^NAME" | sed 's/^NAME=\"//;s/\"$$//')
+
+  UNAME_P := $(shell uname -p)
+  ifneq ($(filter %86,$(UNAME_P)),)
+    HOST_ARCH = x86
+  else
+    HOST_ARCH = $(UNAME_P)
+  endif
+  
+  CROSSTOOL_EXTENSIONS = ""
+endif
+
+$(PREFIX_FOR_EXPORT)HOST_ARCH  := $(HOST_ARCH)
+$(PREFIX_FOR_EXPORT)HOST_OS_TYPE    := $(HOST_OS_TYPE)
+$(PREFIX_FOR_EXPORT)HOST_OS_SUBTYPE := $(HOST_OS_SUBTYPE)
+$(PREFIX_FOR_EXPORT)HOST_EXEC_EXT   := $(HOST_EXEC_EXT)
+
+
+# ----------------------------------------------------------------------------
+#   Cross-Toolchain
+# ----------------------------------------------------------------------------
+
+#   Known directories in which the h8300 toolchain might be found
+CROSSTOOL_DIRS=""                                 \
+               /usr/local/h8300-hitachi-coff/bin/ \
+               /usr/h8300-hitachi-coff/bin/       \
+               /usr/local/brickos/bin/            \
+               /usr/local/lego/bin/               \
+               /usr/local/rcx/bin/
+
+#   Known PREFIXs of the h8300 toolchain
+CROSSTOOL_PREFIXES=                    \
+                   h8300-hitachi-coff- \
+                   h8300-coff-         \
+                   h8300coff-
+
+CROSSTOOL_SUFFIXES=""    \
+                   -3    \
+                   -4.4
+
+# Crosstool Search:
+#   Only run "which" on checks for files in path (where $(dir) is empty);
+#   Otherwise, use realpath to check whether the file path exists.
+# Parameters:
+#   $(1):  The tool to check
+#   $(2):  Additional suffix(es) to check that are specific to the tool
+CROSSTOOL_CANDIDATES = \
+  $(foreach dir,$(CROSSTOOL_DIRS), \
+    $(foreach prefix,$(CROSSTOOL_PREFIXES), \
+      $(foreach suffix,$(CROSSTOOL_SUFFIXES), \
+        $(foreach extension,$(CROSSTOOL_EXTENSIONS), \
+          $(if  $(strip $(if $(subst "",,$(dir)),$(realpath $(subst "",,$(dir)$(prefix)$(1)$(suffix)$(extension))),$(shell which $(subst "",,$(dir)$(prefix)$(1)$(suffix)$(extension)) 2> /dev/null) )), \
+                                      $(strip $(subst "",,$(dir)$(prefix)$(1)$(suffix)$(extension)))  ) ))))
+
+CROSSTOOL_SELECT = \
+  $(or $(firstword $(call CROSSTOOL_CANDIDATES,$(1))), \
+    $(warning  No crosstool found for $(1)))
+
+
+# Binutils Tools
+$(PREFIX_FOR_EXPORT)CROSSADDR2LINE := $(call CROSSTOOL_SELECT,addr2line,-2.16.1)
+GET_BINUTILS_TOOL_PATH = $(subst addr2line,$(1),$($(PREFIX_FOR_EXPORT)CROSSADDR2LINE))
+
+# To save time, we will just do a find/replace for the binutils tools
+$(PREFIX_FOR_EXPORT)CROSSAR := $(call GET_BINUTILS_TOOL_PATH,ar)
+$(PREFIX_FOR_EXPORT)CROSSAS := $(call GET_BINUTILS_TOOL_PATH,as)
+$(PREFIX_FOR_EXPORT)CROSSLD := $(call GET_BINUTILS_TOOL_PATH,ld)
+$(PREFIX_FOR_EXPORT)CROSSNM := $(call GET_BINUTILS_TOOL_PATH,nm)
+$(PREFIX_FOR_EXPORT)CROSSOBJCOPY := $(call GET_BINUTILS_TOOL_PATH,objcopy)
+$(PREFIX_FOR_EXPORT)CROSSOBJDUMP := $(call GET_BINUTILS_TOOL_PATH,objdump)
+$(PREFIX_FOR_EXPORT)CROSSRANLIB := $(call GET_BINUTILS_TOOL_PATH,ranlib)
+$(PREFIX_FOR_EXPORT)CROSSSIZE := $(call GET_BINUTILS_TOOL_PATH,size)
+$(PREFIX_FOR_EXPORT)CROSSSTRIP := $(call GET_BINUTILS_TOOL_PATH,strip)
+
+# GCC-based Programming Language Support
+$(PREFIX_FOR_EXPORT)CROSSCC  := $(call CROSSTOOL_SELECT,gcc)
+$(PREFIX_FOR_EXPORT)CROSSCXX := $(call CROSSTOOL_SELECT,g++)
+$(PREFIX_FOR_EXPORT)CROSSGPC := $(call CROSSTOOL_SELECT,gpc)
+$(PREFIX_FOR_EXPORT)CROSSCIL := $(call CROSSTOOL_SELECT,cil,-4.3)
+
+# GNU Debugger
+$(PREFIX_FOR_EXPORT)CROSSGDB := $(call CROSSTOOL_SELECT,gdb,-7)
+
+# Crosstools target architecture
+$(PREFIX_FOR_EXPORT)CROSS_ARCH := $(shell $($(PREFIX_FOR_EXPORT)CROSSCC) -dumpmachine)
+
+
+# ----------------------------------------------------------------------------
+#   Targets
+# ----------------------------------------------------------------------------
+
+$(MAKEFILE_DIR)/host.properties:
+	$(shell echo "# This file is autogenerated by $(MAKEFILE_NAME)." > $@ )
+	$(shell echo "# This file format is designed to be natively consumed by Makefiles, shell scripts, and INI file readers:" >> $@ )
+	$(shell echo "# * INI Files: Must include a named section, which we define as \" true \" (note spaces)" >> $@ )
+	$(shell echo "# * Makefiles: Recognize the line-continuation character on comment lines, so we use this to ingore the INI section name" >> $@ )
+	$(shell echo "# * Shell Scripts: Do not recognize the line-continuation character on comment lines, but can no-op the INI section name by testing true" >> $@ )
+	$(shell echo "# IMPORTANT: To preserve cross-compatibility, do _NOT_ delete this line or the following line \\" >> $@ )
+	$(shell echo "[ true ]" >> $@ )
+	$(foreach v, \
+		$(shell echo "$(filter-out .VARIABLES,$(.VARIABLES))" | tr ' ' '\n' | sort | grep "^$(PREFIX_FOR_EXPORT)" ), \
+		$(shell echo "$(v:$(PREFIX_FOR_EXPORT)%=%)=$(value $(v))" >> $@ ) \
+	)
+	@cat $@

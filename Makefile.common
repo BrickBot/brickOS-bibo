@@ -14,7 +14,44 @@ MAKEFILE_PATH  := $(abspath $(lastword $(MAKEFILE_LIST)))
 MAKEFILE_DIR   := $(abspath $(dir $(MAKEFILE_PATH)))
 MAKEFILE_NAME  := $(notdir $(MAKEFILE_PATH))
 
-# Default subdir combinations
+HOST_PROPERTIES_FILE := host.properties
+HOST_PROPERTIES_PATH := $(MAKEFILE_DIR)/$(HOST_PROPERTIES_FILE)
+
+# Since we are not installed, we need to ensure we are properly configured
+include $(HOST_PROPERTIES_PATH)
+
+$(HOST_PROPERTIES_PATH):
+	$(MAKE) --makefile=$(MAKEFILE_DIR)/Makefile.configure
+
+
+# ----------------------------------------------------------------------------
+#   Setup Default Values
+# ----------------------------------------------------------------------------
+
+# Default subdirectory and file names
+BINSUBDIR         ?= bin
+SBINSUBDIR        ?= sbin
+LIBEXECSUBDIR     ?= libexec
+LIBSUBDIR         ?= lib
+SYSCONFSUBDIR     ?= etc
+SHAREDSTATESUBDIR ?= com
+LOCALSTATESUBDIR  ?= var
+INCLUDESUBDIR     ?= include
+DATASUBDIR        ?= share
+INFOSUBDIR        ?= info
+LOCALESUBDIR      ?= locale
+MANSUBDIR         ?= man
+MAN1SUBDIR        ?= man1
+DOCSUBDIR         ?= doc
+HTMLSUBDIR        ?= html
+
+ARCHSUBDIR            ?= $(TARGET_ARCH)
+KERNELSUBDIR          ?= boot
+KCONFIGSUBDIR         ?= kconfig
+CONFIGDEFAULTSFILE    ?= config.h
+KCONFIGFILE           ?= kernel-config.h
+
+# Default subdirectory combinations
 ARCH_SYSCONF_PACKAGESUBDIR          ?= $(SYSCONFSUBDIR)/$(PACKAGE)
 ARCH_INCLUDE_PACKAGESUBDIR          ?= $(INCLUDESUBDIR)/$(PACKAGE)/$(VERSION_SERIES)
 ARCH_INCLUDE_KCONFIGSUBDIR          ?= $(INCLUDESUBDIR)/$(KCONFIGSUBDIR)
@@ -22,6 +59,10 @@ ARCH_INCLUDE_KCONFIG_INSTANCESUBDIR ?= $(INCLUDESUBDIR)/$(KCONFIGINSTANCESUBDIR)
 ARCH_KERNELSUBDIR                   ?= $(KERNELSUBDIR)
 ARCH_KERNEL_INSTANCESUBDIR          ?= $(KERNELSUBDIR)/$(KERNEL)
 ARCH_LIB_INSTANCESUBDIR             ?= $(LIBSUBDIR)/$(KERNEL)
+
+CONFIGDEFAULTSPATH    ?= $(INCLUDEDIR)/$(CONFIGDEFAULTSFILE)
+KCONFIGINSTANCESUBDIR ?= $(KCONFIGSUBDIR)/$(KERNEL)
+KCONFIGINSTANCEPATH   ?= $(KCONFIGINSTANCESUBDIR)/$(KCONFIGFILE)
 
 
 # ----------------------------------------------------------------------------
@@ -69,13 +110,6 @@ else
     CROSSLIBS = $(patsubst $(LIBDIR)/%/Makefile.sub,-l%,$(wildcard $(LIBDIR)/*/Makefile.sub))
   endif
   MULTIKERNELSUBDIR_SEARCH_PATTERN ?=
-
-# Since we are not installed, we need to ensure we are properly configured
-include $(MAKEFILE_DIR)/Makefile.config
-
-$(MAKEFILE_DIR)/Makefile.config:
-	$(MAKEFILE_DIR)/configure
-
 endif
 
 
@@ -85,33 +119,6 @@ endif
 
 # PACKAGE MAINTAINERS: Adjust here the default paths of where files were installed
 #   if these paths differ from your packaging system defaults.
-
-# Default subdirectory and file names
-BINSUBDIR         ?= bin
-SBINSUBDIR        ?= sbin
-LIBEXECSUBDIR     ?= libexec
-LIBSUBDIR         ?= lib
-SYSCONFSUBDIR     ?= etc
-SHAREDSTATESUBDIR ?= com
-LOCALSTATESUBDIR  ?= var
-INCLUDESUBDIR     ?= include
-DATASUBDIR        ?= share
-INFOSUBDIR        ?= info
-LOCALESUBDIR      ?= locale
-MANSUBDIR         ?= man
-MAN1SUBDIR        ?= man1
-DOCSUBDIR         ?= doc
-HTMLSUBDIR        ?= html
-
-ARCHSUBDIR            ?= $(TARGET_ARCH)
-KERNELSUBDIR          ?= boot
-KCONFIGSUBDIR         ?= kconfig
-CONFIGDEFAULTSFILE    ?= config.h
-KCONFIGFILE           ?= kernel-config.h
-
-CONFIGDEFAULTSPATH    ?= $(INCLUDEDIR)/$(CONFIGDEFAULTSFILE)
-KCONFIGINSTANCESUBDIR ?= $(KCONFIGSUBDIR)/$(KERNEL)
-KCONFIGINSTANCEPATH   ?= $(KCONFIGINSTANCESUBDIR)/$(KCONFIGFILE)
 
 #
 #  Define default install paths (overridden by packaging systems)
@@ -196,42 +203,35 @@ CROSSLIBS := $(if $(filter --whole-archive,$(KLIBS)),,$(CROSSLIBS))
 
 #  Defines for build of native parts: utils and other host-run programs
 #
-COPT   =-g -Os -fno-builtin -fomit-frame-pointer
-CWARN  =-Wall
+CC     = gcc
+COPT   = -Os -fno-builtin -fomit-frame-pointer
+CWARN  = -Wall
 CINC   =
-CFLAGS =$(COPT) $(CWARN) $(CINC)
+CDEF   =
+CFLAGS = $(COPT) $(CWARN) $(CINC) $(CDEF)
+
+ifeq ("$(HOST_OS_TYPE)","Windows")
+  CDEF += -D_WIN32
+else
+  COPT += -g
+endif
 
 #  Defines for build of cross-compiled parts: firmware, demo programs
 #
-CROSSCOPT  =$(COPT) -mquickcall
-CROSSCWARN =$(CWARN)
-CROSSCINC  =-I$(INCLUDEDIR) -I$(KCONFIGINSTANCEDIR)
-CROSSCFLAGS   =$(CROSSCOPT) $(CROSSCWARN) $(CROSSCINC) $(CROSSCDEFINES)
-CROSSCXXFLAGS =-DCXX -fno-rtti -fno-exceptions $(CROSSCFLAGS)
-CROSSPFLAGS   =$(CROSSCFLAGS) --extended-syntax --unit-path=$(BRICKOS_ROOT)/lib/p --automake
+CROSSCOPT  = $(COPT) -mquickcall
+CROSSCWARN = $(CWARN)
+CROSSCINC  = -I$(INCLUDEDIR) -I$(KCONFIGINSTANCEDIR)
+CROSSCFLAGS   = $(CROSSCOPT) $(CROSSCWARN) $(CROSSCINC) $(CROSSCDEFINES)
+CROSSCXXFLAGS = -DCXX -fno-rtti -fno-exceptions $(CROSSCFLAGS)
+CROSSPFLAGS   = $(CROSSCFLAGS) --extended-syntax --unit-path=$(BRICKOS_ROOT)/lib/p --automake
 
 
-#  Defines for programs and scripts
+#  Defines for internal programs and scripts
 #
-CROSSAS =$(CROSSTOOLPREFIX)as$(CROSSTOOLSUFFIX)
-CROSSAR =$(CROSSTOOLPREFIX)ar$(CROSSTOOLSUFFIX)
-CROSSLD =$(CROSSTOOLPREFIX)ld$(CROSSTOOLSUFFIX)
-CROSSNM =$(CROSSTOOLPREFIX)nm$(CROSSTOOLSUFFIX)
-CROSSSIZE =$(CROSSTOOLPREFIX)size$(CROSSTOOLSUFFIX)
-CROSSOBJCOPY =$(CROSSTOOLPREFIX)objcopy$(CROSSTOOLSUFFIX)
-CROSSOBJDUMP =$(CROSSTOOLPREFIX)objdump$(CROSSTOOLSUFFIX)
-CROSSRANLIB  =$(CROSSTOOLPREFIX)ranlib$(CROSSTOOLSUFFIX)
-CROSSCC  =$(CROSSTOOLPREFIX)gcc$(CROSSTOOLSUFFIX)
-CROSSCXX =$(CROSSTOOLPREFIX)g++$(CROSSTOOLSUFFIX)
-CROSSGPC =$(CROSSTOOLPREFIX)gpc$(CROSSTOOLSUFFIX)
-CROSSGDB =$(CROSSTOOLPREFIX)gdb$(CROSSTOOLSUFFIX)
-
-#MERGEMAP = $(LIBEXECDIR)/merge-map$(EXT)
-#FIXDEPS  = $(LIBEXECDIR)/fixdeps$(EXT)
-GENLDS   = $(LIBEXECDIR)/genlds$(EXT)
-WRITELX	 = $(LIBEXECDIR)/writelx$(EXT)
-
-ARCH := $(shell $(CROSSCC) -dumpmachine)
+#MERGEMAP = $(LIBEXECDIR)/merge-map$(HOST_EXEC_EXT)
+#FIXDEPS  = $(LIBEXECDIR)/fixdeps$(HOST_EXEC_EXT)
+GENLDS   = $(LIBEXECDIR)/genlds$(HOST_EXEC_EXT)
+WRITELX	 = $(LIBEXECDIR)/writelx$(HOST_EXEC_EXT)
 
 
 #  Linker command files dynamic executables  (variable "$(KERNEL_FILES_BASE)" is without the extension).
@@ -248,6 +248,7 @@ DLDFLAGS    = -T $(DYNAMIC_LDS) -relax -L$(LIBDIR)
 GET_DEFINE_FROM_FILE = $(shell sed -n -E 's/^([[:blank:]]*#[[:blank:]]*define[[:blank:]]*$(1)[[:blank:]]*)([^[:blank:]]+([[:blank:]]*[^[:blank:]])*)([[:blank:]]*)$$/\2/p' $(2))
 # Check the kerne-specific configuration and then the default configuration
 PROG_MAX := $(or $(call GET_DEFINE_FROM_FILE,PROG_MAX,$(KCONFIGINSTANCEPATH)),$(call GET_DEFINE_FROM_FILE,PROG_MAX,$(CONFIGDEFAULTSPATH)),$(error ERROR: Unable to get the configuration for PROG_MAX))
+
 
 # ----------------------------------------------------------------------------
 #   Base address determination for relocation info

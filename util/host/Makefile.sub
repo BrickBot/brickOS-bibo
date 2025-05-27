@@ -4,16 +4,16 @@
 ###  brickOS - the independent LEGO Mindstorms OS
 ### --------------------------------------------------------------------------
 
-FONTTARGET=fontdesign$(EXT)
-FIRMDLTARGET=firmdl$(EXT)
+FONTTARGET=fontdesign$(HOST_EXEC_EXT)
+FIRMDLTARGET=firmdl$(HOST_EXEC_EXT)
 FIRMDLMAN1=firmdl.1
-LNPMSGTARGET=lnpmsg$(EXT)
-IRSRVRTARGET=ir-server$(EXT)
-DLLTARGET=dll$(EXT)
+LNPMSGTARGET=lnpmsg$(HOST_EXEC_EXT)
+IRSRVRTARGET=ir-server$(HOST_EXEC_EXT)
+DLLTARGET=dll$(HOST_EXEC_EXT)
 DLLMAN1=dll.1
-WRITELXTARGET=writelx$(EXT)
-GENLDSTARGET=genlds$(EXT)
-MKIMG := util/host/mkimg$(EXT)
+WRITELXTARGET=writelx$(HOST_EXEC_EXT)
+GENLDSTARGET=genlds$(HOST_EXEC_EXT)
+MKIMG := util/host/mkimg$(HOST_EXEC_EXT)
 
 RCX_COMM_SRCS = rcx_comm.c lnp-logical.c lnp.c
 
@@ -107,7 +107,7 @@ util/host/fastdl_38400.o: util/host/fastdl.S
 	$(CROSSCC) -MD -DB38400 $(CROSSCFLAGS) -c $< -o $@
 
 
-CFLAGS += -Iutil/host
+CINC += -Iutil/host
 
 $(MKIMG): $(MKIMGOBJS)
 	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
@@ -120,7 +120,7 @@ util/$(LNPMSGTARGET): $(LNPMSGOBJS)
 util/$(IRSRVRTARGET): $(IRSRVROBJS)
 	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
 
-util/dll$(EXT): $(DLLOBJS)
+util/dll$(HOST_EXEC_EXT): $(DLLOBJS)
 	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
 $(WRITELX): $(WRITELXOBJS)
 	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)

@@ -42,7 +42,7 @@ demo-clean::
 demo-realclean:: demo-clean
 	rm -f demo/xs-lisp/*.lx  demo/xs-lisp/*.a  demo/xs-lisp/*.o
 
-#eval-host$(EXT): $(XSEVAL) $(XSSRC)
+#eval-host$(HOST_EXEC_EXT): $(XSEVAL) $(XSSRC)
 #	cd xs/lisp && ../xs-host < ../../$<
 #	$(CC) -o $@ -DSTACKSIZE=$(DEMO_XS_STACKSIZE) $(OPTIONS) $(XSEVAL)
 

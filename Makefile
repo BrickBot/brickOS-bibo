@@ -53,10 +53,9 @@ include Makefile.utility
 
 
 clean:: $(MAKE_ALL_TARGETS:%=%-clean)
-	rm -f Makefile.common.dist demo/c/Makefile.dist demo/c++/Makefile.dist config.h.dist
 
 realclean:: clean $(MAKE_ALL_TARGETS:%=%-realclean)
-	rm -f Makefile.config tags TAGS *.bak *~ *.bak
+	rm -f tags TAGS *.bak *~ *.bak
 
 install:: $(MAKE_ALL_TARGETS:%=%-install)
 
@@ -105,11 +104,13 @@ makefiles-install::
 makefiles-uninstall::
 	rm -f $(DESTDIR)$(pkgtargetsysconfdir)/Makefile
 	rm -f $(DESTDIR)$(pkgtargetsysconfdir)/Makefile.common
+	rm -f $(DESTDIR)$(pkgtargetsysconfdir)/$(HOST_PROPERTIES_FILE)
 	rm -f $(DESTDIR)$(bindir)/makelx
 
 makefiles-clean::
 
 makefiles-realclean:: makefiles-clean
+	rm -f $(HOST_PROPERTIES_PATH)
 
 #  NOTE: --format=1 is not supported on Linux ([ce]tags in emacs2[01] packages)
 #   please set in your own environment

@@ -55,8 +55,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# Makefile Configuration File
-Makefile.config
+# Host Properties File
+host.properties
 
 # BrickOS / Bibo RCX Kernel Outputs
 *.coff

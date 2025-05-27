@@ -19,10 +19,10 @@ XS_STACKSIZE=1024
 OPTIONS=
 
 # XS builds are specific to a given kernel configuration
-XSTARGET     = xs-$(KERNEL)$(EXT)
-XSHOSTTARGET = xs-$(KERNEL)-host$(EXT)
-XSRCXTARGET  = xs-$(KERNEL)-rcx$(EXT)
-XSIRTARGET   = xs-$(KERNEL)-ir$(EXT)
+XSTARGET     = xs-$(KERNEL)$(HOST_EXEC_EXT)
+XSHOSTTARGET = xs-$(KERNEL)-host$(HOST_EXEC_EXT)
+XSRCXTARGET  = xs-$(KERNEL)-rcx$(HOST_EXEC_EXT)
+XSIRTARGET   = xs-$(KERNEL)-ir$(HOST_EXEC_EXT)
 
 # XSFILES      = front.c eval.c wtobj.c test.c errmsg.c
 XSSRCDIR     = xs/lisp
@@ -41,7 +41,7 @@ XSLX = xs/eval-ir.lx
 
 #NATIVEOBJS += $(XSOBJS)
 
-#all:: ircom.o xs$(EXT) xs-ir$(EXT) xs-host$(EXT) xs-rcx$(EXT) eval-ir.lx eval-host$(EXT) eval-rcx.lx
+#all:: ircom.o xs$(HOST_EXEC_EXT) xs-ir$(HOST_EXEC_EXT) xs-host$(HOST_EXEC_EXT) xs-rcx$(HOST_EXEC_EXT) eval-ir.lx eval-host$(HOST_EXEC_EXT) eval-rcx.lx
 
 #
 # Setup the relationships between "kernel" targets and "lang-lisp" targets
