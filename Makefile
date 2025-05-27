@@ -82,7 +82,7 @@ makefiles::
 
 makefiles-install::
 	test -d $(DESTDIR)$(pkgtargetsysconfdir) || mkdir -p $(DESTDIR)$(pkgtargetsysconfdir)
-	install -m 644 Makefile.common $(DESTDIR)$(pkgtargetsysconfdir)
+	install -m 644 Makefile.common Makefile.configure $(HOST_PROPERTIES_FILE)  $(DESTDIR)$(pkgtargetsysconfdir)
 	sed -e '/Installation Variables/a \
 	ORG = $(ORG)\
 	PACKAGE = $(PACKAGE)\
@@ -104,6 +104,7 @@ makefiles-install::
 makefiles-uninstall::
 	rm -f $(DESTDIR)$(pkgtargetsysconfdir)/Makefile
 	rm -f $(DESTDIR)$(pkgtargetsysconfdir)/Makefile.common
+	rm -f $(DESTDIR)$(pkgtargetsysconfdir)/Makefile.configure
 	rm -f $(DESTDIR)$(pkgtargetsysconfdir)/$(HOST_PROPERTIES_FILE)
 	rm -f $(DESTDIR)$(bindir)/makelx
 
