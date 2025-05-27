@@ -8,7 +8,7 @@
 # Project-related names (all lowercase by convention)
 ORG = brickbot
 PACKAGE = brickos
-TARGET_ARCH = h8300-lego-coff
+BRICK_ARCH = h8300-lego-coff
 KERNEL ?= bibo
 
 # Version of this release
@@ -86,7 +86,7 @@ makefiles-install::
 	sed -e '/Installation Variables/a \
 	ORG = $(ORG)\
 	PACKAGE = $(PACKAGE)\
-	TARGET_ARCH = $(TARGET_ARCH)\
+	BRICK_ARCH = $(BRICK_ARCH)\
 	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)\
 	CROSSTOOLSUFFIX = $(CROSSTOOLSUFFIX)\
 	CROSSTOOLEXT    = $(CROSSTOOLEXT)'\
@@ -97,7 +97,7 @@ makefiles-install::
 	ORG=$(ORG)\
 	PACKAGE=$(PACKAGE)\
 	SYSCONF_SUBDIR=$(ARCH_SYSCONF_PACKAGESUBDIR)\
-	TARGET_ARCH=$(TARGET_ARCH)'\
+	BRICK_ARCH=$(BRICK_ARCH)'\
 		< makelx.sh  > $(DESTDIR)$(bindir)/makelx
 	chmod 755 $(DESTDIR)$(bindir)/makelx
 

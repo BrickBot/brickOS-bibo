@@ -45,7 +45,7 @@ MAN1SUBDIR        ?= man1
 DOCSUBDIR         ?= doc
 HTMLSUBDIR        ?= html
 
-ARCHSUBDIR            ?= $(TARGET_ARCH)
+ARCHSUBDIR            ?= $(BRICK_ARCH)
 KERNELSUBDIR          ?= boot
 KCONFIGSUBDIR         ?= kconfig
 CONFIGDEFAULTSFILE    ?= config.h
