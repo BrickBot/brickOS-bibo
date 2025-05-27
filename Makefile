@@ -86,17 +86,14 @@ makefiles-install::
 	sed -e '/Installation Variables/a \
 	ORG = $(ORG)\
 	PACKAGE = $(PACKAGE)\
-	BRICK_ARCH = $(BRICK_ARCH)\
-	CROSSTOOLPREFIX = $(CROSSTOOLPREFIX)\
-	CROSSTOOLSUFFIX = $(CROSSTOOLSUFFIX)\
-	CROSSTOOLEXT    = $(CROSSTOOLEXT)'\
+	BRICK_ARCH = $(BRICK_ARCH)'\
 		< Makefile.lxprog  > $(DESTDIR)$(pkgtargetsysconfdir)/Makefile
 	chmod 644 $(DESTDIR)$(pkgtargetsysconfdir)/Makefile
 	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
 	sed -e '/Installation Variables/a \
 	ORG=$(ORG)\
 	PACKAGE=$(PACKAGE)\
-	SYSCONF_SUBDIR=$(ARCH_SYSCONF_PACKAGESUBDIR)\
+	SYSCONF_PACKAGESUBDIR=$(SYSCONF_PACKAGESUBDIR)\
 	BRICK_ARCH=$(BRICK_ARCH)'\
 		< makelx.sh  > $(DESTDIR)$(bindir)/makelx
 	chmod 755 $(DESTDIR)$(bindir)/makelx

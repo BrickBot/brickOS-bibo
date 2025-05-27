@@ -69,8 +69,8 @@ host-realclean:: host-clean
 host-install:: $(HOST_BIN_PATHS) $(HOST_LIBEXEC_PATHS) $(MAN1_PATHS)
 	test -d $(DESTDIR)$(bindir) || mkdir -p $(DESTDIR)$(bindir)
 	install -s -m 755  $(HOST_BIN_PATHS) $(DESTDIR)$(bindir)/
-	test -d $(DESTDIR)$(libexecdir) || mkdir -p $(DESTDIR)$(libexecdir)
-	install -s -m 755  $(HOST_LIBEXEC_PATHS) $(DESTDIR)$(libexecdir)/
+	test -d $(DESTDIR)$(pkglibexecdir) || mkdir -p $(DESTDIR)$(pkglibexecdir)
+	install -s -m 755  $(HOST_LIBEXEC_PATHS) $(DESTDIR)$(pkglibexecdir)/
 	test -d $(DESTDIR)$(man1dir) || mkdir -p $(DESTDIR)$(man1dir)
 	install -m 644 $(MAN1_PATHS) $(DESTDIR)$(man1dir)/
 

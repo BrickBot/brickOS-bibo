@@ -52,17 +52,17 @@ CONFIGDEFAULTSFILE    ?= config.h
 KCONFIGFILE           ?= kernel-config.h
 
 # Default subdirectory combinations
-ARCH_SYSCONF_PACKAGESUBDIR          ?= $(SYSCONFSUBDIR)/$(PACKAGE)
-ARCH_INCLUDE_PACKAGESUBDIR          ?= $(INCLUDESUBDIR)/$(PACKAGE)/$(VERSION_SERIES)
-ARCH_INCLUDE_KCONFIGSUBDIR          ?= $(INCLUDESUBDIR)/$(KCONFIGSUBDIR)
-ARCH_INCLUDE_KCONFIG_INSTANCESUBDIR ?= $(INCLUDESUBDIR)/$(KCONFIGINSTANCESUBDIR)
-ARCH_KERNELSUBDIR                   ?= $(KERNELSUBDIR)
-ARCH_KERNEL_INSTANCESUBDIR          ?= $(KERNELSUBDIR)/$(KERNEL)
-ARCH_LIB_INSTANCESUBDIR             ?= $(LIBSUBDIR)/$(KERNEL)
-
 CONFIGDEFAULTSPATH    ?= $(INCLUDEDIR)/$(CONFIGDEFAULTSFILE)
 KCONFIGINSTANCESUBDIR ?= $(KCONFIGSUBDIR)/$(KERNEL)
 KCONFIGINSTANCEPATH   ?= $(KCONFIGINSTANCESUBDIR)/$(KCONFIGFILE)
+
+# Default subdirectory combinations for the target arch
+SYSCONF_PACKAGESUBDIR          ?= $(SYSCONFSUBDIR)/$(PACKAGE)
+INCLUDE_PACKAGESUBDIR          ?= $(INCLUDESUBDIR)/$(PACKAGE)/$(VERSION_SERIES)
+INCLUDE_KCONFIGSUBDIR          ?= $(INCLUDESUBDIR)/$(KCONFIGSUBDIR)
+INCLUDE_KCONFIG_INSTANCESUBDIR ?= $(INCLUDESUBDIR)/$(KCONFIGINSTANCESUBDIR)
+KERNEL_INSTANCESUBDIR          ?= $(KERNELSUBDIR)/$(KERNEL)
+LIB_INSTANCESUBDIR             ?= $(LIBSUBDIR)/$(KERNEL)
 
 
 # ----------------------------------------------------------------------------
@@ -78,16 +78,16 @@ ifeq ("$(wildcard $(MAKEFILE_DIR)/makelx.sh)","")
   RUNTIME_ROOT         ?= $(abspath $(MAKEFILE_DIR)/../../..)
   $(info Running as installed from $(RUNTIME_ROOT))
   
-  BINDIR     ?= $(RUNTIME_ROOT)/$(BINSUBDIR)
-  LIBEXECDIR ?= $(RUNTIME_ROOT)/$(LIBEXECSUBDIR)
+  BINDIR        ?= $(RUNTIME_ROOT)/$(BINSUBDIR)
+  LIBEXECPKGDIR ?= $(RUNTIME_ROOT)/$(LIBEXECSUBDIR)/$(PACKAGE)
   
   ARCHDIR            ?= $(RUNTIME_ROOT)/$(ARCHSUBDIR)
-  INCLUDEDIR         ?= $(ARCHDIR)/$(ARCH_INCLUDE_PACKAGESUBDIR)
-  KCONFIGDIR         ?= $(ARCHDIR)/$(ARCH_INCLUDE_KCONFIGSUBDIR)
-  KCONFIGINSTANCEDIR ?= $(ARCHDIR)/$(ARCH_INCLUDE_KCONFIG_INSTANCESUBDIR)
-  KERNELDIR          ?= $(ARCHDIR)/$(ARCH_KERNELSUBDIR)
-  KERNELINSTANCEDIR  ?= $(ARCHDIR)/$(ARCH_KERNEL_INSTANCESUBDIR)
-  LIBDIR             ?= $(ARCHDIR)/$(ARCH_LIB_INSTANCESUBDIR)
+  INCLUDEDIR         ?= $(ARCHDIR)/$(INCLUDE_PACKAGESUBDIR)
+  KCONFIGDIR         ?= $(ARCHDIR)/$(INCLUDE_KCONFIGSUBDIR)
+  KCONFIGINSTANCEDIR ?= $(ARCHDIR)/$(INCLUDE_KCONFIG_INSTANCESUBDIR)
+  KERNELDIR          ?= $(ARCHDIR)/$(KERNELSUBDIR)
+  KERNELINSTANCEDIR  ?= $(ARCHDIR)/$(KERNEL_INSTANCESUBDIR)
+  LIBDIR             ?= $(ARCHDIR)/$(LIB_INSTANCESUBDIR)
   
   MULTIKERNELSUBDIR_SEARCH_PATTERN ?= /*
 else
@@ -95,8 +95,8 @@ else
   RUNTIME_ROOT         ?= $(MAKEFILE_DIR)
   $(info Running relative to the source tree at $(MAKEFILE_DIR))
 
-  BINDIR     ?= util
-  LIBEXECDIR ?= util
+  BINDIR        ?= util
+  LIBEXECPKGDIR ?= util
   
   INCLUDEDIR         ?= $(INCLUDESUBDIR)
   KCONFIGDIR         ?= $(KCONFIGSUBDIR)
@@ -146,19 +146,20 @@ htmldir ?= ${docdir}/${HTMLSUBDIR}
 mandir ?= ${datadir}/${MANSUBDIR}
 man1dir ?= ${mandir}/${MAN1SUBDIR}
 
+pkglibexecdir ?= ${libexecdir}/${PACKAGE}
 pkgdatadir ?= ${datadir}/${PACKAGE}
 pkgdocdir ?= ${docdir}/packages/${PACKAGE}
 pkghtmldir ?= ${pkgdocdir}/${HTMLSUBDIR}
 pkgexampledir ?= ${pkgdocdir}/${EXAMPLESSUBDIR}
 
 pkgtargetdir                ?= ${prefix}/${ARCHSUBDIR}
-pkgtargetincludedir         ?= ${pkgtargetdir}/${ARCH_INCLUDE_PACKAGESUBDIR}
-pkgtargetkconfigdir         ?= ${pkgtargetdir}/${ARCH_INCLUDE_KCONFIGSUBDIR}
-pkgtargetkconfiginstancedir ?= ${pkgtargetdir}/${ARCH_INCLUDE_KCONFIG_INSTANCESUBDIR}
-pkgtargetkerneldir          ?= ${pkgtargetdir}/${ARCH_KERNELSUBDIR}
-pkgtargetkernelinstancedir  ?= ${pkgtargetdir}/${ARCH_KERNEL_INSTANCESUBDIR}
-pkgtargetlibinstancedir     ?= ${pkgtargetdir}/${ARCH_LIB_INSTANCESUBDIR}
-pkgtargetsysconfdir         ?= ${pkgtargetdir}/${ARCH_SYSCONF_PACKAGESUBDIR}
+pkgtargetincludedir         ?= ${pkgtargetdir}/${INCLUDE_PACKAGESUBDIR}
+pkgtargetkconfigdir         ?= ${pkgtargetdir}/${INCLUDE_KCONFIGSUBDIR}
+pkgtargetkconfiginstancedir ?= ${pkgtargetdir}/${INCLUDE_KCONFIG_INSTANCESUBDIR}
+pkgtargetkerneldir          ?= ${pkgtargetdir}/${KERNELSUBDIR}
+pkgtargetkernelinstancedir  ?= ${pkgtargetdir}/${KERNEL_INSTANCESUBDIR}
+pkgtargetlibinstancedir     ?= ${pkgtargetdir}/${LIB_INSTANCESUBDIR}
+pkgtargetsysconfdir         ?= ${pkgtargetdir}/${SYSCONF_PACKAGESUBDIR}
 
 
 # ----------------------------------------------------------------------------
@@ -228,10 +229,10 @@ CROSSPFLAGS   = $(CROSSCFLAGS) --extended-syntax --unit-path=$(BRICKOS_ROOT)/lib
 
 #  Defines for internal programs and scripts
 #
-#MERGEMAP = $(LIBEXECDIR)/merge-map$(HOST_EXEC_EXT)
-#FIXDEPS  = $(LIBEXECDIR)/fixdeps$(HOST_EXEC_EXT)
-GENLDS   = $(LIBEXECDIR)/genlds$(HOST_EXEC_EXT)
-WRITELX	 = $(LIBEXECDIR)/writelx$(HOST_EXEC_EXT)
+#MERGEMAP = $(LIBEXECPKGDIR)/merge-map$(HOST_EXEC_EXT)
+#FIXDEPS  = $(LIBEXECPKGDIR)/fixdeps$(HOST_EXEC_EXT)
+GENLDS   = $(LIBEXECPKGDIR)/genlds$(HOST_EXEC_EXT)
+WRITELX	 = $(LIBEXECPKGDIR)/writelx$(HOST_EXEC_EXT)
 
 
 #  Linker command files dynamic executables  (variable "$(KERNEL_FILES_BASE)" is without the extension).

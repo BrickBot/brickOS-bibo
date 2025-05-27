@@ -20,7 +20,7 @@ SCRIPT_EXTENSION=${SCRIPT_NAME##*.}
 SCRIPT_DIR=$(realpath -s $(dirname $0))
 
 SOURCE_TREE_MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/Makefile.lxprog)
-INSTALLED_MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/../$TARGET_ARCH/$SYSCONF_SUBDIR/Makefile)
+INSTALLED_MAKEFILE_PATH=$(realpath -s $SCRIPT_DIR/../$BRICK_ARCH/$SYSCONF_PACKAGESUBDIR/Makefile)
 
 # Functions
 output_usage()
