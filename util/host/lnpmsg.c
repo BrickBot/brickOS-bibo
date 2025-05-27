@@ -67,6 +67,8 @@
 
 #include <lnp-logical.h>
 #include <lnp.h>
+
+#include "config.h"
 #include "rcx_comm.h"
 #include "lnpmsg_comm.h"
 
@@ -144,7 +146,7 @@ int main(int argc, char **argv)
       "\n"
       "Examples: \n" // lnpmsg -t usb -p 6 -l crashlog.txt\n"
 //      "          lnpmsg -t usb -sf commands.txt SENDNOW\n"
-      "          lnpmsg --tty=tcp:localhost:50637 -sim \"Integrity Message\"\n"
+      "          lnpmsg --tty=tcp:localhost:" DEFAULT_IR_SERVER_BROADCAST_PORT_AS_STRING " -sim \"Integrity Message\"\n"
       "          lnpmsg -tusb -sam 8 0 15 \"Integrity Message\"\n"
       ;
    
@@ -339,7 +341,7 @@ int main(int argc, char **argv)
   
   if(BADFILE == tty.fd)
   {
-	fprintf(stderr, "Exiting program");
+	fprintf(stderr, "Exiting program\n");
     fflush(stderr);
     exit(1);
   }

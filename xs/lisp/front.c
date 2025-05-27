@@ -29,6 +29,9 @@
 
 #include "object.h"
 
+// Host Config
+#include "../../util/host/rcx_comm.h"
+
 // Kernel includes
 #include "../../include/dmusic.h"
 #include "../../include/dchars.h"
@@ -3489,30 +3492,11 @@ int main(int argc, char **argv) {
 #endif
     char *usage_string =
     "usage: %s [options]\n\n"
-	"Options:\n"
-	"  -t<device>   , --tty=<device>        set the IR device to <device>\n"
-	"    <device> may take one of the following formats:\n"
-#if defined(_WIN32) || defined (__CYGWIN__)
-	"                 serial:<device name>  (e.g. serial:COM1)\n"
-	"                 usb[:<device name>]   (e.g. usb or usb:\\\\\\\\.\\\\legotower1)\n"
-#else
-	"                 serial:<device name>  (e.g. serial:/dev/ttyS0)\n"
-	"                 usb:<device name>     (e.g. usb:/dev/legousbtower0)\n"
-#endif
-	"                 tcp:<host>[:<port>]   (e.g. tcp:localhost:50637)\n"
-	"                 ncd:<host>:<port>     (e.g. tcp:localhost:87)\n"
-	"  -b<rate>     , --baud=<rate>         baud rate (e.g. 2400, 4800)\n"
-	"  -o<timeout>  , --timeout=<mseconds>  timeout in milliseconds\n"
-	"  -h           , --help                display this help\n"
-	"  -v           , --verbose             verbose mode\n"
-	"\n"
-	"Default tty device can be set using one of the following methods:\n"
-	" * Environment variable RCXTTY.\n"
-	"      Eg:\tset RCXTTY=tcp:localhost:50637\n"
-	" * Configuration file ~/.rcx/device.conf\n"
-	"      Specify <device> as the first line of the file\n"
-	"\n"
-	;
+    RCX_COMM_OPTIONS
+    "\n"
+    RCX_COMM_OPTIONS_INFO
+    "\n"
+    ;
 
     // Process command-line arguments
     while((opt=getopt_long(argc, argv, "t:b:o:hv",

@@ -25,6 +25,8 @@
 #ifndef RCX_COMM_H_INCLUDED
 #define RCX_COMM_H_INCLUDED
 
+#include "config.h"
+
 #if defined(_WIN32)
   #include <windows.h>
 #endif
@@ -92,8 +94,9 @@
 	"  -t<device>   , --tty=<device>        set the IR device to <device>\n" \
 	"    <device> may take one of the following formats:\n" \
     RCX_PLATFORM_DEVICE_OPTIONS \
-	"                 tcp:<host>[:<port>]   (e.g. tcp:localhost:50637)\n" \
-	"                 ncd:<host>:<port>     (e.g. tcp:localhost:87)\n" \
+	"                 tcp[:<host>[:<port>]] (e.g. tcp:localhost:" DEFAULT_IR_SERVER_BROADCAST_PORT_AS_STRING ")\n" \
+	"                 ncd[:<host>[:<port>]] (e.g. tcp:localhost:87)\n" \
+    "                                       default host:port is localhost:" DEFAULT_IR_SERVER_BROADCAST_PORT_AS_STRING "\n"\
     "                 com:<device name>     non-echo, non-keepalive serial device\n" \
     "                                       (such as bluetooth)\n"\
 	"  -b<rate>     , --baud=<rate>         baud rate (e.g. 2400, 4800)\n" \
@@ -105,7 +108,7 @@
 	"Default tty device can be set using one of the following methods,\n" \
 	"listed in order of precedence:\n" \
 	" * Environment variable RCXTTY.\n" \
-	"      Eg:\tset RCXTTY=tcp:localhost:50637\n" \
+	"      Eg:\tset RCXTTY=tcp:localhost:" DEFAULT_IR_SERVER_BROADCAST_PORT_AS_STRING "\n" \
 	" * Configuration file ~/.rcx/device.conf\n" \
 	" * Configuration file /etc/rcx/device.conf\n" \
 	"      Specify <device> as the first line of the conf file\n"

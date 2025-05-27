@@ -39,6 +39,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "config.h"
 #include "lnp-logical.h"
 #include "rcx_comm.h"
 
@@ -67,7 +68,6 @@ static const struct option long_options[]={
   #define getopt_long(ac, av, opt, lopt, lidx) (getopt((ac), (av), (opt)))
 #endif // HAVE_GETOPT_LONG
 
-#define BRICK_BROADCAST_PORT 50637
 #define MAX_CLIENTS 255
 
 int sockets[MAX_CLIENTS];
@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
     struct sockaddr addr;
     struct sockaddr_in* addr_in = (struct sockaddr_in*) &addr;
     struct timeval tv;
-    long port = BRICK_BROADCAST_PORT;
+    long port = DEFAULT_IR_SERVER_BROADCAST_PORT;
     int slot_len = 0;
     int val = 1;
     int len = 0;
@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
     char *usage_string =
     "usage: %s [options]\n\n"
     RCX_COMM_OPTIONS
-    "  -p<port>     , --port=<port number>  server broadcast port (default: 50637)\n"
+    "  -p<port>     , --port=<port number>  server broadcast port (default: " DEFAULT_IR_SERVER_BROADCAST_PORT_AS_STRING ")\n"
     "  -c<tcp>      , --tcp=<server>:<port> uplink to another TCP IR server\n"
 	"\n"
     "Note: There is no functional difference between TCP uplink and TCP downlink\n"

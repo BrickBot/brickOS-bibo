@@ -34,6 +34,15 @@
 //
 #define CONF_RCX_PROTOCOL               //!< RCX protocol handler
 
+// IR broadcast services
+//
+#define DEFAULT_IR_SERVER_BROADCAST_PORT 50637
+// #define int as string:
+//  - https://gcc.gnu.org/onlinedocs/gcc-4.4.7/cpp/Stringification.html
+#define xstr(s) str(s)
+#define str(s) #s
+#define DEFAULT_IR_SERVER_BROADCAST_PORT_AS_STRING  xstr(DEFAULT_IR_SERVER_BROADCAST_PORT)
+
 // networking services
 //
 #define CONF_LNP                        //!< link networking protocol

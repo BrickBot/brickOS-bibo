@@ -42,7 +42,7 @@
  * - Consolidated and merged duplicate firmdl, dll, and lnpmsg code
  *
  * Merged from lnphost.sf.net under the GNU GPL (C) 2004:
- * -Stephan Höhrmann's lnp_hexdump as rcx_hexdump
+ * -Stephan HÃ¶hrmann's lnp_hexdump as rcx_hexdump
  *
  * Matthew Sheets - 2009-06-13
  * - Enabled changing the baud rate and timeout settings at run-time
@@ -83,11 +83,14 @@
 #include <lnp.h>
 #include <sys/lnp-logical.h>
 #include <sys/lnp.h>
+
+#include "config.h"
 #include "rcx_comm.h"
 
 /* Globals */
 
 int __comm_debug = FALSE;
+char *default_host = "localhost";
 
 /* Timer routines */
 
@@ -544,7 +547,7 @@ void rcx_init_tcp(tty_t *tty, const char *tty_name, int baud)
   tty->fd = BADFILE;
   
   char *portStr;
-  int port = 50637;
+  int port = DEFAULT_IR_SERVER_BROADCAST_PORT;
   struct hostent *h;
   struct sockaddr_in localAddr, ttyAddr;
 
@@ -724,6 +727,20 @@ void rcx_init(tty_t *tty, const char *tty_name, int baud, int timeout, int start
       tty_name += 4;
 	  if(__comm_debug)
 		fprintf(stderr, "rcx_comm: Jochen Hoenicke - NCD Mode.\n");
+    }
+    else if (strcmp(tty_name, "tcp") == 0)
+    {
+      tty->type = tty_t_tcp;
+      tty_name = default_host;
+	  if(__comm_debug)
+		fprintf(stderr, "rcx_comm: Jochen Hoenicke - TCP Mode with defaults.\n");
+    }
+    else if (strcmp(tty_name, "ncd") == 0)
+    {
+      tty->type = tty_t_ncd;
+      tty_name = default_host;
+	  if(__comm_debug)
+		fprintf(stderr, "rcx_comm: Jochen Hoenicke - NCD Mode with defaults.\n");
     }
     else if (strncmp(tty_name, "usb:", 4) == 0)
     {
