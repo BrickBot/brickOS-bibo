@@ -29,9 +29,14 @@ VERSION_SERIES = v$(VERSION_MAJOR)
 # 
 SUBDIRS=util lib include kconfig kernel rom xs
 
+# The dependent targets for "all"
+MAKE_ALL_TARGETS=host headers kernel rom
+# Excluded targets: docs (currently broken?)
+
 # Only build the demo programs if program support is enabled
 ifeq ($(shell grep --quiet '^\#define CONF_PROGRAM' include/config.h && echo 1),1)
   SUBDIRS += demo
+  MAKE_ALL_TARGETS += demo
 else
   $(info NOTE: CONF_PROGRAM support for programs disabled; skipping building of demo programs)
 endif
@@ -39,9 +44,6 @@ endif
 # Add docs to the subdirs list last
 SUBDIRS += doc
 
-# The "all" targets
-MAKE_ALL_TARGETS=host headers kernel rom demo
-# Excluded targets: docs (currently broken?)
 
 all:: $(MAKE_ALL_TARGETS)
 
