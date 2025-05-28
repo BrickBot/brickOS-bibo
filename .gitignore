@@ -73,7 +73,7 @@ host.properties
 
 # BrickOS / Bibo Intermediate Files
 util/host/fastdl_*.h
-util/include/
+util/lnp-include/
 
 # BrickOS / Bibo Host Outputs
 util/dll
