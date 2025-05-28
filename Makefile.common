@@ -202,11 +202,14 @@ KLIBRARIES=$(LIBC) $(LIBMINT)
 CROSSLIBS := $(if $(filter --whole-archive,$(KLIBS)),,$(CROSSLIBS))
 
 
+#  Defines for build of both native and cross-compiled parts
+#
+COPT   = -Os -fno-builtin -fomit-frame-pointer
+CWARN  = -Wall
+
 #  Defines for build of native parts: utils and other host-run programs
 #
 CC     = gcc
-COPT   = -Os -fno-builtin -fomit-frame-pointer
-CWARN  = -Wall
 CINC   =
 CDEF   =
 CFLAGS = $(COPT) $(CWARN) $(CINC) $(CDEF)
