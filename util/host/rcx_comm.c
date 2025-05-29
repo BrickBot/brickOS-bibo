@@ -90,7 +90,9 @@
 /* Globals */
 
 int __comm_debug = FALSE;
-char *default_host = "localhost";
+char *default_ir_server_host = DEFAULT_IR_SERVER_HOST_NAME;
+char *default_usb_tower_name_linux = DEFAULT_USB_TOWER_NAME_LINUX;
+char *default_usb_tower_name_windows = DEFAULT_USB_TOWER_NAME_WINDOWS;
 
 /* Timer routines */
 
@@ -731,14 +733,14 @@ void rcx_init(tty_t *tty, const char *tty_name, int baud, int timeout, int start
     else if (strcmp(tty_name, "tcp") == 0)
     {
       tty->type = tty_t_tcp;
-      tty_name = default_host;
+      tty_name = default_ir_server_host;
 	  if(__comm_debug)
 		fprintf(stderr, "rcx_comm: Jochen Hoenicke - TCP Mode with defaults.\n");
     }
     else if (strcmp(tty_name, "ncd") == 0)
     {
       tty->type = tty_t_ncd;
-      tty_name = default_host;
+      tty_name = default_ir_server_host;
 	  if(__comm_debug)
 		fprintf(stderr, "rcx_comm: Jochen Hoenicke - NCD Mode with defaults.\n");
     }
@@ -763,25 +765,29 @@ void rcx_init(tty_t *tty, const char *tty_name, int baud, int timeout, int start
 	  if(__comm_debug)
 		fprintf(stderr, "rcx_comm: Serial-specified Mode.\n");
     }
-
     //Check the command line to see if IR tower is USB.
-#if defined(_WIN32)
-    else if(stricmp(tty_name, "usb")==0)	{
+    else if(strcmp(tty_name, "usb")==0)	{
         tty->type = tty_t_usb;
+        char* usb_debug_msg;
+#if defined(_WIN32)
+        // If you have more than one (unlikely), set the correct usb tower name in config.h.
+        tty_name = default_usb_tower_name_windows;
+        usb_debug_msg = "rcx_comm: Hary Mahesan - USB IR Tower Mode for Windows.\n";
+#else
+        tty_name = default_usb_tower_name_linux;
+        usb_debug_msg = "rcx_comm: P.C. Chan & Tyler Akins - USB IR Tower Mode for Linux.\n";
+#endif
         if(__comm_debug)
-            fprintf(stderr, "rcx_comm: Hary Mahesan - USB IR Tower Mode.\n");
-        tty_name = "\\\\.\\legotower1"; // Set the correct usb tower if you have more than one (unlikely).
+            fprintf(stderr, usb_debug_msg);
     }
-#elif defined(LINUX) || defined(linux)
     // If the tty string contains "usb", e.g. /dev/usb/legousbtower0, we
     // assume it is the USB tower.  If you use something else that doesn't
     // have "usb" in the device name, link it.
     else if (strstr(tty_name,"usb") !=0) {
        tty->type = tty_t_usb;
        if (__comm_debug)
-           fprintf(stderr, "rcx_comm: P.C. Chan & Tyler Akins - USB IR Tower Mode for Linux.\n");
+           fprintf(stderr, "rcx_comm: No tty type prefix, but \"usb\" detected in device name.\n");
     }
-#endif
     else {
        tty->type = tty_t_serial;
        if (__comm_debug)

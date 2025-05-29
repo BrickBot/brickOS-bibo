@@ -87,7 +87,7 @@
 #else
 #define RCX_PLATFORM_DEVICE_OPTIONS \
 	"                 serial:<device name>  (e.g. serial:/dev/ttyS0)\n" \
-	"                 usb:<device name>     (e.g. usb:/dev/legousbtower0)\n"
+	"                 usb[:<device name>]   (e.g. usb:" DEFAULT_USB_TOWER_NAME_LINUX ")\n"
 #endif 
 
 #define RCX_COMM_OPTIONS	"Options:\n" \

@@ -34,8 +34,14 @@
 //
 #define CONF_RCX_PROTOCOL               //!< RCX protocol handler
 
+// USB device
+//
+#define DEFAULT_USB_TOWER_NAME_LINUX    "/dev/usb/legousbtower0"
+#define DEFAULT_USB_TOWER_NAME_WINDOWS  "\\\\.\\legotower1"
+
 // IR broadcast services
 //
+#define DEFAULT_IR_SERVER_HOST_NAME "localhost"
 #define DEFAULT_IR_SERVER_BROADCAST_PORT 50637
 // #define int as string:
 //  - https://gcc.gnu.org/onlinedocs/gcc-4.4.7/cpp/Stringification.html
