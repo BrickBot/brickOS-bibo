@@ -67,6 +67,7 @@ host.properties
 
 # BrickOS / Bibo RCX Program Outputs
 *.lx
+*.rcoff
 
 # BrickOS / Bibo RCX Program Intermediate Outputs
 *.d[cs][12]
