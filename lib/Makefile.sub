@@ -13,16 +13,19 @@ include lib/printf/Makefile.sub
 DISTFILES += lib/Makefile.sub
 
 
-libs:: $(LIBRARIES) kconfig
+lib: $(LIBRARIES) kconfig
 
-libs-clean:: kconfig-clean
+lib-clean: kconfig-clean
 
-libs-realclean:: libs-clean kconfig-realclean
+lib-realclean: lib-clean kconfig-realclean
 	rm -f $(LIBRARIES)
 
-libs-install:: libs kconfig-install
+lib-install: lib kconfig-install
 	test -d $(DESTDIR)$(pkgtargetlibinstancedir) || mkdir -p $(DESTDIR)$(pkgtargetlibinstancedir)
 	install -m 644 $(LIBRARIES) $(DESTDIR)$(pkgtargetlibinstancedir)
 
-libs-uninstall:: kconfig-uninstall
+lib-uninstall: kconfig-uninstall
 	rm -f -r $(DESTDIR)$(pkgtargetlibinstancedir)
+
+
+.PHONY: lib lib-clean lib-realclean lib-install lib-uninstall

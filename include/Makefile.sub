@@ -25,7 +25,7 @@ include-clean:
 
 include-realclean: include-clean
 
-include-install:
+include-install: include
 	test -d $(DESTDIR)$(pkgtargetincludedir)     || mkdir -p $(DESTDIR)$(pkgtargetincludedir)
 	test -d $(DESTDIR)$(pkgtargetincludedir)/rom || mkdir -p $(DESTDIR)$(pkgtargetincludedir)/rom
 	test -d $(DESTDIR)$(pkgtargetincludedir)/sys || mkdir -p $(DESTDIR)$(pkgtargetincludedir)/sys
