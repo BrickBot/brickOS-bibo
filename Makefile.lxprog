@@ -22,19 +22,19 @@ replace_extensions=$(filter %$(2), $($(1):%.c=%$(2)) $($(1):%.cpp=%$(2)) \
         $($(1):%.s=%$(2)) $($(1):%.S=%$(2)) \
         $($(1):%.strl=%$(2)) $($(1):%.lsp=%$(2)) )
 
-# Process "SOURCES" arg
+# Process "FILES" arg
 #
-ifdef SOURCES
+ifdef FILES
 # Handle a simple user declaration of source files names:
 # The first item is the source file with the entrypoint (e.g. main() method;
 #   the remaining items (if any) are any additionally-needed sources
-PROGRAM_MAIN_SOURCE := $(word 1,$(SOURCES))
+PROGRAM_MAIN_SOURCE := $(word 1,$(FILES))
 PROGRAM_MAIN_NAME := $(basename $(PROGRAM_MAIN_SOURCE))
 
 # Now that the source file names are parsed, assign as if they had been
 #   explicitly declared in a Makefile
 PROGRAM_MAIN_SOURCES := $(PROGRAM_MAIN_SOURCE)
-$(PROGRAM_MAIN_NAME)_SRC := $(filter-out $(PROGRAM_MAIN_SOURCE),$(SOURCES))
+$(PROGRAM_MAIN_NAME)_SRC := $(filter-out $(PROGRAM_MAIN_SOURCE),$(FILES))
 else
 # Hard-coded example:
 PROGRAM_MAIN_SOURCES?=hello-C.c

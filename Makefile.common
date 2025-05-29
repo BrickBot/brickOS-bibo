@@ -106,7 +106,7 @@ else
   LIBDIR             ?= $(LIBSUBDIR)
 
   ifeq ("$(CROSSLIBS)","")
-    # Lib check based on lib*.a files didn't work, so now check for source tree subfolder names
+    # Lib check based on lib*.a files didn't find anything, so now check for source tree subfolder names
     CROSSLIBS = $(patsubst $(LIBDIR)/%/Makefile.sub,-l%,$(wildcard $(LIBDIR)/*/Makefile.sub))
   endif
   MULTIKERNELSUBDIR_SEARCH_PATTERN ?=

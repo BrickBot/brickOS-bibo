@@ -80,14 +80,14 @@ else
   
   if [ -z "$*" ] ; then
     output_usage
-    echo "ERROR: No source file(s) specified."
+    echo "ERROR: No file(s) specified."
     exit 1
   else
-    MAKE_SOURCES="SOURCES='$*'"
+    MAKE_FILES="FILES='$*'"
   fi
 
   # Generate and execute the make command to build the LX program
-  MAKE_COMMAND="${MAKE_PROGRAM} ${MAKE_VARS} ${MAKE_SOURCES} --makefile='${MAKEFILE_PATH}'"
+  MAKE_COMMAND="${MAKE_PROGRAM} ${MAKE_VARS} ${MAKE_FILES} ${MAKE_TARGETS} --makefile='${MAKEFILE_PATH}'"
   echo "Command: \"${MAKE_COMMAND}\""
   eval "${MAKE_COMMAND}"
 fi
