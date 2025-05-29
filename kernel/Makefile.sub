@@ -27,23 +27,24 @@ DISTFILES += kernel/Makefile.sub $(KSOURCE_PATHS) $(KASMSOURCE_PATHS)
 # This will not work on Windows unless you have perl installed.
 #
 
-kernel:: $(KERNEL_TARGETS) libs
+kernel:: $(KERNEL_TARGETS) lib
 
-kernel-clean:: libs-clean
+kernel-clean:: lib-clean
 	rm -f $(KERNEL_TARGETS)
 	rm -f kernel/*.o kernel/*.dis kernel/*.map kernel/*.d
 
-kernel-realclean:: kernel-clean libs-realclean
+kernel-realclean:: kernel-clean lib-realclean
 	rm -rf kernel/*~ kernel/*.bak kernel/*.tgz kernel/*.s kernel/tags kernel/*.dcoff kernel/*.dmap kernel/*.dsrec
 	rm -f  kernel/*.srec kernel/*.coff kernel/*.bin kernel/*.lds kernel/*.kmetadata kernel/install-stamp
 
-kernel-install:: $(KERNEL_TARGETS) libs-install
+kernel-install:: $(KERNEL_TARGETS) lib-install
 	test -d $(DESTDIR)$(pkgtargetkernelinstancedir) || mkdir -p $(DESTDIR)$(pkgtargetkernelinstancedir)
 	install -m 644 $(KERNEL_FILES) $(DESTDIR)$(pkgtargetkernelinstancedir)
 
-kernel-uninstall:: libs-uninstall
+kernel-uninstall:: lib-uninstall
 #	cd $(DESTDIR)$(pkgtargetkernelinstancedir) && rm -f $(notdir $(KERNEL_FILES))
 	rm -f -r $(DESTDIR)$(pkgtargetkernelinstancedir)
+
 
 .PHONY: all kernel kernel-clean kernel-realclean kernel-install kernel-uninstall tag depend
 

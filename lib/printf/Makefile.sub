@@ -5,19 +5,16 @@
 ### --------------------------------------------------------------------------
 
 LIBPRINTFSRC := printf.c
-LIBPRINTF := lib/libprintf.a
+
+LIBPRINTFOBJS=$(LIBPRINTFSRC:%.c=lib/printf/%.o)
 
 DISTFILES += $(patsubst %,lib/printf/%, Makefile.sub $(LIBPRINTFSRC))
 
+LIBPRINTF := lib/libprintf.a
 LIBRARIES+=$(LIBPRINTF)
-LIBPRINTFOBJS=$(LIBPRINTFSRC:%.c=lib/printf/%.o)
 
-libs-clean::
-	rm -f lib/printf/*.d lib/printf/*.o
 
-libs-realclean::
-	rm -f lib/printf/*~ lib/printf/*.bak lib/printf/tags
-
+# Lib Target
 $(LIBPRINTF): $(LIBPRINTFOBJS)
 	rm -f $@
 	$(CROSSAR) -sq $@ $^

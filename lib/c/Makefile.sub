@@ -6,19 +6,15 @@
 
 LIBCSRC := memcpy.c memset.c random.c calloc.c \
            strcmp.c strcpy.c strlen.c
-LIBC := lib/libc.a
+LIBCOBJS=$(LIBCSRC:%.c=lib/c/%.o)
 
 DISTFILES += $(patsubst %,lib/c/%, Makefile.sub $(LIBCSRC))
 
+LIBC := lib/libc.a
 LIBRARIES+=$(LIBC)
-LIBCOBJS=$(LIBCSRC:%.c=lib/c/%.o)
 
-libs-clean::
-	rm -f lib/c/*.d lib/c/*.o
 
-libs-realclean::
-	rm -f lib/c/*~ lib/c/*.bak lib/c/tags
-
+# Lib Target
 $(LIBC): $(LIBCOBJS)
 	rm -f $@
 	$(CROSSAR) -sq $@ $^

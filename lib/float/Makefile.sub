@@ -6,18 +6,15 @@
 
 LIBFLOATSRC := expandsf.s joinsf.s addsf3.s negsf2.s mulsf3.s divsf3.s \
               floatsisf.s cmpsf2.s fixsfsi.s startsf.s normalsf.s
-LIBFLOAT := lib/libfloat.a
-
-DISTFILES += $(patsubst %,lib/float/%, Makefile.sub $(LIBFLOATSRC))
-LIBRARIES+=$(LIBFLOAT)
 LIBFLOATOBJS=$(LIBFLOATSRC:%.s=lib/float/%.o)
 
-libs-clean::
-	rm -f lib/float/*.d lib/float/*.o
+DISTFILES += $(patsubst %,lib/float/%, Makefile.sub $(LIBFLOATSRC))
 
-libs-realclean::
-	rm -f lib/float/*~ lib/float/*.bak lib/float/tags
+LIBFLOAT := lib/libfloat.a
+LIBRARIES+=$(LIBFLOAT)
 
+
+# Lib Target
 $(LIBFLOAT): $(LIBFLOATOBJS)
 	rm -f $@
 	$(CROSSAR) -sq $@ $^

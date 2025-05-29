@@ -6,18 +6,15 @@
 
 LIBCPPCSRC := stub.c
 LIBCPPSRC := mem.cpp
-LIBCPP := lib/libc++.a
-
-DISTFILES += $(patsubst %,lib/c++/%, Makefile.sub $(LIBCPPCSRC) $(LIBCPPSRC))
-LIBRARIES+=$(LIBCPP)
 LIBCPPOBJS=$(LIBCPPCSRC:%.c=lib/c++/%.o) $(LIBCPPSRC:%.cpp=lib/c++/%.o)
 
-libs-clean::
-	rm -f lib/c++/*.d lib/c++/*.o
+DISTFILES += $(patsubst %,lib/c++/%, Makefile.sub $(LIBCPPCSRC) $(LIBCPPSRC))
 
-libs-realclean::
-	rm -f lib/c++/*~ lib/c/*.bak lib/c/tags
+LIBCPP := lib/libc++.a
+LIBRARIES+=$(LIBCPP)
 
+
+# Lib Target
 $(LIBCPP): $(LIBCPPOBJS)
 	rm -f $@
 	$(CROSSAR) -sq $@ $^

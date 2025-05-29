@@ -16,8 +16,10 @@ DISTFILES += lib/Makefile.sub
 lib: $(LIBRARIES) kconfig
 
 lib-clean: kconfig-clean
+	rm -f lib/*/*.d  lib/*/*.o
 
 lib-realclean: lib-clean kconfig-realclean
+	rm -f lib/*/*~  lib/*/*.bak  lib/*/tags
 	rm -f $(LIBRARIES)
 
 lib-install: lib kconfig-install

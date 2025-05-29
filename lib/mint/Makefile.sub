@@ -6,18 +6,15 @@
 
 LIBMINTSRC:= cmpsi2.c divhi3.c modhi3.c mulhi3.c  udivhi3.c umodhi3.c \
 	     divsi3.c modsi3.c mulsi3.c ucmpsi2.c udivsi3.c umodsi3.c
-LIBMINT := lib/libmint.a
-
-DISTFILES += $(patsubst %,lib/mint/%, Makefile.sub $(LIBMINTSRC))
-LIBRARIES+=$(LIBMINT)
 LIBMINTOBJS=$(LIBMINTSRC:%.c=lib/mint/%.o)
 
-libs-clean::
-	rm -f lib/mint/*.d lib/mint/*.o
+DISTFILES += $(patsubst %,lib/mint/%, Makefile.sub $(LIBMINTSRC))
 
-libs-realclean::
-	rm -f lib/mint/*~ lib/mint/*.bak lib/mint/tags
+LIBMINT := lib/libmint.a
+LIBRARIES+=$(LIBMINT)
 
+
+# Lib Target
 $(LIBMINT): $(LIBMINTOBJS)
 	rm -f $@
 	$(CROSSAR) -sq $@ $^
