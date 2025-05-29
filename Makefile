@@ -30,7 +30,7 @@ VERSION_SERIES = v$(VERSION_MAJOR)
 SUBDIRS=util lib include kconfig kernel rom xs
 
 # The dependent targets for "all"
-MAKE_ALL_TARGETS=host headers kernel rom
+MAKE_ALL_TARGETS=host include kernel rom
 # Excluded targets: docs (currently broken?)
 
 # Only build the demo programs if program support is enabled

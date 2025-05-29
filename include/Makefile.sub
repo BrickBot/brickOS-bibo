@@ -6,7 +6,7 @@
 
 
 
-HEADERS=config.h conio.h dbutton.h dchars.h dirpd.h dkey.h dlcd.h dmotor.h \
+INCLUDES=config.h conio.h dbutton.h dchars.h dirpd.h dkey.h dlcd.h dmotor.h \
 	dcc.h dmusic.h dsensor.h dsound.h lnp.h lnp-logical.h mem.h \
 	persistent.h powerfunctions.h remote.h semaphore.h setjmp.h stdio.h \
 	stdlib.h string.h swmux.h time.h tm.h unistd.h \
@@ -16,22 +16,25 @@ HEADERS=config.h conio.h dbutton.h dchars.h dirpd.h dkey.h dlcd.h dmotor.h \
 	sys/lnp-logical.h sys/mm.h sys/program.h sys/time.h \
 	sys/tm.h sys/vis.h sys/waitqueue.h
 
-DISTFILES += include/Makefile.sub $(HEADERS:%=include/%)
+DISTFILES += include/Makefile.sub $(INCLUDES:%=include/%)
 
 
-headers::
+include:
 
-headers-clean::
+include-clean:
 
-headers-realclean:: headers-clean
+include-realclean: include-clean
 
-headers-install::
+include-install:
 	test -d $(DESTDIR)$(pkgtargetincludedir)     || mkdir -p $(DESTDIR)$(pkgtargetincludedir)
 	test -d $(DESTDIR)$(pkgtargetincludedir)/rom || mkdir -p $(DESTDIR)$(pkgtargetincludedir)/rom
 	test -d $(DESTDIR)$(pkgtargetincludedir)/sys || mkdir -p $(DESTDIR)$(pkgtargetincludedir)/sys
-	for i in $(HEADERS); do \
+	for i in $(INCLUDES); do \
 	    install -m 644 include/$$i $(DESTDIR)${pkgtargetincludedir}/$$i ; \
 	done
 
-headers-uninstall::
+include-uninstall:
 	rm -f -r $(DESTDIR)$(pkgtargetincludedir)
+
+
+.PHONY: include include-clean include-realclean include-install include-uninstall
