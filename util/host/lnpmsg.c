@@ -120,18 +120,18 @@ int main(int argc, char **argv)
   long remoteMessage = -1;
 
   char *usageString =
-      "Usage: lnpmsg [action] [options]\n"
+      "Usage: lnpmsg [options] [action]\n"
       "\n"
       "Actions:\n"
-      "  -slm <message num> Send Lego standard firmware message.\n"
-      "  -srm <message num> Send Lego remote message.\n"
+      "  -slm <message num> Send Lego standard firmware message (0 - 255).\n"
+      "  -srm <message num> Send Lego remote message (0 - 65,535).\n"
       "  -sim \"<message>\"   Send LNP Integrity message.\n"
       "  -sam <source port> <destination address> <destination port> \"<message>\"\n"
       "                       Send LNP Addressing message; valid addresses & ports: 0-15.\n"
       "   If no send action is specified, the program will run in \"listen\" mode."
       "\n"
       RCX_COMM_OPTIONS
-//      "  -a <address>     Set PC host address, valid from 0-15.  Default 0.\n"
+      "  --node=<address>     Set PC host address, valid from 0-15.  Default 0.\n"
 //      "  -p <port>        Set PC host port to listen on, valid from 0-15.\n"
 //      "                   Use -1 to listen for messages directed to any port(default).\n"
 //      "  -l <file>        Log all messages to the specified file.\n"
@@ -159,19 +159,26 @@ int main(int argc, char **argv)
   {
 //    if(!strcmp(argv[0], "--debug"))            //Extract debug option.
 //      showDebugInfo = 1;
-//    else if(!strcmp(argv[0], "-a"))            //Extract host address option.
-//    {
-//      if(argc > 1)
-//      {
-//        argc--;
-//        argv++;
-//        addressPC=atoi(argv[0]);
-//        if(addressPC<0 || addressPC>15)
-//          sprintf(errorMsg, STR_HOST_ADD_RANGE, "0-15");
-//      }
-//      else
-//        sprintf(errorMsg, STR_NO_PARAMETER, "-a");
-//    }
+//    else
+    if(!strncmp(argv[0], "--node=", 7))            //Extract host address option
+    {
+        addressPC=atoi(argv[0]+7);
+        if(addressPC<0 || addressPC>15)
+          sprintf(errorMsg, STR_HOST_ADD_RANGE, "0-15");
+    }
+    else if(!strcmp(argv[0], "-n"))            //Extract host address option
+    {
+      if(argc > 1)
+      {
+        argc--;
+        argv++;
+        addressPC=atoi(argv[0]);
+        if(addressPC<0 || addressPC>15)
+          sprintf(errorMsg, STR_HOST_ADD_RANGE, "0-15");
+      }
+      else
+        sprintf(errorMsg, STR_NO_PARAMETER, "-n");
+    }
 //    else if(!strcmp(argv[0], "-p"))            //Extract host port setting.
 //    {
 //      if(argc > 1)
@@ -222,7 +229,7 @@ int main(int argc, char **argv)
 //      else
 //        sprintf(errorMsg, STR_NO_PARAMETER, "-sf");
 //    }
-//    else
+    else
     if (!strcmp(argv[0], "-slm"))
     {
       if (argc > 1)
