@@ -61,11 +61,100 @@ else
       -k)
         shift
         KERNEL="$1"
-        MAKE_VARS="$MAKE_VARS KERNEL=$KERNEL"
+        MAKE_VARS="$MAKE_VARS KERNEL='$KERNEL'"
         ;;
       --kernel=*)
         KERNEL="${1#*=}"
-        MAKE_VARS="$MAKE_VARS KERNEL=$KERNEL"
+        MAKE_VARS="$MAKE_VARS KERNEL='$KERNEL'"
+        ;;
+      -t)
+        shift
+        MAKE_VARS="$MAKE_VARS TTY_NAME='$1'"
+        ;;
+      --tty=*)
+        MAKE_VARS="$MAKE_VARS TTY_NAME='${1#*=}'"
+        ;;
+      -b)
+        shift
+        MAKE_VARS="$MAKE_VARS TTY_BAUD='$1'"
+        ;;
+      --baud=*)
+        MAKE_VARS="$MAKE_VARS TTY_BAUD='${1#*=}'"
+        ;;
+      -o)
+        shift
+        MAKE_VARS="$MAKE_VARS TTY_TIMEOUT='$1'"
+        ;;
+      --timeout=*)
+        MAKE_VARS="$MAKE_VARS TTY_TIMEOUT='${1#*=}'"
+        ;;
+      -n)
+        shift
+        MAKE_VARS="$MAKE_VARS LNP_HOST_ADDR='$1'"
+        ;;
+      --node=*)
+        MAKE_VARS="$MAKE_VARS LNP_HOST_ADDR='${1#*=}'"
+        ;;
+      -k)
+        shift
+        MAKE_VARS="$MAKE_VARS LNP_BRICK_ADDR='$1'"
+        MAKE_TARGETS="$MAKE_TARGETS set-brick-address"
+        ;;
+      --brickaddr=*)
+        MAKE_VARS="$MAKE_VARS LNP_BRICK_ADDR='${1#*=}'"
+        MAKE_TARGETS="$MAKE_TARGETS set-brick-address"
+        ;;
+      -a)
+        shift
+        MAKE_VARS="$MAKE_VARS LNP_DEST_ADDR='$1'"
+        ;;
+      --destaddr=*)
+        MAKE_VARS="$MAKE_VARS LNP_DEST_ADDR='${1#*=}'"
+        ;;
+      -r)
+        shift
+        MAKE_VARS="$MAKE_VARS LNP_DEST_PORT='$1'"
+        ;;
+      --destport=*)
+        MAKE_VARS="$MAKE_VARS LNP_DEST_PORT='${1#*=}'"
+        ;;
+      -p)
+        shift
+        MAKE_VARS="$MAKE_VARS PROG_NUM='$1'"
+        ;;
+      --program=*)
+        MAKE_VARS="$MAKE_VARS PROG_NUM='${1#*=}'"
+        ;;
+      -f | --firmdl)
+        MAKE_TARGETS="$MAKE_TARGETS firmdl"
+        ;;
+      -l | --download)
+        MAKE_TARGETS="$MAKE_TARGETS download"
+        ;;
+      -x | --execute)
+        MAKE_TARGETS="$MAKE_TARGETS execute"
+        ;;
+      -d | --delete)
+        MAKE_TARGETS="$MAKE_TARGETS delete"
+        ;;
+      -e | --emulate)
+        MAKE_TARGETS="$MAKE_TARGETS emulate"
+        ;;
+      -g | --debug)
+        MAKE_TARGETS="$MAKE_TARGETS debug"
+        ;;
+      -slm | -srm | -sim)
+        MAKE_TARGETS="$MAKE_TARGETS message"
+        MAKE_VARS="$MAKE_VARS 'LNP_MSG_ARGS=\"$1 \'$2\'\"'"
+		shift
+        ;;
+      -sam)
+        MAKE_TARGETS="$MAKE_TARGETS message"
+        MAKE_VARS="$MAKE_VARS 'LNP_MSG_ARGS=\"$1 $2 $3 $4 \'$5\'\"'"
+		shift ; shift ; shift ; shift
+        ;;
+      -r | --remote)
+        MAKE_TARGETS="$MAKE_TARGETS remote"
         ;;
       -h | --help)
         output_usage
@@ -78,15 +167,16 @@ else
     shift
   done
   
+  
+  
   if [ -z "$*" ] ; then
-    output_usage
-    echo "ERROR: No file(s) specified."
-    exit 1
+    # No file(s) specified
+	true ;
   else
     MAKE_FILES="FILES='$*'"
   fi
 
-  # Generate and execute the make command to build the LX program
+  # Generate and execute the make command
   MAKE_COMMAND="${MAKE_PROGRAM} ${MAKE_VARS} ${MAKE_FILES} ${MAKE_TARGETS} --makefile='${MAKEFILE_PATH}'"
   echo "Command: \"${MAKE_COMMAND}\""
   eval "${MAKE_COMMAND}"
