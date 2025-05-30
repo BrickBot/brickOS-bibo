@@ -58,7 +58,7 @@ else
   CROSSTOOL_EXTENSIONS = ""
 endif
 
-$(PREFIX_FOR_EXPORT)HOST_ARCH  := $(HOST_ARCH)
+$(PREFIX_FOR_EXPORT)HOST_ARCH       := $(HOST_ARCH)
 $(PREFIX_FOR_EXPORT)HOST_OS_TYPE    := $(HOST_OS_TYPE)
 $(PREFIX_FOR_EXPORT)HOST_OS_SUBTYPE := $(HOST_OS_SUBTYPE)
 $(PREFIX_FOR_EXPORT)HOST_EXEC_EXT   := $(HOST_EXEC_EXT)
@@ -95,14 +95,14 @@ CROSSTOOL_SUFFIXES=""    \
 CROSSTOOL_CANDIDATES = \
   $(foreach dir,$(CROSSTOOL_DIRS), \
     $(foreach prefix,$(CROSSTOOL_PREFIXES), \
-      $(foreach suffix,$(CROSSTOOL_SUFFIXES), \
+      $(foreach suffix,$(strip $(CROSSTOOL_SUFFIXES) $(2)), \
         $(foreach extension,$(CROSSTOOL_EXTENSIONS), \
           $(if  $(strip $(if $(subst "",,$(dir)),$(realpath $(subst "",,$(dir)$(prefix)$(1)$(suffix)$(extension))),$(shell which $(subst "",,$(dir)$(prefix)$(1)$(suffix)$(extension)) 2> /dev/null) )), \
                                       $(strip $(subst "",,$(dir)$(prefix)$(1)$(suffix)$(extension)))  ) ))))
 
 CROSSTOOL_SELECT = \
-  $(or $(firstword $(call CROSSTOOL_CANDIDATES,$(1))), \
-    $(warning  No crosstool found for $(1)))
+  $(or $(firstword $(call CROSSTOOL_CANDIDATES,$(1),$(2))), \
+    $(warning  No crosstool found for $(1)) )
 
 
 # Binutils Tools
