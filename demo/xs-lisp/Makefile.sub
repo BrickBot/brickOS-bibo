@@ -36,11 +36,11 @@ demo-clean::
 	rm -f demo/xs-lisp/*.dis   demo/xs-lisp/*.dis2
 	rm -f demo/xs-lisp/*.dc1   demo/xs-lisp/*.dc2
 	rm -f demo/xs-lisp/*.ds1   demo/xs-lisp/*.ds2
-	rm -f demo/xs-lisp/*.srec  demo/xs-lisp/*.coff  demo/xs-lisp/*.map
+	rm -f demo/xs-lisp/*.srec  demo/xs-lisp/*.map
 	rm -f demo/xs-lisp/*~      demo/xs-lisp/*.bak
 
 demo-realclean:: demo-clean
-	rm -f demo/xs-lisp/*.lx  demo/xs-lisp/*.a  demo/xs-lisp/*.o
+	rm -f demo/xs-lisp/*.lx  demo/xs-lisp/*.a  demo/xs-lisp/*.o  demo/xs-lisp/*.coff  demo/xs-lisp/*.rcoff
 
 #eval-host$(HOST_EXEC_EXT): $(XSEVAL) $(XSSRC)
 #	cd xs/lisp && ../xs-host < ../../$<

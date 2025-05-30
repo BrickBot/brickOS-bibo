@@ -29,13 +29,13 @@ demo:: $(DEMO_CPP_PROGRAM_OUTPUTS)
 .SECONDARY: $(DEMO_CPP_OBJS)
 
 demo-clean::
-	rm -f demo/c++/*.dis  demo/c++/*.dis2 demo/c++/*.s demo/c++/*.ds1 demo/c++/*.ds2
-	rm -f demo/c++/*.dc1  demo/c++/*.dc2  demo/c++/*.d
-	rm -f demo/c++/*.dmap demo/c++/*.dcoff 
-	rm -f demo/c++/*~     demo/c++/*.bak  demo/c++/*.srec demo/c++/*.map demo/c++/*.coff
+	rm -f demo/c++/*.dis  demo/c++/*.dis2  demo/c++/*.s demo/c++/*.ds1 demo/c++/*.ds2
+	rm -f demo/c++/*.dc1  demo/c++/*.dc2   demo/c++/*.d
+	rm -f demo/c++/*.dmap demo/c++/*.dcoff
+	rm -f demo/c++/*~     demo/c++/*.bak   demo/c++/*.srec demo/c++/*.map
 
 demo-realclean:: demo-clean
-	rm -f demo/c++/*.lx  demo/c++/*.a  demo/c++/*.o
+	rm -f demo/c++/*.lx  demo/c++/*.a  demo/c++/*.o  demo/c++/*.coff  demo/c++/*.rcoff
 
 # depencencies
 #
