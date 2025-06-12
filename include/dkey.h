@@ -79,7 +79,7 @@ extern volatile unsigned char dkey;
 
 //! wait until any of the given keys is pressed or released.
 //
-extern char dkey_wait(unsigned char pressed, unsigned char mask);
+extern char dkey_wait(unsigned char keystate, unsigned char keymask);
 
 //! check if the given key is pressed.
 #define dkey_pressed(key)  (dkey_multi & (key))

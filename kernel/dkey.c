@@ -109,7 +109,7 @@ dkey_same:\n\
 ");
 #endif // DOXYGEN_SHOULD_SKIP_THIS
 
-char dkey_wait(unsigned char pressed, unsigned char keymask) {
+char dkey_wait(unsigned char is_depressed, unsigned char keymask) {
     waitqueue_t entry;
     grab_kernel_lock();
     if (is_program_running()) {
@@ -117,7 +117,7 @@ char dkey_wait(unsigned char pressed, unsigned char keymask) {
     } else {
       add_to_waitqueue(&dkey_system_waitqueue, &entry);
     }
-    while ((dkey_multi & keymask) ? !pressed : pressed
+    while ((dkey_multi & keymask) ? !is_depressed : is_depressed
         && !shutdown_requested()) {
       wait();
     }
