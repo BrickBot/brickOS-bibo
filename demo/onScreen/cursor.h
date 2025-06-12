@@ -91,7 +91,10 @@ void Cursor_toggle()
         dlcd_hide(LCD_S3_SELECT);
       break;
   }
-//  lcd_refresh();
+
+#ifndef CONF_LCD_REFRESH
+  lcd_refresh();
+#endif
 }
 
 void Cursor_set(int n)

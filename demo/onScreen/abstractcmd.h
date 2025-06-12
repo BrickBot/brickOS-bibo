@@ -73,7 +73,9 @@ void NOPCommand_display(NOPCommand* cmd)
 // TODO: Verify that hex_display_codes is a suitable replacement.
 //   NOP command does not appear to be selectable, so this might be a non-issue
   cputc_hex_0(cmd->cOp);
-//  lcd_refresh();
+#ifndef CONF_LCD_REFRESH
+  lcd_refresh();
+#endif
 }
 
 void NOPCommand_constructor(NOPCommand* cmd, char cOp)
@@ -122,7 +124,9 @@ void DelayCommand_display_primitive(DelayCommand* cmd, int bToggle)
   cputc_native_2(bSwitch ? CHAR_SPACE : hex_display_codes[(cmd->dsec>>4)&0x0F] );
   cputc_native_1(bSwitch ? CHAR_SPACE : hex_display_codes[cmd->dsec&0x0F] );
   cputc_native_0(CHAR_d);
-//  lcd_refresh();
+#ifndef CONF_LCD_REFRESH
+  lcd_refresh();
+#endif
 }
 
 void DelayCommand_display(DelayCommand* cmd)
@@ -234,6 +238,7 @@ void OutputCommand_display_primitive(OutputCommand* cmd, int bToggle, int ncol)
     cputc_native_2(CHAR_C);
   else
     cputc_native_2(CHAR_SPACE);
+
   cputc_native_1((bSwitch&&(ncol==1)) ? CHAR_UNDERSCORE : ((cmd->nPower<0) ? CHAR_DASH : hex_display_codes[cmd->nPower]));
   cputc_native_0((bSwitch&&(ncol==0)) ? CHAR_SPACE : CHAR_o);
   if (cmd->iPort & 1)
@@ -278,7 +283,10 @@ void OutputCommand_display_primitive(OutputCommand* cmd, int bToggle, int ncol)
       	dlcd_show(LCD_C_RIGHT);
       }
   }
-//  lcd_refresh();
+  
+#ifndef CONF_LCD_REFRESH
+  lcd_refresh();
+#endif
 }
 
 void OutputCommand_display(OutputCommand* cmd)

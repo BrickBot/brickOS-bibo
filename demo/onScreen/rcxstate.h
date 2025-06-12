@@ -22,10 +22,12 @@ void fnDisplayCommand()
     n = MyRCX.M_currentMacro->nCurrentCmd = 0;
   if (MyRCX.M_currentMacro->nCmds > n)
   {
-//    lcd_clear();
-    cputc_hex_4((n>>4)&0x0f);
-    cputc_hex_3(n&0x0f);
-dlcd_show(LCD_3_DOT);
+#ifndef CONF_LCD_REFRESH
+    lcd_clear();
+#endif
+    cputc_hex_4((n>>4) & 0x0f);
+    cputc_hex_3(n & 0x0f);
+    dlcd_show(LCD_3_DOT);
     MyRCX.M_currentMacro->AC_cmds[n]->display(MyRCX.M_currentMacro->AC_cmds[n]);
   }
 }
@@ -42,13 +44,19 @@ RCXState* fnRun()
 {
   if (tRun == NULL) {
     tRun = execi(&taskRun, 0, NULL, PRIO_LOWEST, DEFAULT_STACK_SIZE);
-//    lcd_clear();
-    //cputs("GO   ");
+#ifndef CONF_LCD_REFRESH
+    lcd_clear();
+#endif
 	cputc_native_user(CHAR_G, CHAR_O, 0, 0);  // GO
-//    lcd_refresh();
+
+#ifndef CONF_LCD_REFRESH
+    lcd_refresh();
+#endif
     msleep(500);
-//    lcd_clear();
-//    lcd_refresh();
+    lcd_clear();
+#ifndef CONF_LCD_REFRESH
+    lcd_refresh();
+#endif
     return &RCXGoState;
   }
   else {
@@ -58,12 +66,15 @@ RCXState* fnRun()
     motor_b_dir(off);
     motor_c_dir(off);
 //    lcd_clear();
-    //cputs("OFF  ");
 	cputc_native_user(CHAR_O, CHAR_F, CHAR_F, 0);  // OFF
-//    lcd_refresh();
+#ifndef CONF_LCD_REFRESH
+    lcd_refresh();
+#endif
     msleep(500);
-//    lcd_clear();
-//    lcd_refresh();
+    lcd_clear();
+#ifndef CONF_LCD_REFRESH
+    lcd_refresh();
+#endif
     return &RCXBrowseState;
   }
 }
