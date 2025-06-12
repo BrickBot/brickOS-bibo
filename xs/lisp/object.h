@@ -22,7 +22,7 @@
  *  - https://www.gnu.org/software/libc/manual/html_node/Important-Data-Types.html
  */
 #include <stddef.h>
-typedef ptrdiff_t object;
+typedef size_t object;
 
 #ifdef RCX
 #define TAGMASK   0x8003  // 1.............11
