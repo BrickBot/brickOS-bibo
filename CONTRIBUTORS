@@ -15,6 +15,9 @@ Matthew Sheets (mesheets@users.sourceforge.net)
     including LDCC, lnp_printf, and lnpmsg (formerly LegOShrink)
   Host Utilities
     - Updated utils to better facilitate using TCP as a tty.
+    - Enable default tty names for types TCP and USB
+      ~ TCP defaults to localhost:50637
+      ~ USB defaults to /dev/usb/legousbtower0
     - Made NCD tty types a runtime option instead of a compile-time #define.
     - Reworked firmdl3, dll, and lnpmsg under utils as well as
         lnp and lnp-logic in the kernel to facilitate better code reuse,
