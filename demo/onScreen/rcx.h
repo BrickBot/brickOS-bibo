@@ -83,7 +83,7 @@ void RCXstop(RCX* rcx)
 
 //  if (tTimer != NULL)
 //  {
-//    kill(tTimer);
+//    shutdown_task(tTimer);
 //    tTimer = NULL;
 //  }
   if (tRun != NULL)
@@ -103,12 +103,12 @@ void RCXstop(RCX* rcx)
   }
 //  if (tButtonRun != NULL)
 //  {
-//    kill(tButtonRun);
+//    shutdown_task(tButtonRun);
 //    tButtonRun = NULL;
 //  }
 //  if (tButtonOnOff != NULL)
 //  {
-//    kill(tButtonOnOff);
+//    shutdown_task(tButtonOnOff);
 //    tButtonOnOff = NULL;
 //  }
 
