@@ -70,17 +70,15 @@ $(PREFIX_FOR_EXPORT)HOST_EXEC_EXT   := $(HOST_EXEC_EXT)
 
 #   Known directories in which the h8300 toolchain might be found
 CROSSTOOL_DIRS=""                                 \
-               /usr/local/h8300-hitachi-coff/bin/ \
                /usr/h8300-hitachi-coff/bin/       \
-               /usr/local/brickos/bin/            \
+               /usr/local/h8300-hitachi-coff/bin/ \
                /usr/local/lego/bin/               \
                /usr/local/rcx/bin/
 
 #   Known PREFIXs of the h8300 toolchain
 CROSSTOOL_PREFIXES=                    \
                    h8300-hitachi-coff- \
-                   h8300-coff-         \
-                   h8300coff-
+                   h8300-coff-
 
 CROSSTOOL_SUFFIXES=""    \
                    -3    \
@@ -95,7 +93,7 @@ CROSSTOOL_SUFFIXES=""    \
 CROSSTOOL_CANDIDATES = \
   $(foreach dir,$(CROSSTOOL_DIRS), \
     $(foreach prefix,$(CROSSTOOL_PREFIXES), \
-      $(foreach suffix,$(strip $(CROSSTOOL_SUFFIXES) $(2)), \
+      $(foreach suffix,$(strip $(2) $(CROSSTOOL_SUFFIXES)), \
         $(foreach extension,$(CROSSTOOL_EXTENSIONS), \
           $(if  $(strip $(if $(subst "",,$(dir)),$(realpath $(subst "",,$(dir)$(prefix)$(1)$(suffix)$(extension))),$(shell which $(subst "",,$(dir)$(prefix)$(1)$(suffix)$(extension)) 2> /dev/null) )), \
                                       $(strip $(subst "",,$(dir)$(prefix)$(1)$(suffix)$(extension)))  ) ))))
@@ -127,7 +125,7 @@ $(PREFIX_FOR_EXPORT)CROSSGPC := $(call CROSSTOOL_SELECT,gpc)
 $(PREFIX_FOR_EXPORT)CROSSCIL := $(call CROSSTOOL_SELECT,cil,-4.3)
 
 # GNU Debugger
-$(PREFIX_FOR_EXPORT)CROSSGDB := $(call CROSSTOOL_SELECT,gdb,-7)
+$(PREFIX_FOR_EXPORT)CROSSGDB := $(call CROSSTOOL_SELECT,gdb,-5)
 
 # Crosstools target architecture
 $(PREFIX_FOR_EXPORT)CROSS_ARCH := $(shell $($(PREFIX_FOR_EXPORT)CROSSCC) -dumpmachine)
