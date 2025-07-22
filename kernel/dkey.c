@@ -122,8 +122,10 @@ char dkey_wait(unsigned char is_depressed, unsigned char keymask) {
       wait();
     }
     if (is_program_running()) {
+      // For dkey_user_waitqueue
       remove_from_waitqueue(&entry);
     } else {
+      // For dkey_system_waitqueue
       remove_from_waitqueue(&entry);
     }
     release_kernel_lock();
