@@ -483,8 +483,8 @@ void wait() {
     kernel_lock = oldlock |0x80;
     sti(flags);
     if ((ctid->tflags & T_STATE) == T_ZOMBIE) {
-	ctid->tflags = (ctid->tflags & ~T_STATE) | T_RUNNING;
-	kill(ctid);
+        ctid->tflags = (ctid->tflags & ~T_STATE) | T_RUNNING;
+        kill(ctid);
     }
 }
 
@@ -497,8 +497,8 @@ void wait_timeout(unsigned msec) {
 
 void wakeup(waitqueue_t *queue) {
     while (queue) {
-	make_running(queue->thread);
-	queue = queue->next;
+        make_running(queue->thread);
+        queue = queue->next;
     }
 }
 
@@ -514,6 +514,9 @@ void wakeup_single(waitqueue_t *queue){
     make_running(best);
 }
 
+/**
+ * Add process to wait queue.  May only be called with kernel lock.
+ */
 void add_to_waitqueue(waitqueue_t **queue, waitqueue_t *entry) {
     entry->thread = ctid;
     entry->next = *queue;
