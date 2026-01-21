@@ -76,10 +76,11 @@ TAGS:
 	-etags *.c $(INCLUDEDIR)/*.h $(INCLUDEDIR)/*/*.h 
 
 clean::
-	rm -f *.dis *.dis2 *.s *.ds1 *.ds2 *.dmap *.dcoff 
+	rm -f *.dis *.dis2 *.s *.ds1 *.ds2 *.dmap *.dcoff
 
 realclean:: clean
-	rm -f *~ *.bak *.lx *.a *.o TAGS
+	rm -f *~ *.bak *.lx *.a *.o *.rcoff TAGS
+
 
 .PHONY: all clean realclean
 
