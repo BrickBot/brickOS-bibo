@@ -489,10 +489,13 @@ void wait() {
 }
 
 void wait_timeout(unsigned msec) {
-    timer_t timer = { 0,  (void (*)(void*)) make_running, ctid };
-    add_timer(msec, &timer);
-    wait();
-    remove_timer(&timer);
+    /* If msec is 0, things will freeze */
+    if (msec > 0) {
+        timer_t timer = { 0,  (void (*)(void*)) make_running, ctid };
+        add_timer(msec, &timer);
+        wait();
+        remove_timer(&timer);
+    }
 }
 
 void wakeup(waitqueue_t *queue) {
