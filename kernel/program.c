@@ -103,8 +103,6 @@ const unsigned char min_length[]={
    2  // CMDsethost
 };
 
-static program_t programs[PROG_MAX];       //!< the programs
-
 static unsigned char* buffer_ptr;          //!< packet receive buffer
 volatile unsigned char packet_len;         //!< packet length
 volatile unsigned char packet_src;         //!< packet sender
