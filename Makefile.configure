@@ -93,7 +93,7 @@ CROSSTOOL_SUFFIXES=""    \
 CROSSTOOL_CANDIDATES = \
   $(foreach dir,$(CROSSTOOL_DIRS), \
     $(foreach prefix,$(CROSSTOOL_PREFIXES), \
-      $(foreach suffix,$(strip $(2) $(CROSSTOOL_SUFFIXES)), \
+      $(foreach suffix,$(strip $(CROSSTOOL_SUFFIXES)) $(2), \
         $(foreach extension,$(CROSSTOOL_EXTENSIONS), \
           $(if  $(strip $(if $(subst "",,$(dir)),$(realpath $(subst "",,$(dir)$(prefix)$(1)$(suffix)$(extension))),$(shell which $(subst "",,$(dir)$(prefix)$(1)$(suffix)$(extension)) 2> /dev/null) )), \
                                       $(strip $(subst "",,$(dir)$(prefix)$(1)$(suffix)$(extension)))  ) ))))
