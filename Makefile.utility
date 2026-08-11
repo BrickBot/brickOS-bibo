@@ -27,28 +27,45 @@ STOW_PREREQ_TARGET ?= install
 # Stow Targets
 #
 
-# Defining STOW_DIR as a prerequisite of stow and
-#  install as a prerequitise of STOW_DIR still causes
+# Defining both STOW_DIR as a prerequisite of stow and
+#  also install as a prerequitise of STOW_DIR still causes
 #  the install target to executed every time, even if
 #  configured as an order-only prerequisite.  Thus,
-#  we check for STOW_DIR and trigger install manually.
-stow:   stow-check-package
-ifeq (,$(wildcard $(DESTDIR)$(STOW_DIR)))
-	$(MAKE)  $(STOW_PREREQ_TARGET)
+#  we first check for STOW_DIR and then--if successful--
+#  trigger the install manually.
+
+# Install the package to the Stow root directory, but ONLY if
+#   the Stow package directory does not already exist.
+stow-load:    stow-check-package
+ifeq (,$(wildcard $(DESTDIR)$(prefix)))
+	$(MAKE) $(STOW_PREREQ_TARGET)
+else
+	$(info Directory "$(DESTDIR)$(prefix)" found; skipping "$(STOW_PREREQ_TARGET)" action)
+endif
+
+stow:         stow-check-package
+ifeq (,$(wildcard $(DESTDIR)$(prefix)))
+	$(error Package install path "$(DESTDIR)$(prefix)" not found.  Need to Make target "stow-load"?)
 endif
 	stow $(STOW_STANDARD_ARGS) --stow   "$(STOW_PACKAGE)"
 
-restow: stow-check-package
+restow:       stow-check-package
 	stow $(STOW_STANDARD_ARGS) --restow "$(STOW_PACKAGE)"
 
-unstow: stow-check-package
+unstow:       stow-check-package
 	stow $(STOW_STANDARD_ARGS) --delete "$(STOW_PACKAGE)"
+
+# Remove the package from the Stow root directory
+stow-unload:  stow-check-package
+	rm -rf "$(prefix)"
 
 stow-check-package:
 ifndef prefix
 	$(error The "prefix" variable needed by Stow is undefined)
 else
-	@echo "Stow package name identified as \"$(STOW_PACKAGE)\""
+	@echo "Stow Install Path:    \"$(prefix)\""
+	@echo "Stow Package Name:    \"$(STOW_PACKAGE)\""
+	@echo "Stow Root Directory:  \"$(STOW_DIR)\""
 endif
 
 
