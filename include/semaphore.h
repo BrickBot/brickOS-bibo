@@ -63,7 +63,7 @@ typedef struct {
  *  \param pshared (this argument is ignored)
  *  \return (always 0)
 */
-extern inline int sem_init(sem_t * sem, int pshared, unsigned int value)
+INLINE int sem_init(sem_t * sem, int pshared, unsigned int value)
 {
     sem->value   = value;
     sem->waiters = 0;
@@ -104,7 +104,7 @@ extern int sem_post(sem_t * sem);
 //
 //! Get the semaphore value
 //
-extern inline int sem_getvalue(sem_t * sem, int *sval)
+INLINE int sem_getvalue(sem_t * sem, int *sval)
 {
     *sval = sem->value;
     return 0;
@@ -119,7 +119,7 @@ extern inline int sem_getvalue(sem_t * sem, int *sval)
  *  NOTE: No tasks should be waiting on
  *  the semaphore at the time sem_destroy is  called.
 */
-extern inline int sem_destroy(sem_t * sem)
+INLINE int sem_destroy(sem_t * sem)
 {
   return 0;
 }

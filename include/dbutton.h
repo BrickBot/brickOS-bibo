@@ -64,7 +64,7 @@ extern "C" {
 //! get button states
 /*! masks as defined above
  */
-extern inline int dbutton(void)
+INLINE int dbutton(void)
 {
   int rv;
   __asm__ __volatile__("\n\

@@ -39,7 +39,7 @@ extern "C" {
 ///////////////////////////////////////////////////////////////////////
 
 //! enters software standby mode.
-extern inline void power_off(void)
+INLINE void power_off(void)
 {
   __asm__ __volatile__("\n\
   push r6\n\
@@ -51,7 +51,7 @@ extern inline void power_off(void)
 
 //! disables software standby mode so tm_idle_task() can use the sleep
 //  instruction.
-extern inline void power_init(void) {
+INLINE void power_init(void) {
   __asm__ __volatile__("\n\
   push r6\n\
   jsr @ power_init ; ROM call\n\
@@ -64,8 +64,8 @@ extern inline void power_init(void) {
 extern void reset(void) __attribute__((noreturn));
 
 //! turns off interrupts, then issues reset.
-extern inline void rom_reset(void) __attribute__((noreturn));
-extern inline void rom_reset(void) {
+INLINE void rom_reset(void) __attribute__((noreturn));
+INLINE void rom_reset(void) {
   disable_irqs();
   reset();
 }

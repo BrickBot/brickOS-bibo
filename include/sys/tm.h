@@ -34,8 +34,8 @@ extern "C" {
 
 #ifdef CONF_TM
 
-#include "../tm.h"
-#include "sys/handlers.h"
+#include <tm.h>
+#include <sys/handlers.h>
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -157,7 +157,7 @@ extern void tm_switch_handlers(void);
 /**
  * Release the kernel lock.
  */
-extern inline void release_kernel_lock() {
+INLINE void release_kernel_lock() {
     /* Order is very important.  GCC doesn't optimize
      * it away since kernel_lock is volatile.
      */

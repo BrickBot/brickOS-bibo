@@ -36,6 +36,8 @@
 extern "C" {
 #endif
 
+#include <config.h>
+
 ///////////////////////////////////////////////////////////////////////
 //
 // Definitions
@@ -95,12 +97,12 @@ extern void rom_dummy_handler(); //!< address of an RTS instruction
 ///////////////////////////////////////////////////////////////////////
 
 //! disable interrupt processing
-extern inline void disable_irqs() {
+INLINE void disable_irqs() {
   __asm__ __volatile__("\torc  #0x80,ccr\n":::"cc");
 }
 
 //! enable interrupt processing
-extern inline void enable_irqs() {
+INLINE void enable_irqs() {
   __asm__ __volatile__("\tandc #0x7f,ccr\n":::"cc");
 }
 

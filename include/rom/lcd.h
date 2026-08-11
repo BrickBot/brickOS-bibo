@@ -153,7 +153,7 @@ typedef enum {
 //! show LCD segment
 /*! \param segment segment to show
  */
-extern inline void lcd_show(lcd_segment segment)
+INLINE void lcd_show(lcd_segment segment)
 {
   __asm__ ASMVOLATILE(
 		       "push r6\n"
@@ -168,7 +168,7 @@ extern inline void lcd_show(lcd_segment segment)
 //! hide LCD segment
 /*! \param segment segment to hide
  */
-extern inline void lcd_hide(lcd_segment segment)
+INLINE void lcd_hide(lcd_segment segment)
 {
   __asm__ ASMVOLATILE(
 		       "push r6\n"
@@ -185,7 +185,7 @@ extern inline void lcd_hide(lcd_segment segment)
    \param n a number style
    \param c a comma style
  */
-extern inline void lcd_number(int i, lcd_number_style n, lcd_comma_style c)
+INLINE void lcd_number(int i, lcd_number_style n, lcd_comma_style c)
 {
   __asm__ ASMVOLATILE(
 		       "push r6\n"
@@ -201,7 +201,7 @@ extern inline void lcd_number(int i, lcd_number_style n, lcd_comma_style c)
 }
 
 //! clear LCD display
-extern inline void lcd_clear(void)
+INLINE void lcd_clear(void)
 {
   __asm__ ASMVOLATILE(
 		       "push r6\n"

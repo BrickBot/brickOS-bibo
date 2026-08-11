@@ -16,6 +16,8 @@
 extern "C" {
 #endif
 
+#include <config.h>
+
 /**
  * The handler queue data structure.
  * @internal
@@ -35,13 +37,13 @@ typedef struct _handler_t {
 extern handler_t * volatile handler_queue;
 extern handler_t * volatile * volatile handler_tail;
 
-extern inline unsigned char cli() {
+INLINE unsigned char cli() {
     unsigned char oldflags;
     __asm__ ("\tstc   ccr, %0l   ; save flags\n"
 	     "\torc   #0x80, ccr ; disable IRQ\n" : "=r" (oldflags));
     return oldflags;
 }
-extern inline void sti(unsigned char oldflags) {
+INLINE void sti(unsigned char oldflags) {
     __asm__ ("	ldc   %0l, ccr ; restore flags\n" : : "r" (oldflags));
 }
 
@@ -62,7 +64,7 @@ extern inline void sti(unsigned char oldflags) {
 /**
  * Enqueue a handler.  Should only be called with grabbed kernel_lock.
  */
-extern inline void enqueue_handler(handler_t *handler) {
+INLINE void enqueue_handler(handler_t *handler) {
     extern volatile char kernel_lock;
     unsigned char oldflags = cli();
     *handler_tail = handler;

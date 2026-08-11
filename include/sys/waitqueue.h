@@ -54,7 +54,7 @@ extern void add_to_waitqueue(waitqueue_t **queue, waitqueue_t *entry);
 /**
  * Remove process from wait queue.  May only be called with kernel lock.
  */
-extern inline void remove_from_waitqueue(waitqueue_t *entry) {
+INLINE void remove_from_waitqueue(waitqueue_t *entry) {
     *entry->prev = entry->next;
 }
 

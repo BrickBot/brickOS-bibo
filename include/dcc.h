@@ -72,11 +72,11 @@ extern void dcc_F5_F8(unsigned char addr, unsigned char bits);
 #define DCC_F12 0x08
 extern void dcc_F9_F12(unsigned char addr, unsigned char bits);
 
-extern inline void disable_irqs() {
+INLINE void disable_irqs() {
   __asm__ __volatile__("\torc  #0x80,ccr\n":::"cc");
 }
 
-extern inline void enable_irqs() {
+INLINE void enable_irqs() {
   __asm__ __volatile__("\tandc #0x7f,ccr\n":::"cc");
 }
 

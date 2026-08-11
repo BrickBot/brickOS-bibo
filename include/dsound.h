@@ -109,14 +109,14 @@ extern const note_t *dsound_system_sounds[];    //!< system sound data
 extern void dsound_play(const note_t *notes);
 
 //! play a predefined sound
-static inline void dsound_system(unsigned char nr) {
+INLINE void dsound_system(unsigned char nr) {
     if(nr < DSOUND_SYS_MAX) {
         dsound_play(dsound_system_sounds[nr]);
     }
 }
 
 //! returns nonzero value if a sound is playing
-static inline char dsound_playing(void) {
+INLINE char dsound_playing(void) {
     return dsound_next_note!=0;
 }
 
@@ -143,7 +143,7 @@ extern void dsound_stop(void);
  *    - https://www.mralligator.com/rcx/
 
 //! play a system sound
-extern inline void dsound_play_system(unsigned char nr)
+INLINE void dsound_play_system(unsigned char nr)
 {
   __asm__ (
       "push %0\n"
@@ -156,7 +156,7 @@ extern inline void dsound_play_system(unsigned char nr)
   );
 }
 
-extern inline int dsound_playing_system(void)
+INLINE int dsound_playing_system(void)
 {
   int rv;
   __asm__ __volatile__ (

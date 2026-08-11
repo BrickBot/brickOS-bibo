@@ -94,7 +94,7 @@ void lr_shutdown(void);
  *   processing function for received messages
  *  \return Nothing
  */
-extern inline void lr_set_handler(lr_handler_t handler) {
+INLINE void lr_set_handler(lr_handler_t handler) {
   lr_handler = handler;
 }
 

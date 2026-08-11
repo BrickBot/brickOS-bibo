@@ -167,4 +167,7 @@
 #define __TEXT_INIT__  __attribute__ ((__section__ (".text.in")))
 #define __TEXT_HI__  __attribute__ ((__section__ (".text.hi")))
 
+//! macro to force GCC to inline even under -O0 without needing a separate .c body
+#define INLINE static inline __attribute__((always_inline))
+
 #endif // __config_h__

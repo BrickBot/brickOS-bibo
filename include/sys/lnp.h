@@ -106,13 +106,10 @@ extern void lnp_integrity_byte(unsigned char b);
 //! reset the integrity layer on error or timeout.
 extern void lnp_integrity_reset(void);
 
-#ifndef CONF_HOST
-extern
-#endif
 //! return whether a packet is currently being received
 /*! \return 1 if yes, else zero
 */
-inline int lnp_integrity_active(void) {
+INLINE int lnp_integrity_active(void) {
   return lnp_integrity_state!=LNPwaitHeader;
 }
 

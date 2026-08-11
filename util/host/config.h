@@ -30,6 +30,9 @@
 //
 #define CONF_HOST                       //!< Host environment flag
 
+//! Host version of the INLINE macro
+#define INLINE static inline __attribute__((always_inline))
+
 // remote control services
 //
 #define CONF_RCX_PROTOCOL               //!< RCX protocol handler

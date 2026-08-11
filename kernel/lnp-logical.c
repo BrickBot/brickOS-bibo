@@ -105,14 +105,8 @@ sem_t tx_sem;                //!< transmitter access semaphore
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-//! disable IR carrier frequency.
-extern inline void carrier_shutdown(void) {
-  T1_CR  =0;
-  T1_CSR =0;
-}
-
 //! enable IR carrier frequency.
-extern void carrier_init(void) {
+void carrier_init(void) {
   if (lnp_ir_carrier_enabled){
     T1_CR  =0x9;
     T1_CSR =0x13;

@@ -158,7 +158,7 @@ extern char pf_repeat;
 
 //! send one COMBO_DIRECT message
 //! e.g. pf_combo_direct(PF_CH1, PF_RED_BRK | PF_BLUE_FWD, false)
-static inline void pf_combo_direct(unsigned channel, unsigned speeds,
+INLINE void pf_combo_direct(unsigned channel, unsigned speeds,
   unsigned extra_address)
 {
   pf_send(channel, PF_EXADDR(PF_COMBO_DIRECT), speeds);
@@ -167,7 +167,7 @@ static inline void pf_combo_direct(unsigned channel, unsigned speeds,
 
 //! send one SINGLE_OUTPUT message in PWM mode
 //! e.g. pf_single_output_pwm(PF_CH1, PF_RED, PWM_FWD5, false)
-static inline void pf_single_output_pwm(unsigned channel,
+INLINE void pf_single_output_pwm(unsigned channel,
   unsigned output, unsigned pwm, unsigned extra_address)
 {
   unsigned char ix = extra_address * 4 + channel;
@@ -178,7 +178,7 @@ static inline void pf_single_output_pwm(unsigned channel,
 
 //! send one SINGLE_OUTPUT message in C/S/T/I/D mode
 //! e.g. pf_single_output(PF_CH1, PF_RED, PF_DEC_NUM_PWM, false)
-static inline void pf_single_output(unsigned channel,
+INLINE void pf_single_output(unsigned channel,
   unsigned output, unsigned cmd, unsigned extra_address)
 {
   unsigned char ix = extra_address * 4 + channel;
@@ -188,7 +188,7 @@ static inline void pf_single_output(unsigned channel,
 
 //! send one COMBO_PWM message
 //! e.g. pf_combo_pwm(PF_CH1, PWM_FWD5, PWM_REV3, false)
-static inline void pf_combo_pwm(unsigned channel,
+INLINE void pf_combo_pwm(unsigned channel,
   unsigned pwm_blue, unsigned pwm_red, unsigned extra_address)
 {
   pf_send(PF_EXADDR(PF_COMBO_PWM) | channel, pwm_blue, pwm_red);
@@ -198,7 +198,7 @@ static inline void pf_combo_pwm(unsigned channel,
 //! align toggle bit (e.g. to make sure that the next command has a chance
 // of success).
 //! e.g. pf_align_toggle(PF_CH1, false)
-static inline void pf_align_toggle(int channel, unsigned extra_address)
+INLINE void pf_align_toggle(int channel, unsigned extra_address)
 {
   unsigned char ix = extra_address * 4 + channel;
   pf_send(pf_toggle[ix] | channel, PF_EXADDR(0), PF_ALIGN_TOGGLE);
@@ -207,7 +207,7 @@ static inline void pf_align_toggle(int channel, unsigned extra_address)
 
 //! toggle the extra/default address space selector
 //! e.g. pf_toggle_address(PF_CH1, false)
-static inline void pf_toggle_address(int channel, unsigned extra_address)
+INLINE void pf_toggle_address(int channel, unsigned extra_address)
 {
   unsigned char ix = extra_address * 4 + channel;
   pf_send(pf_toggle[ix] | channel, PF_EXADDR(0), PF_TOGGLE_ADDRESS);

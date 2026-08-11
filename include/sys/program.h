@@ -34,7 +34,7 @@ extern "C" {
 
 #ifdef CONF_PROGRAM
 
-#include <tm.h>
+#include <sys/tm.h>
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -44,6 +44,9 @@ extern "C" {
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_INTERNALS
+
+extern unsigned char _system_reserved_keys;
+
 /**
  * The program control structure
  * @internal
@@ -97,10 +100,18 @@ extern int program_valid(unsigned nr);
 extern void show_program_num();
 
 //! returns true if a program is currently running; false otherwise
-extern inline char is_program_running();
+INLINE char is_program_running() {
+  return nb_tasks > nb_system_tasks;
+}
+
+#ifdef CONF_DKEY
+#include <dkey.h>
 
 //! sets whether any system keys (e.g. On-Off, Run) may be used by a user program
-extern inline void allow_system_keys_access(char keys);
+INLINE void allow_system_keys_access(char keys) {
+  _system_reserved_keys = (KEYS_SYSTEM ^ keys);
+}
+#endif
 
 //! initialize program support
 extern void program_init();

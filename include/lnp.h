@@ -126,49 +126,34 @@ extern volatile lnp_message_handler_t lnp_message_handler;
 //
 ///////////////////////////////////////////////////////////////////////
 
-#ifndef CONF_HOST
-extern
-#endif
 //! set the integrity layer packet handler
-inline void lnp_integrity_set_handler(lnp_integrity_handler_t handler)
+INLINE void lnp_integrity_set_handler(lnp_integrity_handler_t handler)
 {
   lnp_integrity_handler = handler;
 }
 
-#ifndef CONF_HOST
-extern
-#endif
 //! set an addressing layer packet sniffer handler
-inline void lnp_addressing_sniffer_set_handler(lnp_addressing_sniffer_handler_t handler){
+INLINE void lnp_addressing_sniffer_set_handler(lnp_addressing_sniffer_handler_t handler){
    lnp_addressing_sniffer_handler = handler;
 }
 
-#ifndef CONF_HOST
-extern
-#endif
 //! set an addressing layer packet handler for a port.
-inline void lnp_addressing_set_handler(unsigned char port, lnp_addressing_handler_t handler)
+INLINE void lnp_addressing_set_handler(unsigned char port, lnp_addressing_handler_t handler)
 {
   if (!(port & CONF_LNP_HOSTMASK))  // sanity check.
 
     lnp_addressing_handler[port] = handler;
 }
 
-#ifndef CONF_HOST
-extern
-#endif
 //! set new LNP host address
-inline void lnp_set_hostaddr(unsigned char host)
+INLINE void lnp_set_hostaddr(unsigned char host)
 {
     lnp_hostaddr = ((host << 4) & CONF_LNP_HOSTMASK);
 }
 
 #ifdef CONF_RCX_PROTOCOL
-#ifndef CONF_HOST
-extern
-#endif
 //! set the remote packet handler
-inline void lnp_remote_set_handler(lnp_remote_handler_t handler)
+INLINE void lnp_remote_set_handler(lnp_remote_handler_t handler)
 {
   lnp_remote_handler = handler;
 }
@@ -176,11 +161,8 @@ inline void lnp_remote_set_handler(lnp_remote_handler_t handler)
 
 
 #if defined(CONF_RCX_MESSAGE) || defined(CONF_HOST)
-#ifndef CONF_HOST
-extern
-#endif
 //! set the standard firmware message handler
-inline void lnp_message_set_handler(lnp_message_handler_t handler)
+INLINE void lnp_message_set_handler(lnp_message_handler_t handler)
 {
   lnp_message_handler = handler;
 }
@@ -197,7 +179,7 @@ extern int send_code(unsigned int code);
 extern unsigned char lnp_rcx_message;
 
 //! clear last message from standard firmware
-extern inline void clear_msg(void)
+INLINE void clear_msg(void)
 {
    lnp_rcx_message = 0;
 }

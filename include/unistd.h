@@ -51,7 +51,7 @@ extern void debug_printf(const char* format, ...);
  *  \param stack_size the amount of memory in bytes to allocate to this task for its call stack
  *  \return -1 if failed to start, else tid (task-id)
  */
-extern inline tid_t execi(int (*code_start) (int, void **), int argc, void **argv,
+INLINE tid_t execi(int (*code_start) (int, void **), int argc, void **argv,
 			  priority_t priority, size_t stack_size)
 {
     return kexeci(code_start, argc, argv, priority, stack_size, T_USER);
@@ -114,7 +114,7 @@ extern unsigned int sleep(unsigned int sec);
 extern unsigned int msleep(unsigned int msec);
 
 #else
-extern inline wakeup_t wait_event(wakeup_t(*wakeup) (wakeup_t), wakeup_t data)
+INLINE wakeup_t wait_event(wakeup_t(*wakeup) (wakeup_t), wakeup_t data)
 {
   wakeup_t res;
 

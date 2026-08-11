@@ -61,7 +61,7 @@ extern "C" {
  *  NOTE2: toggles port 4 bit 0
  *  \todo determine what clears this and then correct NOTE1
 */
-extern inline void lnp_logical_range(int far) {
+INLINE void lnp_logical_range(int far) {
   if(far)
     *((char*)&PORT4) &=~1;
   else
@@ -72,12 +72,15 @@ extern inline void lnp_logical_range(int far) {
 /*! Determine if the INFRARED transmitter power is set to long range
  *  \return T/F where TRUE means transmitter is set to long range
 */
-extern inline int lnp_logical_range_is_far(void) {
+INLINE int lnp_logical_range_is_far(void) {
   return !(*((char*)&PORT4)&1);
 }
 
 //! disable IR carrier frequency.
-extern inline void carrier_shutdown(void);
+INLINE void carrier_shutdown(void) {
+  T1_CR  =0;
+  T1_CSR =0;
+}
 
 //! enable IR carrier frequency.
 extern void carrier_init(void);

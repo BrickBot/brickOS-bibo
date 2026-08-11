@@ -180,7 +180,7 @@ extern unsigned char ds_edgecount_level_high[3]; //!< minimum (raw>>8) value for
 //! set sensor mode to active (light sensor emits light, rotation works)
 /*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
 */
-extern inline void ds_active(volatile unsigned *sensor)
+INLINE void ds_active(volatile unsigned *sensor)
 {
   if (sensor == &SENSOR_3)
     bit_set(&ds_sensorbits, 0);
@@ -193,7 +193,7 @@ extern inline void ds_active(volatile unsigned *sensor)
 //! set sensor mode to passive (light sensor detects ambient light)
 /*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
 */
-extern inline void ds_passive(volatile unsigned *sensor)
+INLINE void ds_passive(volatile unsigned *sensor)
 {
   if (sensor == &SENSOR_3) {
     bit_clear(&ds_sensorbits, 0);
@@ -223,7 +223,7 @@ extern void ds_rotation_set(volatile unsigned *sensor, int pos);
 //! start tracking rotation sensor
 /*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
 */
-extern inline void ds_rotation_on(volatile unsigned *sensor)
+INLINE void ds_rotation_on(volatile unsigned *sensor)
 {
     if (sensor == &SENSOR_3) {
 	bit_set(&ds_rotation, 0);
@@ -240,7 +240,7 @@ extern inline void ds_rotation_on(volatile unsigned *sensor)
 //! stop tracking rotation sensor
 /*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
 */
-extern inline void ds_rotation_off(volatile unsigned *sensor)
+INLINE void ds_rotation_off(volatile unsigned *sensor)
 {
     if (sensor == &SENSOR_3) {
 	bit_clear(&ds_rotation, 0);
@@ -282,7 +282,7 @@ extern void ds_mux_on(volatile unsigned *sensor,
 //! stop multiplexing
 /*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
 */
-extern inline void ds_mux_off(volatile unsigned *sensor)
+INLINE void ds_mux_off(volatile unsigned *sensor)
 {
   if (sensor == &SENSOR_3)
     bit_clear(&ds_mux, 0);
@@ -299,7 +299,7 @@ extern inline void ds_mux_off(volatile unsigned *sensor)
 //! start tracking edgecount
 /*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
 */
-extern inline void ds_edgecount_on(volatile unsigned *sensor)
+INLINE void ds_edgecount_on(volatile unsigned *sensor)
 {
     if (sensor == &SENSOR_3) {
 	bit_set(&ds_edgecount, 0);
@@ -316,7 +316,7 @@ extern inline void ds_edgecount_on(volatile unsigned *sensor)
 //! stop tracking edgecount
 /*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
 */
-extern inline void ds_edgecount_off(volatile unsigned *sensor)
+INLINE void ds_edgecount_off(volatile unsigned *sensor)
 {
     if (sensor == &SENSOR_3) {
 	bit_clear(&ds_edgecount, 0);
@@ -335,7 +335,7 @@ extern inline void ds_edgecount_off(volatile unsigned *sensor)
 //! set edgecount low threshold
 /*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
 */
-extern inline void ds_edgecount_set_low(volatile unsigned *sensor,
+INLINE void ds_edgecount_set_low(volatile unsigned *sensor,
   unsigned char level)
 {
     if (sensor == &SENSOR_3) {
@@ -352,7 +352,7 @@ extern inline void ds_edgecount_set_low(volatile unsigned *sensor,
 //! set edgecount high threshold
 /*! \param  sensor: &SENSOR_1,&SENSOR_2,&SENSOR_3
 */
-extern inline void ds_edgecount_set_high(volatile unsigned *sensor,
+INLINE void ds_edgecount_set_high(volatile unsigned *sensor,
   unsigned char level)
 {
     if (sensor == &SENSOR_3) {

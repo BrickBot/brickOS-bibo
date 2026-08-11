@@ -76,6 +76,16 @@ static signed cprog = -1;                //!< the current program
 static unsigned char synthetic_key;
 static waitqueue_t *synthetic_waitqueue;
 
+static program_t programs[PROG_MAX];       //!< the programs
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Internal Variables Exposed for External Inlining
+//
+///////////////////////////////////////////////////////////////////////////////
+
+unsigned char _system_reserved_keys = KEYS_SYSTEM; //!< allow user programs to use the On-Off button
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Internal Variables
@@ -98,8 +108,6 @@ static program_t programs[PROG_MAX];       //!< the programs
 static unsigned char* buffer_ptr;          //!< packet receive buffer
 volatile unsigned char packet_len;         //!< packet length
 volatile unsigned char packet_src;         //!< packet sender
-
-static unsigned char system_reserved_keys = KEYS_SYSTEM; //!< allow user programs to use the On-Off button
 
 #if 0
 #define debugs(a) { cputs(a); msleep(500); }
@@ -183,16 +191,6 @@ int find_next_program() {
     return next_prog;
 }
 
-//! reutrns true if a program is running; false otherwise
-char is_program_running() {
-  return nb_tasks > nb_system_tasks;
-}
-
-void allow_system_keys_access(char keys) {
-  system_reserved_keys = (KEYS_SYSTEM ^ keys);
-}
-
-
 //! stop program
 static void program_stop(void) {
     unsigned char count_down = 40;
@@ -244,7 +242,7 @@ static void program_run(unsigned nr) {
           break;
         synthetic_key = 0;
       }
-      if ((dkey & ~dkey_old & (system_reserved_keys)) != 0)
+      if ((dkey & ~dkey_old & (_system_reserved_keys)) != 0)
           break;
     }
     remove_from_waitqueue(&dkey_entry);
