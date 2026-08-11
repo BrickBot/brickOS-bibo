@@ -246,12 +246,24 @@ SECTIONS {
 
   } > eight
 
-  .stab 0 (NOLOAD) : {
-    [ .stab ]
+  /* 
+   * FIX FOR BINUTILS 2.16.1: Map and strictly align the debugging sections.
+   * This is all that h8300-hitachi-coff emits or requires for GDB 6.8.
+   * ALIGN(2) prevents odd-byte ASCII strings in .stabstr from shifting
+   * the offset boundary alignments that GDB 6.8 expects.
+   * While other .stab* sections could also be included, they are
+   * not needed with h8300-hitachi-coff.
+   */
+  .stab 0 : {
+    . = ALIGN(2);
+    *(.stab)
+    . = ALIGN(2);
   }
 
-  .stabstr 0 (NOLOAD) : {
-    [ .stabstr ]
+  .stabstr 0 : {
+    . = ALIGN(2);
+    *(.stabstr)
+    . = ALIGN(2);
   }
 
 } /* SECTIONS */
