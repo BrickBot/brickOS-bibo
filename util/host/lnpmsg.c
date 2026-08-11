@@ -131,7 +131,7 @@ int main(int argc, char **argv)
       "   If no send action is specified, the program will run in \"listen\" mode."
       "\n"
       RCX_COMM_OPTIONS
-      "  --node=<address>    Set PC host address, valid from 0-15.  Default -1 (any).\n"
+      "  --nodeaddr=<address>  Set PC host address, valid from 0-15.  Default -1 (any).\n"
 //      "  -p <port>        Set PC host port to listen on, valid from 0-15.\n"
 //      "                   Use -1 to listen for messages directed to any port(default).\n"
 //      "  -l <file>        Log all messages to the specified file.\n"
