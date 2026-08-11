@@ -160,24 +160,17 @@ int main(int argc, char **argv)
 //    if(!strcmp(argv[0], "--debug"))            //Extract debug option.
 //      showDebugInfo = 1;
 //    else
-    if(!strncmp(argv[0], "--node=", 7))            //Extract host address option
+    if(!strncmp(argv[0], "--nodeaddr=", 11))            //Extract host address option
     {
-        addressPC=atoi(argv[0]+7);
+        addressPC=atoi(&argv[0][11]);
         if(addressPC<0 || addressPC>15)
           sprintf(errorMsg, STR_HOST_ADD_RANGE, "0-15");
     }
     else if(!strcmp(argv[0], "-n"))            //Extract host address option
     {
-      if(argc > 1)
-      {
-        argc--;
-        argv++;
-        addressPC=atoi(argv[0]);
+        addressPC=atoi(&argv[0][2]);
         if(addressPC<0 || addressPC>15)
           sprintf(errorMsg, STR_HOST_ADD_RANGE, "0-15");
-      }
-      else
-        sprintf(errorMsg, STR_NO_PARAMETER, "-n");
     }
 //    else if(!strcmp(argv[0], "-p"))            //Extract host port setting.
 //    {

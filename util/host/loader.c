@@ -126,19 +126,19 @@ typedef enum {
 #include <getopt.h>
 
 static const struct option long_options[]={
-  {"program", required_argument,0,'p'},
-  {"delete",  required_argument,0,'d'},
-  {"destaddr",required_argument,0,'a'},
-  {"destport",required_argument,0,'r'},
-  {"tty",     required_argument,0,'t'},
-  {"baud",    required_argument,0,'b'},
-  {"timeout", required_argument,0,'o'},
-  {"irmode",  required_argument,0,'i'},
-  {"node",    required_argument,0,'n'},
-  {"execute", no_argument      ,0,'e'},
-  {"help",    no_argument      ,0,'h'},
-  {"verbose", no_argument      ,0,'v'},
-  {0         ,0                ,0,0  }
+  {"program",  required_argument,0,'p'},
+  {"delete",   required_argument,0,'d'},
+  {"destaddr", required_argument,0,'a'},
+  {"destport", required_argument,0,'r'},
+  {"tty",      required_argument,0,'t'},
+  {"baud",     required_argument,0,'b'},
+  {"timeout",  required_argument,0,'o'},
+  {"irmode",   required_argument,0,'i'},
+  {"brickaddr",required_argument,0,'k'},
+  {"execute",  no_argument      ,0,'x'},
+  {"help",     no_argument      ,0,'h'},
+  {"verbose",  no_argument      ,0,'v'},
+  {0          ,0                ,0,0  }
 };
 
 #else // HAVE_GETOPT_LONG
@@ -256,13 +256,13 @@ int main(int argc, char **argv) {
   int pdelete_flag = 0;
   int hostaddr_flag = 0;
 
-  while((opt=getopt_long(argc, argv, "p:d:a:r:t:b:o:i:n:ehv",
+  while((opt=getopt_long(argc, argv, "p:d:a:r:t:b:o:i:k:xhv",
                         (struct option *)long_options, &option_index) )!=-1) {
     switch(opt) {
       case 'b':
         baud = atoi(optarg);
         break;
-      case 'e':
+      case 'x':
         run_flag=1;
         break;
       case 'a':
@@ -296,7 +296,7 @@ int main(int argc, char **argv) {
         sscanf(optarg,"%d",&prog);
         pdelete_flag=1;
         break;
-      case 'n':
+      case 'k':
         sscanf(optarg,"%d",&hostaddr);
 		if (hostaddr > ADDR_MAX || hostaddr < ADDR_MIN) {
 			fprintf(stderr, "LNP host address not in range 0..15\n");
@@ -327,18 +327,18 @@ int main(int argc, char **argv) {
   {
     char *usage_string =
     RCX_COMM_OPTIONS
-	"  -p<prognum>  , --program=<prognum>   set destination program to <prognum>\n"
-	"  -a<destaddr> , --destaddr=<destaddr> send to RCX host address <destaddr>\n"
-	"  -r<destport> , --destport=<destport> send to RCX source port <destport>\n"
-	"  -i<0/1>      , --irmode=<0/1>        set IR mode near(0)/far(1) on RCX\n"
-	"  -e           , --execute             execute program after download\n"
+    "  -p<prognum>  , --program=<prognum>   set destination program to <prognum>\n"
+    "  -a<destaddr> , --destaddr=<destaddr> send to RCX host address <destaddr>\n"
+    "  -r<destport> , --destport=<destport> send to RCX source port <destport>\n"
+    "  -i<0/1>      , --irmode=<0/1>        set IR mode near(0)/far(1) on RCX\n"
+    "  -x           , --execute             execute program after download\n"
     "\n"
-	"Commands:\n"
-	"  -d<prognum>  , --delete=<prognum>    delete program <prognum> from memory\n"
-	"  -n<hostaddr> , --node=<hostaddr>     set LNP host address in brick\n"
-	"\n"
+    "Commands:\n"
+    "  -d<prognum>  , --delete=<prognum>    delete program <prognum> from memory\n"
+    "  -k<brickaddr>, --brickaddr=<brickaddr> set LNP host address in brick\n"
+    "\n"
     RCX_COMM_OPTIONS_INFO
-	"\n"
+    "\n"
 	;
 
 	fprintf(stderr, "usage: %s [options] [command | file.lx]\n", argv[0]);
