@@ -7,6 +7,7 @@
 FONTTARGET=fontdesign$(HOST_EXEC_EXT)
 FIRMDLTARGET=firmdl$(HOST_EXEC_EXT)
 FIRMDLMAN1=firmdl.1
+FIXDEPTARGET=fixdepend$(HOST_EXEC_EXT)
 LNPMSGTARGET=lnpmsg$(HOST_EXEC_EXT)
 IRSRVRTARGET=ir-server$(HOST_EXEC_EXT)
 DLLTARGET=dll$(HOST_EXEC_EXT)
@@ -19,6 +20,7 @@ RCX_COMM_SRCS = rcx_comm.c lnp-logical.c lnp.c
 
 FONTSRC    = fontdesign.c
 FIRMDLSRC  = firmdl.c srec.c srecload.c $(RCX_COMM_SRCS)
+FIXDEPSRC  = fixdepend.c
 MKIMGSRC   = mkimg.c srec.c srecload.c
 LNPMSGSRC  = lnpmsg.c lnpmsg_comm.c $(RCX_COMM_SRCS)
 DLLSRC     = loader.c lx.c $(RCX_COMM_SRCS)
@@ -28,6 +30,7 @@ GENLDSSRC  = genlds.c
 
 FONTOBJS    := $(FONTSRC:%.c=util/host/%.o)
 FIRMDLOBJS  := $(FIRMDLSRC:%.c=util/host/%.o)
+FIXDEPOBJS  := $(FIXDEPSRC:%.c=util/host/%.o)
 MKIMGOBJS   := $(MKIMGSRC:%.c=util/host/%.o)
 LNPMSGOBJS  := $(LNPMSGSRC:%.c=util/host/%.o)
 DLLOBJS     := $(DLLSRC:%.c=util/host/%.o)
@@ -37,13 +40,13 @@ GENLDSOBJS  := $(GENLDSSRC:%.c=util/host/%.o)
 
 
 DISTFILES += $(patsubst %,util/host/%, Makefile.sub $(sort $(FONTSRC) $(FIRMDLSRC) \
-        $(MKIMGSRC) $(LNPMSGSRC) $(DLLSRC) $(WRITELXSRC) $(IRSRVRSRC) $(GENLDSSRC) \
-        config.h fastdl.S srec.h srecload.h lx.h rcx_comm.h lnpmsg_comm.h \
+        $(FIXDEPSRC) $(MKIMGSRC) $(LNPMSGSRC) $(DLLSRC) $(WRITELXSRC) $(IRSRVRSRC) \
+        $(GENLDSSRC) config.h fastdl.S srec.h srecload.h lx.h rcx_comm.h lnpmsg_comm.h \
         $(DLLMAN1) $(FIRMDLMAN1) ))
 DISTFILES := $(filter-out util/host/lnp.c util/host/lnp-logical.c, $(DISTFILES))
 LIBS=
 
-HOST_BIN_FILES = $(FIRMDLTARGET) $(DLLTARGET) $(LNPMSGTARGET) $(IRSRVRTARGET)
+HOST_BIN_FILES = $(FIRMDLTARGET) $(FIXDEPTARGET) $(DLLTARGET) $(LNPMSGTARGET) $(IRSRVRTARGET)
 HOST_LIBEXEC_FILES = $(WRITELXTARGET) $(GENLDSTARGET) $(FONTTARGET)
 
 HOST_BIN_PATHS = $(HOST_BIN_FILES:%=util/%)
@@ -85,7 +88,7 @@ util/host/lnp-logical.o: kernel/lnp-logical.c
 	$(CC) -MMD $(CFLAGS) -c -o $@ $^
 
 NATIVEOBJS+=$(patsubst util/host/lnp.o,, $(patsubst util/host/lnp-logical.o,, $(sort $(FONTOBJS) \
-    $(FIRMDLOBJS) $(MKIMGOBJS) $(LNPMSGOBJS) $(DLLOBJS) $(WRITELXOBJS) $(IRSRVROBJS) $(GENLDSOBJS))))
+    $(FIRMDLOBJS) $(FIXDEPOBJS) $(MKIMGOBJS) $(LNPMSGOBJS) $(DLLOBJS) $(WRITELXOBJS) $(IRSRVROBJS) $(GENLDSOBJS))))
 
 util/host/firmdl.o: util/host/fastdl_2400.h util/host/fastdl_4800.h util/host/fastdl_9600.h util/host/fastdl_19200.h  util/host/fastdl_38400.h
 
@@ -114,6 +117,8 @@ $(MKIMG): $(MKIMGOBJS)
 util/$(FONTTARGET): $(FONTOBJS)
 	$(CC) -o $@ $^ $(CFLAGS)
 util/$(FIRMDLTARGET): $(FIRMDLOBJS)
+	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
+util/$(FIXDEPTARGET): $(FIXDEPOBJS)
 	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)
 util/$(LNPMSGTARGET): $(LNPMSGOBJS)
 	$(CC) -o $@ $^ $(LIBS) $(CFLAGS)

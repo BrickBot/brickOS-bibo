@@ -1,0 +1,91 @@
+#!/usr/bin/env perl
+# Shebang line - https://stackoverflow.com/a/2792076
+
+##
+## brickOS - the independent LEGO MindStorms OS
+## util/merge-map - merge a map file with disassembly
+## (c) 1998 by Markus L. Noga <markus@noga.de>
+##
+
+# read symbols
+$mapname=shift;
+open MAP,"<$mapname" || die "Cannot open map file.\n";
+
+while($line=<MAP>) {
+  chop $line;
+  $line=~/0000([0-9a-fA-F]+) (.) (.+)/;
+  $addr=$1;
+  $type=$2;
+  $symb=$3;
+
+  # only overwrite with symbols, not .text etc.
+  if( (!$symbols{$addr}) || !($symb=~/^\./) ) {
+    $symbols{$addr}=$symb;
+    # deal with 8 bit references, too.
+    if($addr=~/[fF][fF]([0-9a-fA-F]+)/) {
+      $symbols{$1}=$symb;
+    }
+  }
+}
+
+close MAP;
+
+
+# read and comment disassembly
+$disname=shift;
+open DIS,"<$disname" || die "Cannot open disassembly.\n";
+$maxoffset=15;
+
+while($line=<DIS>) {
+
+ # annotate symbol references
+ if($line=~/0x([0-9a-fA-F]{2,})((:0|:8|:16)?)/) {
+   $addr=$1;
+   if($2 eq ":8") {
+     #handle 8-bit symbols (offsets possible)
+         
+     $symb=$symbols{$addr};
+     if($symb) {
+      $line=~s/0x$addr:8/$symb/g;
+     }
+   } else {
+     #handle 16-bit symbols (offsets possible)  
+     $offset=hex $addr;
+     for($i=0; $i<$maxoffset; $i++) {
+       $check=sprintf "%04x",$offset-$i;
+       $symb=$symbols{$check};
+       if($symb) {
+	 if(!$i) {
+           $line=~s/0x$addr((:0|:16)?)/$symb/g;
+	 } else {
+           $line=~s/0x$addr((:0|:16)?)/$symb+$i/g;
+	 }       
+	 $i=$maxoffset;
+      }
+     }
+   }
+ } elsif($line=~/\(([0-9a-fA-F]{2,})\)/) {
+   if($symbols{$1}) {
+     $line=~s/\(([0-9a-fA-F]{2,})\)/($symbols{$1})/g;
+   }
+ }
+ 
+ # transform all register names to rN, r7 to sp
+ if($line=~/[^a-zA-Z0-9_ ]([er]|er)[0-9][^a-zA-Z0-9_ ]/) {
+   $line=~s/([^a-zA-Z0-9_ ])([er]|er)([0-9])([^a-zA-Z0-9_ ])/$1r$3$4/g;
+ }
+ if($line=~/[^a-zA-Z0-9_]r7[^a-zA-Z0-9_]/) {
+   $line=~s/([^a-zA-Z0-9_])r7([^a-zA-Z0-9_])/$1sp$2/g;
+ } 
+ 
+ # reintroduce push/pop
+ if($line=~/(.*)mov\.w\s*(.*),\@\-sp(.*)/) {
+  $line="$1push\t$2$3\n";
+ } elsif($line=~/(.*)mov\.w\s*\@sp\+,(.*)/) {
+  $line="$1pop\t$2\n";
+ }
+ 
+ print $line;
+}
+
+close DIS;

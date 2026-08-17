@@ -4,7 +4,7 @@
 ###  bibo - another LEGO MindStorms RCX OS
 ### --------------------------------------------------------------------------
 
-DISTFILES += util/Makefile.sub
+DISTFILES += util/Makefile.sub util/merge-map
 
 CFLAGS+=-Iutil/lnp-include
 
